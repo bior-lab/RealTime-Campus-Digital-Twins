@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node
+node_modules/
+dist/
+build/
+.next/
+
+# Data and secrets
+*.env
+.env*
+!.env.example
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+!data/processed/nus-building-labels.geojson
+!data/processed/nus-campus-buildings.geojson
+!data/processed/*.sample.geojson
+tools/pi_web_api/output/
+
+# System
+.DS_Store
+Thumbs.db

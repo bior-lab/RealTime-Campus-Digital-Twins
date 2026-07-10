@@ -1,0 +1,40 @@
+{
+  "airflow": [
+    "*{building}*Airflow*",
+    "*{building}*Air Flow*",
+    "*{building}*SAFLOW*",
+    "*{building}*Supply Air Flow*"
+  ],
+  "cooling": [
+    "*{building}*Cooling*Hourly*",
+    "*{building}*BTU*Power*",
+    "*{building}*BTU*kW*",
+    "*{building}*Chilled*Water*",
+    "*{building}*CHW*"
+  ],
+  "electricity": [
+    "*{building}*Hourly*kWh*",
+    "*{building}*Electrical*",
+    "*{building}*Active_Energy*",
+    "*{building}*Power_Meters*"
+  ],
+  "indoor": [
+    "*{building}*Temperature*",
+    "*{building}*Humidity*",
+    "*{building}*CO2*"
+  ],
+  "pv": [
+    "*{building}*PV*",
+    "*{building}*Solar*"
+  ],
+  "water": [
+    "*{building}*Water*",
+    "*{building}*WATER*",
+    "*{building}*WM-*",
+    "*{building}*Potable*",
+    "*{building}*Newater*",
+    "*{building}*NEWater*",
+    "*{building}*Volume*",
+    "*{building}*Hourly Consumption*"
+  ]
+}

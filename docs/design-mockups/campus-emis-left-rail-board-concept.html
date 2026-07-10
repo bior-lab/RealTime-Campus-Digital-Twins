@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NUS Campus EMIS Left Rail Board Concept</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17202a;
+        --muted: #5a6978;
+        --line: #d9e1e8;
+        --soft: #f5f7f9;
+        --panel: #ffffff;
+        --rail: #142235;
+        --rail-soft: #1d3148;
+        --blue: #003d7c;
+        --blue-soft: #e9f2fb;
+        --orange: #ef7c00;
+        --teal: #287c6f;
+        --violet: #7655c7;
+        --pink: #c73f7d;
+        --red: #b43b34;
+        --shadow: 0 18px 46px rgba(23, 32, 42, 0.15);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        display: grid;
+        place-items: center;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        color: var(--ink);
+        background: #dfe6ed;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .frame {
+        position: relative;
+        display: grid;
+        grid-template-columns: 82px 430px minmax(0, 1fr);
+        width: 1600px;
+        height: 960px;
+        overflow: hidden;
+        border: 1px solid #c9d3dc;
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: 0 28px 72px rgba(23, 32, 42, 0.2);
+      }
+
+      .rail {
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        min-width: 0;
+        padding: 18px 12px;
+        background: var(--rail);
+        color: rgba(255, 255, 255, 0.72);
+      }
+
+      .rail-logo {
+        display: grid;
+        place-items: center;
+        width: 46px;
+        height: 46px;
+        margin: 0 auto 24px;
+        border-radius: 10px;
+        background: #ffffff;
+        color: var(--blue);
+        font-weight: 850;
+      }
+
+      .rail-nav {
+        display: grid;
+        align-content: start;
+        gap: 10px;
+      }
+
+      .rail-nav button,
+      .rail-bottom button {
+        display: grid;
+        place-items: center;
+        gap: 5px;
+        width: 58px;
+        min-height: 58px;
+        border: 0;
+        border-radius: 10px;
+        background: transparent;
+        color: inherit;
+        font-size: 10px;
+        font-weight: 720;
+      }
+
+      .rail-nav button span,
+      .rail-bottom button span {
+        display: grid;
+        place-items: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        font-size: 12px;
+      }
+
+      .rail-nav button.active {
+        background: var(--blue);
+        color: #fff;
+      }
+
+      .rail-nav button.active span {
+        background: rgba(255, 255, 255, 0.18);
+      }
+
+      .board {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        min-width: 0;
+        height: 100%;
+        overflow: auto;
+        padding: 22px 22px 24px;
+        border-right: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.96);
+      }
+
+      .board-header {
+        display: grid;
+        gap: 6px;
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: var(--blue);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin-bottom: 0;
+        font-size: 26px;
+        line-height: 1.12;
+      }
+
+      h2 {
+        margin-bottom: 8px;
+        font-size: 18px;
+        line-height: 1.2;
+      }
+
+      h3 {
+        margin-bottom: 9px;
+        font-size: 14px;
+        line-height: 1.25;
+      }
+
+      .note {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .search {
+        display: flex;
+        align-items: center;
+        height: 42px;
+        padding: 0 13px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .board-tabs {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+
+      .board-tabs button {
+        min-height: 38px;
+        border: 0;
+        border-right: 1px solid var(--line);
+        background: #fff;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 760;
+      }
+
+      .board-tabs button:last-child {
+        border-right: 0;
+      }
+
+      .board-tabs button.active {
+        background: var(--blue);
+        color: #fff;
+      }
+
+      .section {
+        display: grid;
+        gap: 10px;
+      }
+
+      .section-title {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .section-title h3 {
+        margin: 0;
+      }
+
+      .section-title span {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .kpi {
+        min-height: 84px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+      }
+
+      .kpi span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .kpi strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 21px;
+        line-height: 1.08;
+      }
+
+      .kpi small {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .chart-card,
+      .context-card,
+      .ai-card,
+      .building-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+      }
+
+      .chart-card {
+        padding: 12px;
+      }
+
+      .sparkbars {
+        display: grid;
+        align-items: end;
+        grid-template-columns: repeat(20, 1fr);
+        gap: 4px;
+        height: 86px;
+        margin-top: 8px;
+        padding: 8px;
+        border-radius: 8px;
+        background:
+          repeating-linear-gradient(0deg, transparent 0 26px, rgba(217, 225, 232, 0.72) 26px 27px),
+          var(--soft);
+      }
+
+      .sparkbars i {
+        display: block;
+        height: var(--h);
+        border-radius: 999px 999px 3px 3px;
+        background: var(--blue);
+      }
+
+      .context-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .context-card {
+        display: grid;
+        grid-template-columns: 38px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
+        min-height: 64px;
+        padding: 10px;
+      }
+
+      .context-card .badge {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 999px;
+        background: var(--blue-soft);
+        color: var(--blue);
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .context-card strong,
+      .ai-card strong,
+      .building-card strong {
+        display: block;
+        font-size: 13px;
+        line-height: 1.25;
+      }
+
+      .context-card small,
+      .ai-card p,
+      .building-card small {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.35;
+      }
+
+      .context-card em {
+        color: var(--teal);
+        font-size: 11px;
+        font-style: normal;
+        font-weight: 800;
+      }
+
+      .ai-card {
+        padding: 11px;
+        border-left: 4px solid var(--teal);
+      }
+
+      .ai-card.warning {
+        border-left-color: var(--orange);
+      }
+
+      .workspace {
+        position: relative;
+        min-width: 0;
+        overflow: hidden;
+        background:
+          linear-gradient(rgba(238, 243, 246, 0.88), rgba(238, 243, 246, 0.88)),
+          repeating-linear-gradient(28deg, transparent 0 58px, rgba(255, 255, 255, 0.9) 58px 64px),
+          repeating-linear-gradient(118deg, transparent 0 70px, rgba(255, 255, 255, 0.92) 70px 76px),
+          #eef3f6;
+      }
+
+      .workspace::before,
+      .workspace::after {
+        position: absolute;
+        content: "";
+        pointer-events: none;
+      }
+
+      .workspace::before {
+        inset: 0;
+        background:
+          radial-gradient(ellipse at 47% 50%, rgba(0, 61, 124, 0.1), transparent 34%),
+          linear-gradient(38deg, transparent 0 48%, rgba(255, 255, 255, 0.92) 48% 49%, transparent 49%),
+          linear-gradient(128deg, transparent 0 61%, rgba(255, 255, 255, 0.86) 61% 62%, transparent 62%);
+      }
+
+      .workspace::after {
+        right: -120px;
+        bottom: 118px;
+        width: 760px;
+        height: 92px;
+        border-radius: 999px;
+        background: rgba(154, 207, 230, 0.5);
+        transform: rotate(-10deg);
+      }
+
+      .workspace-top {
+        position: absolute;
+        inset: 18px 20px auto 20px;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .global-search {
+        display: flex;
+        align-items: center;
+        width: min(540px, 52%);
+        height: 42px;
+        padding: 0 14px;
+        border: 1px solid rgba(217, 225, 232, 0.95);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.95);
+        color: var(--muted);
+        font-size: 13px;
+        box-shadow: 0 8px 24px rgba(23, 32, 42, 0.08);
+      }
+
+      .status-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 38px;
+        padding: 0 12px;
+        border: 1px solid rgba(217, 225, 232, 0.95);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.96);
+        color: var(--ink);
+        font-size: 12px;
+        font-weight: 750;
+        box-shadow: 0 8px 24px rgba(23, 32, 42, 0.08);
+      }
+
+      .pill::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--teal);
+      }
+
+      .map-title {
+        position: absolute;
+        left: 46%;
+        top: 49%;
+        z-index: 1;
+        color: rgba(82, 97, 111, 0.24);
+        font-size: 36px;
+        font-weight: 780;
+        line-height: 1.08;
+        text-align: center;
+        text-transform: uppercase;
+        transform: translate(-50%, -50%);
+      }
+
+      .building {
+        position: absolute;
+        z-index: 2;
+        width: var(--w);
+        height: var(--h);
+        border-radius: 4px;
+        background: linear-gradient(135deg, color-mix(in srgb, var(--c) 72%, white), var(--c));
+        box-shadow:
+          10px 13px 0 color-mix(in srgb, var(--c) 62%, #17202a),
+          0 10px 20px rgba(23, 32, 42, 0.18);
+        transform: rotate(-18deg) skewX(10deg);
+      }
+
+      .building.dim {
+        background: #9dafba;
+        box-shadow:
+          8px 11px 0 #728895,
+          0 10px 20px rgba(23, 32, 42, 0.12);
+      }
+
+      .building small {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        color: #fff;
+        font-size: 10px;
+        font-weight: 850;
+        text-shadow: 0 1px 3px rgba(23, 32, 42, 0.36);
+        transform: translate(-50%, -50%) rotate(18deg) skewX(-10deg);
+      }
+
+      .region-pin {
+        position: absolute;
+        z-index: 4;
+        display: grid;
+        place-items: center;
+        width: 58px;
+        height: 58px;
+        border: 5px solid rgba(255, 255, 255, 0.98);
+        border-radius: 999px;
+        background: var(--blue);
+        color: #fff;
+        font-size: 16px;
+        font-weight: 850;
+        box-shadow:
+          0 0 0 20px rgba(0, 61, 124, 0.12),
+          0 0 0 38px rgba(0, 61, 124, 0.06),
+          0 14px 30px rgba(0, 61, 124, 0.24);
+      }
+
+      .region-pin span {
+        position: absolute;
+        top: 60px;
+        left: 50%;
+        width: max-content;
+        max-width: 170px;
+        color: var(--ink);
+        font-size: 12px;
+        font-weight: 760;
+        text-align: center;
+        text-shadow: 0 1px 0 #fff;
+        transform: translateX(-50%);
+      }
+
+      .region-pin.violet {
+        background: var(--violet);
+        box-shadow:
+          0 0 0 20px rgba(118, 85, 199, 0.13),
+          0 0 0 38px rgba(118, 85, 199, 0.07),
+          0 14px 30px rgba(118, 85, 199, 0.24);
+      }
+
+      .region-pin.pink {
+        background: var(--pink);
+        box-shadow:
+          0 0 0 20px rgba(199, 63, 125, 0.13),
+          0 0 0 38px rgba(199, 63, 125, 0.07),
+          0 14px 30px rgba(199, 63, 125, 0.24);
+      }
+
+      .live-popup {
+        position: absolute;
+        left: 304px;
+        top: 474px;
+        z-index: 6;
+        width: 230px;
+        padding: 13px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.97);
+        box-shadow: var(--shadow);
+      }
+
+      .live-popup strong {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+      }
+
+      .live-popup p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      .floating-status {
+        position: absolute;
+        left: 26px;
+        right: 26px;
+        top: 82px;
+        z-index: 5;
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 160px;
+        overflow: hidden;
+        border: 1px solid rgba(217, 225, 232, 0.95);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 12px 32px rgba(23, 32, 42, 0.12);
+      }
+
+      .floating-status > div {
+        min-height: 78px;
+        padding: 15px 16px;
+        border-right: 1px solid var(--line);
+      }
+
+      .floating-status > div:last-child {
+        border-right: 0;
+      }
+
+      .floating-status span {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 760;
+        text-transform: uppercase;
+      }
+
+      .floating-status strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 20px;
+      }
+
+      .mini-progress {
+        height: 14px;
+        margin-top: 10px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #eef2f5;
+      }
+
+      .mini-progress i {
+        display: block;
+        width: 72%;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--teal);
+      }
+
+      .map-legend {
+        position: absolute;
+        right: 26px;
+        bottom: 24px;
+        z-index: 5;
+        width: 242px;
+        padding: 13px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: var(--shadow);
+      }
+
+      .legend-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .legend-row i {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        background: var(--blue);
+      }
+
+      .zoom-controls {
+        position: absolute;
+        right: 26px;
+        top: 184px;
+        z-index: 6;
+        display: grid;
+        gap: 8px;
+      }
+
+      .zoom-controls button {
+        width: 38px;
+        height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        font-size: 18px;
+        font-weight: 850;
+        box-shadow: 0 8px 22px rgba(23, 32, 42, 0.12);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="frame">
+      <aside class="rail">
+        <div>
+          <div class="rail-logo">N</div>
+          <nav class="rail-nav" aria-label="Primary navigation">
+            <button class="active"><span>O</span>Overview</button>
+            <button><span>B</span>Buildings</button>
+            <button><span>C</span>Context</button>
+            <button><span>AI</span>AI</button>
+            <button><span>L</span>Layers</button>
+          </nav>
+        </div>
+        <div></div>
+        <div class="rail-bottom"><button><span>S</span>Settings</button></div>
+      </aside>
+
+      <aside class="board">
+        <header class="board-header">
+          <p class="eyebrow">NUS Campus EMIS</p>
+          <h1>Campus Operations</h1>
+          <p class="note">Realtime campus status, external energy context, and AI triage.</p>
+        </header>
+
+        <div class="search">Search focus buildings, meters, or EMA context</div>
+
+        <nav class="board-tabs" aria-label="Dashboard views">
+          <button class="active">Overview</button>
+          <button>Buildings</button>
+          <button>Context</button>
+          <button>AI</button>
+          <button>Layers</button>
+        </nav>
+
+        <section class="section">
+          <div class="section-title">
+            <h3>Campus Status</h3>
+            <span>SDE4 live endpoint</span>
+          </div>
+          <div class="kpi-grid">
+            <div class="kpi"><span>Electricity</span><strong>0 kWh/h</strong><small>hourly SDE4 endpoint</small></div>
+            <div class="kpi"><span>Cooling</span><strong>0 kWh/h</strong><small>hourly cooling stream</small></div>
+            <div class="kpi"><span>Water</span><strong>No data</strong><small>meter mapping pending</small></div>
+            <div class="kpi"><span>PV</span><strong>0 kW</strong><small>available via PI stream</small></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-title">
+            <h3>Energy Trend</h3>
+            <span>Today</span>
+          </div>
+          <article class="chart-card">
+            <div class="sparkbars">
+              <i style="--h: 44%"></i><i style="--h: 48%"></i><i style="--h: 55%"></i><i style="--h: 62%"></i>
+              <i style="--h: 70%"></i><i style="--h: 68%"></i><i style="--h: 74%"></i><i style="--h: 80%"></i>
+              <i style="--h: 76%"></i><i style="--h: 82%"></i><i style="--h: 88%"></i><i style="--h: 79%"></i>
+              <i style="--h: 71%"></i><i style="--h: 69%"></i><i style="--h: 73%"></i><i style="--h: 77%"></i>
+              <i style="--h: 64%"></i><i style="--h: 58%"></i><i style="--h: 52%"></i><i style="--h: 49%"></i>
+            </div>
+          </article>
+        </section>
+
+        <section class="section">
+          <div class="section-title">
+            <h3>External Context</h3>
+            <span>EMA / data.gov.sg</span>
+          </div>
+          <div class="context-list">
+            <article class="context-card">
+              <span class="badge">T</span>
+              <div><strong>Electricity price</strong><small>Tariff and USEP benchmark context.</small></div>
+              <em>Ready</em>
+            </article>
+            <article class="context-card">
+              <span class="badge">D</span>
+              <div><strong>System demand</strong><small>Monthly generation proxy until half-hourly demand is wired.</small></div>
+              <em>Ready</em>
+            </article>
+            <article class="context-card">
+              <span class="badge">PV</span>
+              <div><strong>Solar deployment</strong><small>PV capacity benchmark by planning region.</small></div>
+              <em>Ready</em>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-title">
+            <h3>AI Triage</h3>
+            <span>Evidence first</span>
+          </div>
+          <article class="ai-card">
+            <strong>1 of 16 focus buildings has live data</strong>
+            <p>Complete PI Web API to building-code mapping before campus-wide AI fault detection.</p>
+          </article>
+          <article class="ai-card warning">
+            <strong>Cost values are benchmark only</strong>
+            <p>Do not label public tariff values as actual NUS electricity cost without contract data.</p>
+          </article>
+        </section>
+      </aside>
+
+      <section class="workspace" aria-label="Campus map workspace">
+        <div class="workspace-top">
+          <div class="global-search">Search campus, building, meter point, or policy context</div>
+          <div class="status-row">
+            <span class="pill">1 building live</span>
+            <span class="pill">EMA context loaded</span>
+          </div>
+        </div>
+
+        <div class="floating-status">
+          <div>
+            <span>Live coverage</span>
+            <strong>1 / 16 focus buildings</strong>
+            <div class="mini-progress"><i></i></div>
+          </div>
+          <div>
+            <span>Selected context</span>
+            <strong>Electricity price benchmark</strong>
+          </div>
+          <div>
+            <span>Updated</span>
+            <strong>13 Jun 2026</strong>
+          </div>
+        </div>
+
+        <div class="map-title">National University<br />of Singapore</div>
+
+        <div class="building" style="left: 188px; top: 286px; --w: 102px; --h: 32px; --c: #4c73d9"><small>SDE3</small></div>
+        <div class="building" style="left: 184px; top: 378px; --w: 78px; --h: 56px; --c: #4c73d9"><small>SDE4</small></div>
+        <div class="building" style="left: 292px; top: 352px; --w: 96px; --h: 44px; --c: #4c73d9"><small>SDE2</small></div>
+        <div class="building" style="left: 342px; top: 238px; --w: 88px; --h: 36px; --c: #e08a38"><small>E6</small></div>
+        <div class="building" style="left: 420px; top: 200px; --w: 86px; --h: 36px; --c: #e08a38"><small>E8</small></div>
+        <div class="building dim" style="left: 520px; top: 250px; --w: 136px; --h: 40px"><small>CLB</small></div>
+        <div class="building dim" style="left: 580px; top: 378px; --w: 96px; --h: 68px"><small>BIZ</small></div>
+        <div class="building dim" style="left: 468px; top: 560px; --w: 128px; --h: 34px"><small>RH</small></div>
+        <div class="building" style="left: 800px; top: 342px; --w: 92px; --h: 40px; --c: #7655c7"><small>S1A</small></div>
+        <div class="building" style="left: 914px; top: 314px; --w: 78px; --h: 82px; --c: #7655c7"><small>S9</small></div>
+        <div class="building" style="left: 978px; top: 456px; --w: 136px; --h: 46px; --c: #c73f7d"><small>CELS</small></div>
+        <div class="building" style="left: 1072px; top: 392px; --w: 104px; --h: 48px; --c: #c73f7d"><small>MD1</small></div>
+        <div class="building" style="left: 1150px; top: 344px; --w: 72px; --h: 78px; --c: #c73f7d"><small>MD6</small></div>
+        <div class="building dim" style="left: 806px; top: 630px; --w: 120px; --h: 30px"><small>PGP</small></div>
+        <div class="building dim" style="left: 940px; top: 688px; --w: 104px; --h: 30px"><small>PGP</small></div>
+
+        <div class="region-pin" style="left: 356px; top: 438px">9<span>Design and Engineering</span></div>
+        <div class="region-pin violet" style="left: 894px; top: 400px">2<span>Science</span></div>
+        <div class="region-pin pink" style="left: 1088px; top: 496px">4<span>Medicine</span></div>
+
+        <article class="live-popup">
+          <strong>SDE4 live endpoint</strong>
+          <p>Electricity, cooling, PV, indoor environment streams mapped. Water point pending.</p>
+        </article>
+
+        <div class="zoom-controls">
+          <button>+</button>
+          <button>-</button>
+        </div>
+
+        <aside class="map-legend">
+          <h3>Operational status</h3>
+          <div class="legend-row"><i style="background: var(--blue)"></i>Live endpoint mapped</div>
+          <div class="legend-row"><i style="background: #9dafba"></i>Catalogued campus building</div>
+          <div class="legend-row"><i style="background: var(--pink)"></i>AI/context attention area</div>
+        </aside>
+      </section>
+    </main>
+  </body>
+</html>

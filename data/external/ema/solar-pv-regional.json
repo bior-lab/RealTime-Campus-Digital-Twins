@@ -1,0 +1,114 @@
+{
+    "id":  "solar-pv-deployment",
+    "title":  "Solar PV deployment",
+    "source":  "data.gov.sg / Energy Market Authority",
+    "source_url":  "https://data.gov.sg/datasets/d_cd4f91f7a1ebb2b7ceb1a70c0dbb706d/view",
+    "retrieved_at":  "2026-06-13T01:25:56",
+    "unit":  "kWac",
+    "summary":  {
+                    "latest_year":  2021,
+                    "latest_installed_capacity_kwac":  341545.3,
+                    "previous_installed_capacity_kwac":  330169.7,
+                    "yoy_capacity_pct":  3.45,
+                    "latest_installations":  4585
+                },
+    "annual":  [
+                   {
+                       "year":  2008,
+                       "installed_capacity_kwac":  278.6,
+                       "installations":  30
+                   },
+                   {
+                       "year":  2009,
+                       "installed_capacity_kwac":  1495.8,
+                       "installations":  59
+                   },
+                   {
+                       "year":  2010,
+                       "installed_capacity_kwac":  2925.3,
+                       "installations":  106
+                   },
+                   {
+                       "year":  2011,
+                       "installed_capacity_kwac":  4565.1,
+                       "installations":  169
+                   },
+                   {
+                       "year":  2012,
+                       "installed_capacity_kwac":  7746.2,
+                       "installations":  294
+                   },
+                   {
+                       "year":  2013,
+                       "installed_capacity_kwac":  11760.9,
+                       "installations":  388
+                   },
+                   {
+                       "year":  2014,
+                       "installed_capacity_kwac":  25336.4,
+                       "installations":  635
+                   },
+                   {
+                       "year":  2015,
+                       "installed_capacity_kwac":  45695.2,
+                       "installations":  941
+                   },
+                   {
+                       "year":  2016,
+                       "installed_capacity_kwac":  96652.5,
+                       "installations":  1831
+                   },
+                   {
+                       "year":  2017,
+                       "installed_capacity_kwac":  117911.1,
+                       "installations":  2131
+                   },
+                   {
+                       "year":  2018,
+                       "installed_capacity_kwac":  160325,
+                       "installations":  2721
+                   },
+                   {
+                       "year":  2019,
+                       "installed_capacity_kwac":  271010,
+                       "installations":  3828
+                   },
+                   {
+                       "year":  2020,
+                       "installed_capacity_kwac":  330169.7,
+                       "installations":  4443
+                   },
+                   {
+                       "year":  2021,
+                       "installed_capacity_kwac":  341545.3,
+                       "installations":  4585
+                   }
+               ],
+    "latest_by_region":  [
+                             {
+                                 "region":  "Central",
+                                 "installed_capacity_kwac":  33343.9,
+                                 "installations":  845
+                             },
+                             {
+                                 "region":  "East",
+                                 "installed_capacity_kwac":  54985.5,
+                                 "installations":  581
+                             },
+                             {
+                                 "region":  "North",
+                                 "installed_capacity_kwac":  53440.2,
+                                 "installations":  777
+                             },
+                             {
+                                 "region":  "North-East",
+                                 "installed_capacity_kwac":  44565.8,
+                                 "installations":  1290
+                             },
+                             {
+                                 "region":  "West",
+                                 "installed_capacity_kwac":  155209.9,
+                                 "installations":  1092
+                             }
+                         ]
+}

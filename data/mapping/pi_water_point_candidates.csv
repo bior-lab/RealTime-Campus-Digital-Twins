@@ -1,0 +1,12 @@
+building,source,point_name,role,notes
+SDE4,PI_Points_by_Building.xlsx,SDE4 Main Potable  Water Meter WM-21,main_potable_meter,Main potable water meter candidate; validate unit and sampling interval in PI.
+SDE4,PI_Points_by_Building.xlsx,SDE4 Main Potable  Water Meter WM-21 Hourly Consumption,main_potable_hourly,Preferred first candidate for potable hourly consumption if the value is cumulative hourly use.
+SDE4,PI_Points_by_Building.xlsx,SDE4 Main New Water Meter WM-19,main_newater_meter,Main NEWater meter candidate; validate whether it is instantaneous or cumulative.
+SDE4,PI_Points_by_Building.xlsx,SDE4 Main New Water Meter WM-19 Hourly Consumption,main_newater_hourly,Preferred first candidate for NEWater hourly consumption.
+SDE4,PI_Points_by_Building.xlsx,SDE4 Newater Sum All Submeters,newater_submeter_sum,Aggregate submeter candidate; compare against main NEWater meter before public use.
+SDE4,PI_Points_by_Building.xlsx,SDE4 Level 2 Planter Water Tap WM-8 Hourly Consumption,submeter_planter_hourly,Submeter candidate for irrigation or planter use.
+SDE4,PI_Points_by_Building.xlsx,SDE4 Level 3 Smart Toilet Smart Geen Toilet WM-17 Hourly Consumption,submeter_toilet_hourly,Submeter candidate; keep separate from whole-building water.
+SDE4,PI_Points_by_Building.xlsx,SDE4 Level 4 Female Toilet WM-15 Hourly Consumption,submeter_toilet_hourly,Submeter candidate; keep separate from whole-building water.
+SDE4,PI_Points_by_Building.xlsx,SDE4 Level 5 Male Toilet WM-2 Hourly Consumption,submeter_toilet_hourly,Submeter candidate; keep separate from whole-building water.
+SDE4,PI_Points_by_Building.xlsx,SDE4 Level 6 Female Toillet WM-18 Hourly Consumption,submeter_toilet_hourly,Submeter candidate; source spelling is preserved from PI workbook.
+SDE4,PI_Points_by_Building.xlsx,SDE4 Level 6 Planter Water Tap WM-11 Hourly Consumption,submeter_planter_hourly,Submeter candidate for irrigation or planter use.

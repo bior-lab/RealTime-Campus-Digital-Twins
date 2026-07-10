@@ -1,0 +1,315 @@
+{
+    "id":  "electricity-consumption",
+    "title":  "Electricity consumption",
+    "source":  "data.gov.sg / Energy Market Authority",
+    "source_url":  "https://data.gov.sg/datasets/d_3745e3aa98ff3c4bcfcb8e1f6dffef42/view",
+    "retrieved_at":  "2026-06-13T01:25:56",
+    "unit":  "GWh",
+    "summary":  {
+                    "latest_year":  2024,
+                    "latest_consumption_year":  2024,
+                    "latest_consumption_gwh":  57639.7,
+                    "previous_consumption_gwh":  55426.4,
+                    "yoy_consumption_pct":  3.99,
+                    "latest_generation_year":  2025,
+                    "latest_generation_gwh":  60410.4
+                },
+    "series":  [
+                   {
+                       "name":  "Electricity Generation",
+                       "unit":  "GWh",
+                       "values":  [
+                                      {
+                                          "year":  1975,
+                                          "value_gwh":  4175.7
+                                      },
+                                      {
+                                          "year":  1976,
+                                          "value_gwh":  4604.9
+                                      },
+                                      {
+                                          "year":  1977,
+                                          "value_gwh":  5114.7
+                                      },
+                                      {
+                                          "year":  1978,
+                                          "value_gwh":  5897.9
+                                      },
+                                      {
+                                          "year":  1979,
+                                          "value_gwh":  6447.8
+                                      },
+                                      {
+                                          "year":  1980,
+                                          "value_gwh":  6940.5
+                                      },
+                                      {
+                                          "year":  1981,
+                                          "value_gwh":  7441.9
+                                      },
+                                      {
+                                          "year":  1982,
+                                          "value_gwh":  7859.5
+                                      },
+                                      {
+                                          "year":  1983,
+                                          "value_gwh":  8625.9
+                                      },
+                                      {
+                                          "year":  1984,
+                                          "value_gwh":  9420.7
+                                      },
+                                      {
+                                          "year":  1985,
+                                          "value_gwh":  9876.3
+                                      },
+                                      {
+                                          "year":  1986,
+                                          "value_gwh":  10576.5
+                                      },
+                                      {
+                                          "year":  1987,
+                                          "value_gwh":  11813.8
+                                      },
+                                      {
+                                          "year":  1988,
+                                          "value_gwh":  13017.5
+                                      },
+                                      {
+                                          "year":  1989,
+                                          "value_gwh":  14038.9
+                                      },
+                                      {
+                                          "year":  1990,
+                                          "value_gwh":  15617.6
+                                      },
+                                      {
+                                          "year":  1991,
+                                          "value_gwh":  16596.6
+                                      },
+                                      {
+                                          "year":  1992,
+                                          "value_gwh":  17543.1
+                                      },
+                                      {
+                                          "year":  1993,
+                                          "value_gwh":  18962.4
+                                      },
+                                      {
+                                          "year":  1994,
+                                          "value_gwh":  20675.4
+                                      },
+                                      {
+                                          "year":  1995,
+                                          "value_gwh":  22057.4
+                                      },
+                                      {
+                                          "year":  1996,
+                                          "value_gwh":  23909.4
+                                      },
+                                      {
+                                          "year":  1997,
+                                          "value_gwh":  26709.4
+                                      },
+                                      {
+                                          "year":  1998,
+                                          "value_gwh":  28374.8
+                                      },
+                                      {
+                                          "year":  1999,
+                                          "value_gwh":  29520.1
+                                      },
+                                      {
+                                          "year":  2000,
+                                          "value_gwh":  31665
+                                      },
+                                      {
+                                          "year":  2001,
+                                          "value_gwh":  33061
+                                      },
+                                      {
+                                          "year":  2002,
+                                          "value_gwh":  34664.5
+                                      },
+                                      {
+                                          "year":  2003,
+                                          "value_gwh":  35281.5
+                                      },
+                                      {
+                                          "year":  2004,
+                                          "value_gwh":  36809.5
+                                      },
+                                      {
+                                          "year":  2005,
+                                          "value_gwh":  38212.7
+                                      },
+                                      {
+                                          "year":  2006,
+                                          "value_gwh":  39480.1
+                                      },
+                                      {
+                                          "year":  2007,
+                                          "value_gwh":  41134.4
+                                      },
+                                      {
+                                          "year":  2008,
+                                          "value_gwh":  41669.6
+                                      },
+                                      {
+                                          "year":  2009,
+                                          "value_gwh":  41800.6
+                                      },
+                                      {
+                                          "year":  2010,
+                                          "value_gwh":  45366.5
+                                      },
+                                      {
+                                          "year":  2011,
+                                          "value_gwh":  45999.4
+                                      },
+                                      {
+                                          "year":  2012,
+                                          "value_gwh":  46936.2
+                                      },
+                                      {
+                                          "year":  2013,
+                                          "value_gwh":  47963.5
+                                      },
+                                      {
+                                          "year":  2014,
+                                          "value_gwh":  49309.7
+                                      },
+                                      {
+                                          "year":  2015,
+                                          "value_gwh":  50271.6
+                                      },
+                                      {
+                                          "year":  2016,
+                                          "value_gwh":  51586.6
+                                      },
+                                      {
+                                          "year":  2017,
+                                          "value_gwh":  52225.8
+                                      },
+                                      {
+                                          "year":  2018,
+                                          "value_gwh":  52904.8
+                                      },
+                                      {
+                                          "year":  2019,
+                                          "value_gwh":  54142.3
+                                      },
+                                      {
+                                          "year":  2020,
+                                          "value_gwh":  53071.6
+                                      },
+                                      {
+                                          "year":  2021,
+                                          "value_gwh":  55788.3
+                                      },
+                                      {
+                                          "year":  2022,
+                                          "value_gwh":  57113.7
+                                      },
+                                      {
+                                          "year":  2023,
+                                          "value_gwh":  57384.2
+                                      },
+                                      {
+                                          "year":  2024,
+                                          "value_gwh":  59616.1
+                                      },
+                                      {
+                                          "year":  2025,
+                                          "value_gwh":  60410.4
+                                      }
+                                  ]
+                   },
+                   {
+                       "name":  "Electricity Consumption",
+                       "unit":  "GWh",
+                       "values":  [
+                                      {
+                                          "year":  2005,
+                                          "value_gwh":  35489.3
+                                      },
+                                      {
+                                          "year":  2006,
+                                          "value_gwh":  36801.8
+                                      },
+                                      {
+                                          "year":  2007,
+                                          "value_gwh":  38304.9
+                                      },
+                                      {
+                                          "year":  2008,
+                                          "value_gwh":  38986.9
+                                      },
+                                      {
+                                          "year":  2009,
+                                          "value_gwh":  38822.9
+                                      },
+                                      {
+                                          "year":  2010,
+                                          "value_gwh":  42251.8
+                                      },
+                                      {
+                                          "year":  2011,
+                                          "value_gwh":  43007.1
+                                      },
+                                      {
+                                          "year":  2012,
+                                          "value_gwh":  44200.7
+                                      },
+                                      {
+                                          "year":  2013,
+                                          "value_gwh":  44948.8
+                                      },
+                                      {
+                                          "year":  2014,
+                                          "value_gwh":  46403
+                                      },
+                                      {
+                                          "year":  2015,
+                                          "value_gwh":  47513.9
+                                      },
+                                      {
+                                          "year":  2016,
+                                          "value_gwh":  48626.6
+                                      },
+                                      {
+                                          "year":  2017,
+                                          "value_gwh":  49643.7
+                                      },
+                                      {
+                                          "year":  2018,
+                                          "value_gwh":  50466.9
+                                      },
+                                      {
+                                          "year":  2019,
+                                          "value_gwh":  51736.7
+                                      },
+                                      {
+                                          "year":  2020,
+                                          "value_gwh":  50789.7
+                                      },
+                                      {
+                                          "year":  2021,
+                                          "value_gwh":  53495.6
+                                      },
+                                      {
+                                          "year":  2022,
+                                          "value_gwh":  54910.6
+                                      },
+                                      {
+                                          "year":  2023,
+                                          "value_gwh":  55426.4
+                                      },
+                                      {
+                                          "year":  2024,
+                                          "value_gwh":  57639.7
+                                      }
+                                  ]
+                   }
+               ]
+}

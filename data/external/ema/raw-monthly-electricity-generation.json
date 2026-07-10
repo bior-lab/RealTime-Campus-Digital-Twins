@@ -1,0 +1,3098 @@
+{
+    "success":  true,
+    "result":  {
+                   "resource_id":  "d_ae4afbaf5bc96bde19d8ce85810ab9f4",
+                   "fields":  [
+                                  {
+                                      "type":  "text",
+                                      "id":  "DataSeries"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2026Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2026Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2025Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2025Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2025Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2025Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2025Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2025Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2025Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2025May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2025Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2025Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2025Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2025Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2024Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2024Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2024Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2024Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2024Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2024Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2024Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2024May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2024Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2024Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2024Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2024Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2023Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2023Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2023Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2023Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2023Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2023Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2023Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2023May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2023Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2023Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2023Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2023Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2022Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2022Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2022Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2022Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2022Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2022Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2022Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2022May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2022Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2022Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2022Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2022Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2021Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2021Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2021Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2021Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2021Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2021Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2021Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2021May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2021Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2021Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2021Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2021Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2020Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2020Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2020Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2020Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2020Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2020Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2020Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2020May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2020Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2020Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2020Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2020Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2019Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2019Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2019Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2019Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2019Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2019Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2019Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2019May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2019Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2019Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2019Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2019Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2018Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2018Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2018Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2018Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2018Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2018Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2018Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2018May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2018Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2018Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2018Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2018Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2017Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2017Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2017Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2017Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2017Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2017Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2017Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2017May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2017Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2017Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2017Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2017Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2016Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2016Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2016Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2016Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2016Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2016Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2016Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2016May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2016Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2016Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2016Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2016Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2015Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2015Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2015Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2015Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2015Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2015Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2015Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2015May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2015Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2015Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2015Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2015Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2014Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2014Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2014Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2014Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2014Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2014Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2014Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2014May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2014Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2014Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2014Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2014Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2013Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2013Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2013Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2013Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2013Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2013Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2013Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2013May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2013Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2013Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2013Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2013Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2012Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2012Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2012Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2012Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2012Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2012Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2012Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2012May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2012Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2012Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2012Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2012Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2011Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2011Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2011Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2011Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2011Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2011Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2011Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2011May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2011Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2011Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2011Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2011Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2010Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2010Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2010Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2010Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2010Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2010Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2010Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2010May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2010Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2010Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2010Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2010Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2009Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2009Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2009Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2009Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2009Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2009Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2009Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2009May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2009Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2009Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2009Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2009Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2008Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2008Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2008Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2008Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2008Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2008Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2008Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2008May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2008Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2008Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2008Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2008Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2007Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2007Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2007Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2007Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2007Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2007Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2007Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2007May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2007Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2007Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2007Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2007Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2006Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2006Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2006Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2006Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2006Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2006Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2006Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2006May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2006Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2006Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2006Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2006Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2005Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2005Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2005Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2005Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2005Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2005Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2005Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2005May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2005Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2005Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2005Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2005Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2004Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2004Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2004Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2004Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2004Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2004Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2004Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2004May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2004Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2004Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2004Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2004Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2003Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2003Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2003Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2003Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2003Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2003Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2003Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2003May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2003Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2003Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2003Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2003Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2002Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2002Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2002Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2002Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2002Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2002Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2002Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2002May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2002Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2002Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2002Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2002Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2001Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2001Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2001Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2001Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2001Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2001Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2001Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2001May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2001Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2001Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2001Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2001Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2000Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2000Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2000Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2000Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2000Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2000Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2000Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2000May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2000Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2000Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2000Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "2000Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1999Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1999Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1999Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1999Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1999Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1999Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1999Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1999May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1999Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1999Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1999Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1999Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1998Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1998Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1998Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1998Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1998Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1998Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1998Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1998May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1998Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1998Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1998Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1998Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1997Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1997Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1997Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1997Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1997Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1997Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1997Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1997May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1997Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1997Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1997Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1997Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1996Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1996Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1996Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1996Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1996Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1996Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1996Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1996May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1996Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1996Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1996Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1996Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1995Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1995Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1995Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1995Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1995Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1995Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1995Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1995May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1995Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1995Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1995Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1995Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1994Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1994Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1994Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1994Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1994Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1994Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1994Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1994May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1994Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1994Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1994Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1994Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1993Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1993Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1993Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1993Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1993Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1993Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1993Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1993May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1993Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1993Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1993Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1993Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1992Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1992Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1992Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1992Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1992Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1992Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1992Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1992May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1992Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1992Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1992Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1992Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1991Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1991Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1991Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1991Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1991Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1991Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1991Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1991May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1991Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1991Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1991Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1991Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1990Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1990Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1990Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1990Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1990Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1990Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1990Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1990May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1990Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1990Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1990Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1990Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1989Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1989Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1989Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1989Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1989Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1989Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1989Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1989May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1989Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1989Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1989Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1989Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1988Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1988Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1988Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1988Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1988Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1988Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1988Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1988May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1988Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1988Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1988Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1988Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1987Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1987Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1987Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1987Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1987Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1987Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1987Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1987May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1987Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1987Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1987Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1987Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1986Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1986Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1986Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1986Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1986Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1986Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1986Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1986May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1986Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1986Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1986Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1986Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1985Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1985Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1985Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1985Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1985Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1985Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1985Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1985May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1985Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1985Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1985Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1985Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1984Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1984Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1984Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1984Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1984Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1984Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1984Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1984May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1984Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1984Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1984Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1984Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1983Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1983Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1983Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1983Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1983Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1983Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1983Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1983May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1983Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1983Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1983Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1983Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1982Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1982Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1982Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1982Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1982Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1982Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1982Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1982May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1982Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1982Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1982Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1982Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1981Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1981Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1981Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1981Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1981Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1981Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1981Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1981May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1981Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1981Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1981Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1981Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1980Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1980Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1980Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1980Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1980Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1980Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1980Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1980May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1980Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1980Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1980Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1980Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1979Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1979Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1979Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1979Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1979Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1979Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1979Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1979May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1979Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1979Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1979Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1979Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1978Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1978Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1978Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1978Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1978Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1978Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1978Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1978May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1978Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1978Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1978Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1978Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1977Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1977Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1977Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1977Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1977Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1977Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1977Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1977May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1977Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1977Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1977Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1977Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1976Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1976Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1976Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1976Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1976Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1976Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1976Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1976May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1976Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1976Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1976Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1976Jan"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1975Dec"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1975Nov"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1975Oct"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1975Sep"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1975Aug"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1975Jul"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1975Jun"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1975May"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1975Apr"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1975Mar"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1975Feb"
+                                  },
+                                  {
+                                      "type":  "numeric",
+                                      "id":  "1975Jan"
+                                  },
+                                  {
+                                      "type":  "int4",
+                                      "id":  "_id"
+                                  }
+                              ],
+                   "records":  [
+                                   {
+                                       "_id":  1,
+                                       "DataSeries":  "Electricity Generation",
+                                       "2026Feb":  "4630.9",
+                                       "2026Jan":  "5032.9",
+                                       "2025Dec":  "5038.1",
+                                       "2025Nov":  "5093.1",
+                                       "2025Oct":  "5195.7",
+                                       "2025Sep":  "4940.8",
+                                       "2025Aug":  "5182.4",
+                                       "2025Jul":  "5352.5",
+                                       "2025Jun":  "5148.6",
+                                       "2025May":  "5252.8",
+                                       "2025Apr":  "4921.2",
+                                       "2025Mar":  "4991.2",
+                                       "2025Feb":  "4460.5",
+                                       "2025Jan":  "4833.5",
+                                       "2024Dec":  "4937.6",
+                                       "2024Nov":  "4861.4",
+                                       "2024Oct":  "5095.2",
+                                       "2024Sep":  "4950.1",
+                                       "2024Aug":  "5131.9",
+                                       "2024Jul":  "5189.6",
+                                       "2024Jun":  "4909.9",
+                                       "2024May":  "5167.1",
+                                       "2024Apr":  "5012.3",
+                                       "2024Mar":  "4964.5",
+                                       "2024Feb":  "4576.2",
+                                       "2024Jan":  "4820.3",
+                                       "2023Dec":  "4742.7",
+                                       "2023Nov":  "4736.6",
+                                       "2023Oct":  "5010.2",
+                                       "2023Sep":  "4780.2",
+                                       "2023Aug":  "4945.2",
+                                       "2023Jul":  "4931.7",
+                                       "2023Jun":  "4797.3",
+                                       "2023May":  "5032.7",
+                                       "2023Apr":  "4762.5",
+                                       "2023Mar":  "4740.4",
+                                       "2023Feb":  "4240.9",
+                                       "2023Jan":  "4664",
+                                       "2022Dec":  "4665.9",
+                                       "2022Nov":  "4694.7",
+                                       "2022Oct":  "4782.1",
+                                       "2022Sep":  "4720",
+                                       "2022Aug":  "4921.3",
+                                       "2022Jul":  "4952.4",
+                                       "2022Jun":  "4738.8",
+                                       "2022May":  "4968.7",
+                                       "2022Apr":  "4716.2",
+                                       "2022Mar":  "4886.1",
+                                       "2022Feb":  "4287.3",
+                                       "2022Jan":  "4780.2",
+                                       "2021Dec":  "4783.9",
+                                       "2021Nov":  "4602.2",
+                                       "2021Oct":  "4825.3",
+                                       "2021Sep":  "4633.2",
+                                       "2021Aug":  "4719.8",
+                                       "2021Jul":  "4801.6",
+                                       "2021Jun":  "4714.8",
+                                       "2021May":  "4808",
+                                       "2021Apr":  "4632.5",
+                                       "2021Mar":  "4733",
+                                       "2021Feb":  "4113",
+                                       "2021Jan":  "4420.9",
+                                       "2020Dec":  "4547.5",
+                                       "2020Nov":  "4370",
+                                       "2020Oct":  "4537.7",
+                                       "2020Sep":  "4321.1",
+                                       "2020Aug":  "4476.5",
+                                       "2020Jul":  "4420",
+                                       "2020Jun":  "4287",
+                                       "2020May":  "4338.9",
+                                       "2020Apr":  "4239",
+                                       "2020Mar":  "4655.5",
+                                       "2020Feb":  "4329.1",
+                                       "2020Jan":  "4549.3",
+                                       "2019Dec":  "4429.9",
+                                       "2019Nov":  "4424.2",
+                                       "2019Oct":  "4565.1",
+                                       "2019Sep":  "4585.6",
+                                       "2019Aug":  "4694.4",
+                                       "2019Jul":  "4658.5",
+                                       "2019Jun":  "4437.8",
+                                       "2019May":  "4717.7",
+                                       "2019Apr":  "4495.5",
+                                       "2019Mar":  "4543.6",
+                                       "2019Feb":  "4034.3",
+                                       "2019Jan":  "4555.7",
+                                       "2018Dec":  "4419.2",
+                                       "2018Nov":  "4303.1",
+                                       "2018Oct":  "4535.3",
+                                       "2018Sep":  "4324.4",
+                                       "2018Aug":  "4583.9",
+                                       "2018Jul":  "4579",
+                                       "2018Jun":  "4445.9",
+                                       "2018May":  "4623",
+                                       "2018Apr":  "4381.8",
+                                       "2018Mar":  "4477.5",
+                                       "2018Feb":  "3923.2",
+                                       "2018Jan":  "4308.5",
+                                       "2017Dec":  "4376.5",
+                                       "2017Nov":  "4283.3",
+                                       "2017Oct":  "4504.5",
+                                       "2017Sep":  "4365.6",
+                                       "2017Aug":  "4555.1",
+                                       "2017Jul":  "4522.2",
+                                       "2017Jun":  "4385.4",
+                                       "2017May":  "4514.8",
+                                       "2017Apr":  "4187",
+                                       "2017Mar":  "4344.4",
+                                       "2017Feb":  "3892.2",
+                                       "2017Jan":  "4294.8",
+                                       "2016Dec":  "4357",
+                                       "2016Nov":  "4242.1",
+                                       "2016Oct":  "4439.7",
+                                       "2016Sep":  "4345.9",
+                                       "2016Aug":  "4477",
+                                       "2016Jul":  "4366",
+                                       "2016Jun":  "4261.5",
+                                       "2016May":  "4431.1",
+                                       "2016Apr":  "4304.4",
+                                       "2016Mar":  "4313.1",
+                                       "2016Feb":  "3849.2",
+                                       "2016Jan":  "4199.6",
+                                       "2015Dec":  "4131.4",
+                                       "2015Nov":  "4080.6",
+                                       "2015Oct":  "4389.8",
+                                       "2015Sep":  "4228.8",
+                                       "2015Aug":  "4304.7",
+                                       "2015Jul":  "4419.1",
+                                       "2015Jun":  "4210.3",
+                                       "2015May":  "4298.4",
+                                       "2015Apr":  "4173.8",
+                                       "2015Mar":  "4249.6",
+                                       "2015Feb":  "3666.9",
+                                       "2015Jan":  "4118.2",
+                                       "2014Dec":  "4054.9",
+                                       "2014Nov":  "3971.9",
+                                       "2014Oct":  "4251.2",
+                                       "2014Sep":  "4165.9",
+                                       "2014Aug":  "4212.2",
+                                       "2014Jul":  "4338.7",
+                                       "2014Jun":  "4201",
+                                       "2014May":  "4264",
+                                       "2014Apr":  "4081.8",
+                                       "2014Mar":  "4157.9",
+                                       "2014Feb":  "3667.9",
+                                       "2014Jan":  "3942.3",
+                                       "2013Dec":  "3951.6",
+                                       "2013Nov":  "3918.7",
+                                       "2013Oct":  "4082.9",
+                                       "2013Sep":  "3971.1",
+                                       "2013Aug":  "4162.5",
+                                       "2013Jul":  "4158",
+                                       "2013Jun":  "4043.6",
+                                       "2013May":  "4239",
+                                       "2013Apr":  "4030.8",
+                                       "2013Mar":  "4039",
+                                       "2013Feb":  "3445.1",
+                                       "2013Jan":  "3921.2",
+                                       "2012Dec":  "3846.1",
+                                       "2012Nov":  "3842.5",
+                                       "2012Oct":  "4040.1",
+                                       "2012Sep":  "3877.7",
+                                       "2012Aug":  "4040.9",
+                                       "2012Jul":  "4028.3",
+                                       "2012Jun":  "4005.9",
+                                       "2012May":  "4075.9",
+                                       "2012Apr":  "3850.4",
+                                       "2012Mar":  "3919.9",
+                                       "2012Feb":  "3655.8",
+                                       "2012Jan":  "3752.7",
+                                       "2011Dec":  "3747.7",
+                                       "2011Nov":  "3742.6",
+                                       "2011Oct":  "3840",
+                                       "2011Sep":  "3873.4",
+                                       "2011Aug":  "3935.7",
+                                       "2011Jul":  "4042.9",
+                                       "2011Jun":  "3965.2",
+                                       "2011May":  "4128.9",
+                                       "2011Apr":  "3768.2",
+                                       "2011Mar":  "3851.8",
+                                       "2011Feb":  "3366.1",
+                                       "2011Jan":  "3736.9",
+                                       "2010Dec":  "3796",
+                                       "2010Nov":  "3741.8",
+                                       "2010Oct":  "3928.9",
+                                       "2010Sep":  "3762.3",
+                                       "2010Aug":  "3857.2",
+                                       "2010Jul":  "3862.7",
+                                       "2010Jun":  "3740.3",
+                                       "2010May":  "3974.5",
+                                       "2010Apr":  "3800.1",
+                                       "2010Mar":  "3872.1",
+                                       "2010Feb":  "3373.6",
+                                       "2010Jan":  "3657",
+                                       "2009Dec":  "3606.5",
+                                       "2009Nov":  "3494.8",
+                                       "2009Oct":  "3711.3",
+                                       "2009Sep":  "3578.4",
+                                       "2009Aug":  "3656.8",
+                                       "2009Jul":  "3652.1",
+                                       "2009Jun":  "3571.6",
+                                       "2009May":  "3558.9",
+                                       "2009Apr":  "3390.6",
+                                       "2009Mar":  "3338",
+                                       "2009Feb":  "3034.9",
+                                       "2009Jan":  "3206.7",
+                                       "2008Dec":  "3281.4",
+                                       "2008Nov":  "3324.8",
+                                       "2008Oct":  "3548.5",
+                                       "2008Sep":  "3519.9",
+                                       "2008Aug":  "3537.2",
+                                       "2008Jul":  "3588.7",
+                                       "2008Jun":  "3489",
+                                       "2008May":  "3680.3",
+                                       "2008Apr":  "3544.1",
+                                       "2008Mar":  "3466.6",
+                                       "2008Feb":  "3190.1",
+                                       "2008Jan":  "3499",
+                                       "2007Dec":  "3371.2",
+                                       "2007Nov":  "3397.8",
+                                       "2007Oct":  "3620.3",
+                                       "2007Sep":  "3441.2",
+                                       "2007Aug":  "3521.7",
+                                       "2007Jul":  "3514",
+                                       "2007Jun":  "3456.9",
+                                       "2007May":  "3562.3",
+                                       "2007Apr":  "3404",
+                                       "2007Mar":  "3495.4",
+                                       "2007Feb":  "3015.5",
+                                       "2007Jan":  "3334.1",
+                                       "2006Dec":  "3307",
+                                       "2006Nov":  "3303.9",
+                                       "2006Oct":  "3435.7",
+                                       "2006Sep":  "3290.3",
+                                       "2006Aug":  "3403.2",
+                                       "2006Jul":  "3416.3",
+                                       "2006Jun":  "3272.3",
+                                       "2006May":  "3404.3",
+                                       "2006Apr":  "3195.2",
+                                       "2006Mar":  "3404.2",
+                                       "2006Feb":  "2950.9",
+                                       "2006Jan":  "3096.8",
+                                       "2005Dec":  "3240.2",
+                                       "2005Nov":  "3157.8",
+                                       "2005Oct":  "3295",
+                                       "2005Sep":  "3232.7",
+                                       "2005Aug":  "3280.3",
+                                       "2005Jul":  "3253",
+                                       "2005Jun":  "3208.8",
+                                       "2005May":  "3258.1",
+                                       "2005Apr":  "3164.3",
+                                       "2005Mar":  "3266.6",
+                                       "2005Feb":  "2815.7",
+                                       "2005Jan":  "3040.2",
+                                       "2004Dec":  "3056.2",
+                                       "2004Nov":  "3000.4",
+                                       "2004Oct":  "3163.4",
+                                       "2004Sep":  "3086.6",
+                                       "2004Aug":  "3150",
+                                       "2004Jul":  "3108.1",
+                                       "2004Jun":  "3109",
+                                       "2004May":  "3205.7",
+                                       "2004Apr":  "3101.7",
+                                       "2004Mar":  "3100.9",
+                                       "2004Feb":  "2831.6",
+                                       "2004Jan":  "2895.9",
+                                       "2003Dec":  "2930.5",
+                                       "2003Nov":  "2873.5",
+                                       "2003Oct":  "3018.8",
+                                       "2003Sep":  "2922.8",
+                                       "2003Aug":  "2990.9",
+                                       "2003Jul":  "3018.6",
+                                       "2003Jun":  "2991.4",
+                                       "2003May":  "3093.4",
+                                       "2003Apr":  "2932.2",
+                                       "2003Mar":  "3033.9",
+                                       "2003Feb":  "2568.7",
+                                       "2003Jan":  "2906.8",
+                                       "2002Dec":  "2880.8",
+                                       "2002Nov":  "2859.3",
+                                       "2002Oct":  "3061.2",
+                                       "2002Sep":  "2890",
+                                       "2002Aug":  "3008.5",
+                                       "2002Jul":  "3039.3",
+                                       "2002Jun":  "2909.6",
+                                       "2002May":  "3005.1",
+                                       "2002Apr":  "2911.9",
+                                       "2002Mar":  "2886.9",
+                                       "2002Feb":  "2430.9",
+                                       "2002Jan":  "2781",
+                                       "2001Dec":  "2693.5",
+                                       "2001Nov":  "2699.4",
+                                       "2001Oct":  "2858.5",
+                                       "2001Sep":  "2760.1",
+                                       "2001Aug":  "2849.6",
+                                       "2001Jul":  "2895.7",
+                                       "2001Jun":  "2763.1",
+                                       "2001May":  "2906.8",
+                                       "2001Apr":  "2733.2",
+                                       "2001Mar":  "2829.7",
+                                       "2001Feb":  "2466.6",
+                                       "2001Jan":  "2604.8",
+                                       "2000Dec":  "2709.1",
+                                       "2000Nov":  "2716.7",
+                                       "2000Oct":  "2792.5",
+                                       "2000Sep":  "2709.3",
+                                       "2000Aug":  "2732.4",
+                                       "2000Jul":  "2748.9",
+                                       "2000Jun":  "2611",
+                                       "2000May":  "2767",
+                                       "2000Apr":  "2550.3",
+                                       "2000Mar":  "2592.4",
+                                       "2000Feb":  "2277.1",
+                                       "2000Jan":  "2458.3",
+                                       "1999Dec":  "2523",
+                                       "1999Nov":  "2490.1",
+                                       "1999Oct":  "2554.5",
+                                       "1999Sep":  "2537.8",
+                                       "1999Aug":  "2542.8",
+                                       "1999Jul":  "2513.2",
+                                       "1999Jun":  "2486.2",
+                                       "1999May":  "2541.9",
+                                       "1999Apr":  "2474.6",
+                                       "1999Mar":  "2450.5",
+                                       "1999Feb":  "2094",
+                                       "1999Jan":  "2311.5",
+                                       "1998Dec":  "2344.4",
+                                       "1998Nov":  "2344.4",
+                                       "1998Oct":  "2435.2",
+                                       "1998Sep":  "2328.4",
+                                       "1998Aug":  "2340.2",
+                                       "1998Jul":  "2417.8",
+                                       "1998Jun":  "2379.1",
+                                       "1998May":  "2462.3",
+                                       "1998Apr":  "2412.7",
+                                       "1998Mar":  "2485.1",
+                                       "1998Feb":  "2176",
+                                       "1998Jan":  "2249.2",
+                                       "1997Dec":  "2305.1",
+                                       "1997Nov":  "2262.8",
+                                       "1997Oct":  "2378",
+                                       "1997Sep":  "2327.2",
+                                       "1997Aug":  "2347.6",
+                                       "1997Jul":  "2349.3",
+                                       "1997Jun":  "2279.9",
+                                       "1997May":  "2312.2",
+                                       "1997Apr":  "2134.4",
+                                       "1997Mar":  "2148.3",
+                                       "1997Feb":  "1795.7",
+                                       "1997Jan":  "2068.9",
+                                       "1996Dec":  "2019.8",
+                                       "1996Nov":  "2022.6",
+                                       "1996Oct":  "2103.1",
+                                       "1996Sep":  "2013.3",
+                                       "1996Aug":  "2046.4",
+                                       "1996Jul":  "2098.4",
+                                       "1996Jun":  "2015.5",
+                                       "1996May":  "2074.3",
+                                       "1996Apr":  "1956.4",
+                                       "1996Mar":  "2003.8",
+                                       "1996Feb":  "1662.9",
+                                       "1996Jan":  "1892.9",
+                                       "1995Dec":  "1846.2",
+                                       "1995Nov":  "1853.4",
+                                       "1995Oct":  "1910.8",
+                                       "1995Sep":  "1904.6",
+                                       "1995Aug":  "1897.4",
+                                       "1995Jul":  "1915.2",
+                                       "1995Jun":  "1895.1",
+                                       "1995May":  "1913.4",
+                                       "1995Apr":  "1800.7",
+                                       "1995Mar":  "1837.2",
+                                       "1995Feb":  "1543.6",
+                                       "1995Jan":  "1739.8",
+                                       "1994Dec":  "1768.2",
+                                       "1994Nov":  "1712.7",
+                                       "1994Oct":  "1821.6",
+                                       "1994Sep":  "1766.6",
+                                       "1994Aug":  "1803.5",
+                                       "1994Jul":  "1818.2",
+                                       "1994Jun":  "1755.9",
+                                       "1994May":  "1747",
+                                       "1994Apr":  "1697.7",
+                                       "1994Mar":  "1699.8",
+                                       "1994Feb":  "1431.7",
+                                       "1994Jan":  "1652.5",
+                                       "1993Dec":  "1638.6",
+                                       "1993Nov":  "1604.5",
+                                       "1993Oct":  "1660.3",
+                                       "1993Sep":  "1635.6",
+                                       "1993Aug":  "1666.3",
+                                       "1993Jul":  "1656.6",
+                                       "1993Jun":  "1610.6",
+                                       "1993May":  "1605.5",
+                                       "1993Apr":  "1552.7",
+                                       "1993Mar":  "1554",
+                                       "1993Feb":  "1392.7",
+                                       "1993Jan":  "1385",
+                                       "1992Dec":  "1466.8",
+                                       "1992Nov":  "1446.3",
+                                       "1992Oct":  "1530.1",
+                                       "1992Sep":  "1449.1",
+                                       "1992Aug":  "1493.7",
+                                       "1992Jul":  "1524",
+                                       "1992Jun":  "1471.4",
+                                       "1992May":  "1493.4",
+                                       "1992Apr":  "1454.5",
+                                       "1992Mar":  "1506.3",
+                                       "1992Feb":  "1277.8",
+                                       "1992Jan":  "1429.7",
+                                       "1991Dec":  "1366.7",
+                                       "1991Nov":  "1362",
+                                       "1991Oct":  "1475",
+                                       "1991Sep":  "1398.5",
+                                       "1991Aug":  "1449.8",
+                                       "1991Jul":  "1479.5",
+                                       "1991Jun":  "1391.8",
+                                       "1991May":  "1415.9",
+                                       "1991Apr":  "1342.7",
+                                       "1991Mar":  "1382.7",
+                                       "1991Feb":  "1166.1",
+                                       "1991Jan":  "1365.9",
+                                       "1990Dec":  "1300.6",
+                                       "1990Nov":  "1327.2",
+                                       "1990Oct":  "1368.8",
+                                       "1990Sep":  "1307.3",
+                                       "1990Aug":  "1368.8",
+                                       "1990Jul":  "1346.1",
+                                       "1990Jun":  "1324",
+                                       "1990May":  "1351.8",
+                                       "1990Apr":  "1273.9",
+                                       "1990Mar":  "1330.6",
+                                       "1990Feb":  "1150.2",
+                                       "1990Jan":  "1168.3",
+                                       "1989Dec":  "1203.7",
+                                       "1989Nov":  "1209.6",
+                                       "1989Oct":  "1238.8",
+                                       "1989Sep":  "1188.4",
+                                       "1989Aug":  "1225.5",
+                                       "1989Jul":  "1208.6",
+                                       "1989Jun":  "1185",
+                                       "1989May":  "1188.4",
+                                       "1989Apr":  "1155",
+                                       "1989Mar":  "1134.9",
+                                       "1989Feb":  "964.4",
+                                       "1989Jan":  "1136.6",
+                                       "1988Dec":  "1109.5",
+                                       "1988Nov":  "1086.4",
+                                       "1988Oct":  "1140.6",
+                                       "1988Sep":  "1098.3",
+                                       "1988Aug":  "1122.7",
+                                       "1988Jul":  "1108.8",
+                                       "1988Jun":  "1115",
+                                       "1988May":  "1098.8",
+                                       "1988Apr":  "1069.1",
+                                       "1988Mar":  "1087.8",
+                                       "1988Feb":  "945.5",
+                                       "1988Jan":  "1035",
+                                       "1987Dec":  "1031.2",
+                                       "1987Nov":  "1025.4",
+                                       "1987Oct":  "1063",
+                                       "1987Sep":  "1020.8",
+                                       "1987Aug":  "1000.7",
+                                       "1987Jul":  "1045.2",
+                                       "1987Jun":  "1002.5",
+                                       "1987May":  "961.7",
+                                       "1987Apr":  "965.2",
+                                       "1987Mar":  "980.1",
+                                       "1987Feb":  "838.9",
+                                       "1987Jan":  "879.1",
+                                       "1986Dec":  "926.5",
+                                       "1986Nov":  "903.3",
+                                       "1986Oct":  "943.5",
+                                       "1986Sep":  "906.5",
+                                       "1986Aug":  "929.6",
+                                       "1986Jul":  "914.7",
+                                       "1986Jun":  "872.4",
+                                       "1986May":  "917.4",
+                                       "1986Apr":  "866.3",
+                                       "1986Mar":  "849.7",
+                                       "1986Feb":  "727.4",
+                                       "1986Jan":  "819.2",
+                                       "1985Dec":  "809.8",
+                                       "1985Nov":  "796.2",
+                                       "1985Oct":  "845.2",
+                                       "1985Sep":  "815.7",
+                                       "1985Aug":  "829.1",
+                                       "1985Jul":  "847.6",
+                                       "1985Jun":  "818.3",
+                                       "1985May":  "872.9",
+                                       "1985Apr":  "836.8",
+                                       "1985Mar":  "846.5",
+                                       "1985Feb":  "725.3",
+                                       "1985Jan":  "832.9",
+                                       "1984Dec":  "792.6",
+                                       "1984Nov":  "807.3",
+                                       "1984Oct":  "819.8",
+                                       "1984Sep":  "777.9",
+                                       "1984Aug":  "828",
+                                       "1984Jul":  "816.2",
+                                       "1984Jun":  "790.8",
+                                       "1984May":  "810.2",
+                                       "1984Apr":  "778.6",
+                                       "1984Mar":  "793.3",
+                                       "1984Feb":  "669.4",
+                                       "1984Jan":  "736.6",
+                                       "1983Dec":  "732.4",
+                                       "1983Nov":  "730.4",
+                                       "1983Oct":  "771",
+                                       "1983Sep":  "730.7",
+                                       "1983Aug":  "764.2",
+                                       "1983Jul":  "741.1",
+                                       "1983Jun":  "728.4",
+                                       "1983May":  "727.1",
+                                       "1983Apr":  "719",
+                                       "1983Mar":  "727.4",
+                                       "1983Feb":  "586.9",
+                                       "1983Jan":  "667.3",
+                                       "1982Dec":  "657.3",
+                                       "1982Nov":  "658.4",
+                                       "1982Oct":  "683.6",
+                                       "1982Sep":  "664.6",
+                                       "1982Aug":  "676.6",
+                                       "1982Jul":  "679.2",
+                                       "1982Jun":  "673.9",
+                                       "1982May":  "676.1",
+                                       "1982Apr":  "642",
+                                       "1982Mar":  "674.7",
+                                       "1982Feb":  "590.4",
+                                       "1982Jan":  "582.7",
+                                       "1981Dec":  "620.9",
+                                       "1981Nov":  "630.7",
+                                       "1981Oct":  "638.6",
+                                       "1981Sep":  "629.1",
+                                       "1981Aug":  "638.5",
+                                       "1981Jul":  "652.6",
+                                       "1981Jun":  "639.2",
+                                       "1981May":  "634.4",
+                                       "1981Apr":  "615.1",
+                                       "1981Mar":  "631.8",
+                                       "1981Feb":  "513.9",
+                                       "1981Jan":  "597.1",
+                                       "1980Dec":  "586.5",
+                                       "1980Nov":  "574.6",
+                                       "1980Oct":  "608.7",
+                                       "1980Sep":  "590.8",
+                                       "1980Aug":  "570.7",
+                                       "1980Jul":  "614.2",
+                                       "1980Jun":  "584.4",
+                                       "1980May":  "595.7",
+                                       "1980Apr":  "561.6",
+                                       "1980Mar":  "584.2",
+                                       "1980Feb":  "504.8",
+                                       "1980Jan":  "564.3",
+                                       "1979Dec":  "548.5",
+                                       "1979Nov":  "540.5",
+                                       "1979Oct":  "564.1",
+                                       "1979Sep":  "538.2",
+                                       "1979Aug":  "546.6",
+                                       "1979Jul":  "554.1",
+                                       "1979Jun":  "532.6",
+                                       "1979May":  "550.8",
+                                       "1979Apr":  "524",
+                                       "1979Mar":  "553.1",
+                                       "1979Feb":  "485",
+                                       "1979Jan":  "510.3",
+                                       "1978Dec":  "522.9",
+                                       "1978Nov":  "514.7",
+                                       "1978Oct":  "529.9",
+                                       "1978Sep":  "504.3",
+                                       "1978Aug":  "526",
+                                       "1978Jul":  "506.1",
+                                       "1978Jun":  "488.3",
+                                       "1978May":  "495.4",
+                                       "1978Apr":  "471.9",
+                                       "1978Mar":  "482",
+                                       "1978Feb":  "397.4",
+                                       "1978Jan":  "459",
+                                       "1977Dec":  "456",
+                                       "1977Nov":  "432.5",
+                                       "1977Oct":  "455.1",
+                                       "1977Sep":  "431.1",
+                                       "1977Aug":  "437.4",
+                                       "1977Jul":  "440.8",
+                                       "1977Jun":  "428.7",
+                                       "1977May":  "443",
+                                       "1977Apr":  "420.9",
+                                       "1977Mar":  "421.6",
+                                       "1977Feb":  "343.4",
+                                       "1977Jan":  "404.2",
+                                       "1976Dec":  "394.4",
+                                       "1976Nov":  "401.6",
+                                       "1976Oct":  "402.4",
+                                       "1976Sep":  "396.8",
+                                       "1976Aug":  "402.8",
+                                       "1976Jul":  "396.9",
+                                       "1976Jun":  "382",
+                                       "1976May":  "388.6",
+                                       "1976Apr":  "374.5",
+                                       "1976Mar":  "381.2",
+                                       "1976Feb":  "332.3",
+                                       "1976Jan":  "351.4",
+                                       "1975Dec":  "362.3",
+                                       "1975Nov":  "345.6",
+                                       "1975Oct":  "368.5",
+                                       "1975Sep":  "359.1",
+                                       "1975Aug":  "363",
+                                       "1975Jul":  "359.7",
+                                       "1975Jun":  "343.3",
+                                       "1975May":  "351.4",
+                                       "1975Apr":  "348.6",
+                                       "1975Mar":  "342.8",
+                                       "1975Feb":  "289.6",
+                                       "1975Jan":  "341.8"
+                                   }
+                               ],
+                   "_links":  {
+                                  "start":  "/api/action/datastore_search?resource_id=d_ae4afbaf5bc96bde19d8ce85810ab9f4\u0026limit=5000",
+                                  "next":  "/api/action/datastore_search?resource_id=d_ae4afbaf5bc96bde19d8ce85810ab9f4\u0026offset=5000\u0026limit=5000"
+                              },
+                   "total":  1,
+                   "limit":  5000
+               }
+}

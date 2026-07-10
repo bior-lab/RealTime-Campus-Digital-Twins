@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NUS Campus EMIS Dashboard</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="vendor/mapbox-gl/mapbox-gl.css" />
+    <link rel="stylesheet" href="src/styles.css?v=20260615-layer-labels" />
+    <script src="vendor/mapbox-gl/mapbox-gl.js"></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="rail" aria-label="Primary navigation">
+        <nav class="rail-nav">
+          <button type="button" class="active" data-tab="overview" aria-pressed="true">
+            <span class="rail-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M4 19V5" />
+                <path d="M4 19h16" />
+                <path d="M8 16v-5" />
+                <path d="M12 16V8" />
+                <path d="M16 16v-3" />
+              </svg>
+            </span>
+            Overview
+          </button>
+          <button type="button" data-tab="buildings" aria-pressed="false">
+            <span class="rail-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M4 21V7l8-4 8 4v14" />
+                <path d="M9 21v-5h6v5" />
+                <path d="M8 10h.01" />
+                <path d="M12 10h.01" />
+                <path d="M16 10h.01" />
+                <path d="M8 14h.01" />
+                <path d="M16 14h.01" />
+              </svg>
+            </span>
+            Buildings
+          </button>
+          <button type="button" data-tab="context" aria-pressed="false">
+            <span class="rail-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z" />
+                <path d="M3 12h18" />
+                <path d="M12 3c2.4 2.5 3.6 5.5 3.6 9S14.4 18.5 12 21" />
+                <path d="M12 3c-2.4 2.5-3.6 5.5-3.6 9S9.6 18.5 12 21" />
+              </svg>
+            </span>
+            Context
+          </button>
+          <button type="button" data-tab="ai" aria-pressed="false">
+            <span class="rail-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M12 3v4" />
+                <path d="M12 17v4" />
+                <path d="M3 12h4" />
+                <path d="M17 12h4" />
+                <path d="M8.5 8.5 6 6" />
+                <path d="m18 18-2.5-2.5" />
+                <path d="m15.5 8.5 2.5-2.5" />
+                <path d="M6 18l2.5-2.5" />
+                <path d="M10 10h4v4h-4z" />
+              </svg>
+            </span>
+            AI
+          </button>
+          <button type="button" data-tab="layers" aria-pressed="false">
+            <span class="rail-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="m12 3 9 5-9 5-9-5 9-5Z" />
+                <path d="m3 12 9 5 9-5" />
+                <path d="m3 16 9 5 9-5" />
+              </svg>
+            </span>
+            Layers
+          </button>
+        </nav>
+        <div class="rail-spacer"></div>
+        <button type="button" class="rail-settings" aria-label="Settings">
+          <span class="rail-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z" />
+              <path d="M19.4 15a1.8 1.8 0 0 0 .36 2l.06.06a2.1 2.1 0 0 1-3 3l-.06-.06a1.8 1.8 0 0 0-2-.36 1.8 1.8 0 0 0-1.1 1.66V21a2.1 2.1 0 0 1-4.2 0v-.09a1.8 1.8 0 0 0-1.1-1.66 1.8 1.8 0 0 0-2 .36l-.06.06a2.1 2.1 0 0 1-3-3l.06-.06a1.8 1.8 0 0 0 .36-2 1.8 1.8 0 0 0-1.66-1.1H2a2.1 2.1 0 0 1 0-4.2h.09a1.8 1.8 0 0 0 1.66-1.1 1.8 1.8 0 0 0-.36-2l-.06-.06a2.1 2.1 0 0 1 3-3l.06.06a1.8 1.8 0 0 0 2 .36 1.8 1.8 0 0 0 1.1-1.66V2a2.1 2.1 0 0 1 4.2 0v.09a1.8 1.8 0 0 0 1.1 1.66 1.8 1.8 0 0 0 2-.36l.06-.06a2.1 2.1 0 0 1 3 3l-.06.06a1.8 1.8 0 0 0-.36 2 1.8 1.8 0 0 0 1.66 1.1H22a2.1 2.1 0 0 1 0 4.2h-.09A1.8 1.8 0 0 0 19.4 15Z" />
+            </svg>
+          </span>
+          Settings
+        </button>
+      </aside>
+
+      <section class="map-stage" aria-label="NUS campus map">
+        <div id="map" class="map"></div>
+
+        <div id="tokenPanel" class="token-panel" role="dialog" aria-labelledby="tokenTitle">
+          <h1 id="tokenTitle">NUS Campus EMIS</h1>
+          <p>No Mapbox token is committed to this repository. Paste a temporary public token to load the map in this browser.</p>
+          <form id="tokenForm" class="token-form">
+            <label for="tokenInput">Temporary Mapbox public token</label>
+            <div class="token-row">
+              <input id="tokenInput" name="token" type="password" autocomplete="off" placeholder="pk..." />
+              <button type="submit">Load</button>
+            </div>
+            <p id="tokenError" class="token-error hidden" role="alert"></p>
+          </form>
+        </div>
+
+        <div class="map-toolbar" aria-label="Map controls">
+          <button id="campusView" type="button">Campus</button>
+          <button id="mapRealtimeView" type="button" aria-pressed="false">Realtime</button>
+          <button id="mapBrickView" type="button" aria-pressed="false">Brick</button>
+        </div>
+
+        <div class="map-status">
+          <span id="realtimeStatusDot" class="status-dot"></span>
+          <span id="realtimeStatusText">Realtime API pending</span>
+        </div>
+
+        <div id="trendModal" class="trend-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="trendModalTitle">
+          <section class="trend-modal">
+            <header class="trend-modal-header">
+              <div>
+                <p class="eyebrow" id="trendModalEyebrow">Realtime Analytics</p>
+                <h2 id="trendModalTitle">Historical trend</h2>
+                <p id="trendModalSubtitle">Select a realtime point to inspect the recent operating pattern.</p>
+              </div>
+              <button id="trendClose" class="icon-button" type="button" aria-label="Close realtime trend">×</button>
+            </header>
+
+            <div class="trend-place-row">
+              <label for="trendPlaceSelect">
+                <span>Place</span>
+                <select id="trendPlaceSelect"></select>
+              </label>
+              <div id="trendPlaceMeta" class="trend-place-meta"></div>
+            </div>
+            <div id="trendLiveMeters" class="trend-live-meters" aria-label="Live meter snapshot"></div>
+            <nav id="trendTabs" class="trend-tabs" aria-label="Realtime history points"></nav>
+            <div id="trendStatus" class="trend-status">Select a point to load history.</div>
+            <div id="trendKpis" class="trend-kpis"></div>
+            <div id="trendChart" class="trend-chart-panel"></div>
+            <p id="trendNarrative" class="trend-narrative"></p>
+          </section>
+        </div>
+
+        <div id="brickModal" class="brick-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="brickModalTitle">
+          <section class="brick-modal">
+            <header class="brick-modal-header">
+              <div>
+                <p class="eyebrow" id="brickModalEyebrow">Brick Model</p>
+                <h2 id="brickModalTitle">SDE4 operational graph</h2>
+                <p id="brickModalSubtitle">System, equipment, and live point relationships for the current SDE4 seed model.</p>
+              </div>
+              <button id="brickClose" class="icon-button" type="button" aria-label="Close Brick graph">×</button>
+            </header>
+
+            <div class="brick-place-row">
+              <label for="brickPlaceSelect">
+                <span>Place</span>
+                <select id="brickPlaceSelect"></select>
+              </label>
+              <div id="brickPlaceMeta" class="brick-place-meta"></div>
+            </div>
+
+            <div id="brickSummary" class="brick-summary" aria-label="Brick graph summary"></div>
+
+            <div class="brick-workspace">
+              <div>
+                <div id="brickGraph" class="brick-graph" aria-label="SDE4 Brick node graph"></div>
+                <div id="brickRelations" class="brick-relations" aria-label="Brick relationship examples"></div>
+              </div>
+              <aside id="brickInspector" class="brick-inspector" aria-label="Brick node details"></aside>
+            </div>
+          </section>
+        </div>
+
+        <aside id="externalContextPanelLegacy" class="external-context-panel hidden" aria-label="External energy context">
+          <div class="floating-panel-header">
+            <div>
+              <p class="eyebrow">EMA / data.gov.sg</p>
+              <h2>External Energy Context</h2>
+            </div>
+            <button id="externalContextClose" class="icon-button" type="button" aria-label="Close external energy context">×</button>
+          </div>
+          <div id="externalVizPanelLegacy" class="external-viz-panel" aria-live="polite"></div>
+        </aside>
+
+        <div class="legend" aria-label="Map legend">
+          <div class="legend-title" id="legendTitle">Building type</div>
+          <div id="legendItems" class="legend-items"></div>
+          <div id="legendScale" class="legend-scale hidden" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div id="legendLabels" class="legend-labels hidden">
+            <span>Low</span>
+            <span>High</span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="control-panel" aria-label="NUS campus EMIS controls">
+        <header class="panel-header">
+          <div class="panel-brand">
+            <img src="assets/bior-logo.png" alt="NUS Building Informatics & Operations Research Lab" />
+          </div>
+          <div class="panel-title-block">
+            <p class="eyebrow">NUS Campus EMIS</p>
+            <h2>Campus Operations</h2>
+            <p class="panel-note">Realtime campus status, external energy context, and AI triage.</p>
+          </div>
+        </header>
+
+        <section id="tab-overview" class="tab-panel active" data-tab-panel="overview">
+          <section class="panel-section">
+            <div class="section-header">
+              <h3>Live Building Snapshot</h3>
+              <span id="overviewCoverage" class="section-kicker">Live coverage</span>
+            </div>
+            <div class="live-summary" aria-label="Campus summary">
+              <div>
+                <span class="summary-label">Electricity demand</span>
+                <strong id="summaryElectricity">-</strong>
+              </div>
+              <div>
+                <span class="summary-label">Cooling</span>
+                <strong id="summaryCooling">-</strong>
+              </div>
+              <div>
+                <span class="summary-label">Water</span>
+                <strong id="summaryWater">-</strong>
+              </div>
+              <div>
+                <span class="summary-label">PV generation</span>
+                <strong id="summaryPv">-</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-header">
+              <h3>Campus Regions</h3>
+              <span class="section-kicker">Focus markers</span>
+            </div>
+            <div id="regionList" class="region-list"></div>
+          </section>
+
+          <section class="panel-section ai-brief">
+            <div class="section-header">
+              <h3>AI Triage</h3>
+              <span class="section-kicker">Current rules</span>
+            </div>
+            <div id="aiBriefList" class="ai-list"></div>
+          </section>
+        </section>
+
+        <section id="tab-buildings" class="tab-panel" data-tab-panel="buildings">
+          <section class="panel-section">
+            <h3>Find Building</h3>
+            <input id="buildingSearch" class="search-input" type="search" placeholder="Search focus buildings" />
+            <div id="buildingList" class="building-list"></div>
+          </section>
+
+          <section class="panel-section building-card" aria-live="polite">
+            <div class="building-card-header">
+              <div>
+                <p class="eyebrow" id="buildingZone">Selected building</p>
+                <h3 id="buildingName">Select a building marker</h3>
+              </div>
+              <span id="buildingStatus" class="status-pill">Ready</span>
+            </div>
+            <div id="buildingBlocks" class="block-chip-list hidden"></div>
+            <dl class="metric-list">
+              <div>
+                <dt>Electricity</dt>
+                <dd id="buildingElectricity">-</dd>
+              </div>
+              <div>
+                <dt>Cooling</dt>
+                <dd id="buildingCooling">-</dd>
+              </div>
+              <div>
+                <dt>Water</dt>
+                <dd id="buildingWater">-</dd>
+              </div>
+              <div>
+                <dt>PV</dt>
+                <dd id="buildingPv">-</dd>
+              </div>
+              <div>
+                <dt>EUI</dt>
+                <dd id="buildingEui">-</dd>
+              </div>
+              <div>
+                <dt>Updated</dt>
+                <dd id="buildingUpdated">-</dd>
+              </div>
+            </dl>
+            <p id="buildingInsight" class="insight-text">Live data is available for mapped buildings. SDE4 currently uses the realtime API endpoint.</p>
+            <button id="zoomSelected" class="full-button" type="button" disabled>Zoom to selected building</button>
+          </section>
+
+          <section id="realtimeTrends" class="panel-section realtime-trends hidden" aria-live="polite">
+            <div class="section-header">
+              <h3>Realtime Trends</h3>
+              <button id="trendView" class="text-button" type="button">View</button>
+            </div>
+            <div id="trendSummary" class="trend-summary"></div>
+            <p id="trendNote" class="trend-note">Historical Beehub points are aggregated before charting.</p>
+          </section>
+
+          <details class="panel-section realtime-drawer">
+            <summary>
+              <span>Realtime Points</span>
+              <em id="pointCount">0 points</em>
+            </summary>
+            <div id="pointList" class="point-list"></div>
+          </details>
+        </section>
+
+        <section id="tab-ai" class="tab-panel" data-tab-panel="ai">
+          <section class="panel-section ai-health-monitor">
+            <div class="section-header">
+              <h3>Health Monitor Dashboard</h3>
+              <button id="aiHealthRefresh" class="text-button" type="button">Refresh</button>
+            </div>
+            <div id="aiHealthKpis" class="ai-health-kpis" aria-label="AI health monitoring summary"></div>
+            <div class="ai-health-grid">
+              <article class="ai-chart-card">
+                <div class="section-header">
+                  <h3>Live Building Health Status</h3>
+                  <span id="aiClusterMeta" class="section-kicker">SDE4</span>
+                </div>
+                <div id="aiClusterChart" class="ai-cluster-chart"></div>
+              </article>
+              <article class="ai-chart-card">
+                <div class="section-header">
+                  <h3>SDE4 Diagnostic Evidence</h3>
+                  <span class="section-kicker">Last 7 days</span>
+                </div>
+                <div id="aiRegimeTimeline" class="ai-regime-timeline"></div>
+              </article>
+            </div>
+            <div id="aiLlmSummary" class="ai-llm-summary"></div>
+            <article class="ai-agent-window" aria-label="AI operations agent">
+              <div class="section-header">
+                <div>
+                  <h3>AI Agent</h3>
+                  <span id="aiAgentStatus" class="section-kicker">Evidence agent</span>
+                </div>
+              </div>
+              <div id="aiAgentMessages" class="ai-agent-messages" aria-live="polite"></div>
+              <div id="aiAgentSuggestions" class="ai-agent-suggestions">
+                <button type="button" data-agent-prompt="Explain the current cooling regime">Current regime</button>
+                <button type="button" data-agent-prompt="What should I check first?">Checks</button>
+                <button type="button" data-agent-prompt="How is weather affecting cooling?">Weather coupling</button>
+                <button type="button" data-agent-prompt="What data gaps limit confidence?">Data gaps</button>
+              </div>
+              <form id="aiAgentPromptForm" class="ai-agent-input">
+                <input id="aiAgentPromptInput" type="text" autocomplete="off" placeholder="Ask about SDE4 cooling health" />
+                <button type="submit">Send</button>
+              </form>
+            </article>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-header">
+              <h3>AI Insights</h3>
+              <span class="section-kicker">Evidence first</span>
+            </div>
+            <div id="aiInsightList" class="ai-list"></div>
+          </section>
+        </section>
+
+        <section id="tab-context" class="tab-panel" data-tab-panel="context">
+          <section class="panel-section external-data">
+            <div class="section-header">
+              <h3>External Energy Context</h3>
+              <span class="section-kicker">EMA / data.gov.sg</span>
+            </div>
+            <div id="externalDataGrid" class="external-data-grid">
+              <button type="button" class="external-data-card" data-external="system-demand">
+                <strong>System demand</strong>
+                <span>Useful for grid context and peak-period annotation.</span>
+              </button>
+              <button type="button" class="external-data-card" data-external="electricity-consumption">
+                <strong>Electricity consumption</strong>
+                <span>Useful for national and sector baseline comparison.</span>
+              </button>
+              <button type="button" class="external-data-card" data-external="solar-pv-deployment">
+                <strong>Solar PV deployment</strong>
+                <span>Useful for PV capacity and adoption benchmarking.</span>
+              </button>
+            </div>
+            <div id="externalVizPanel" class="external-viz-panel" aria-live="polite"></div>
+          </section>
+        </section>
+
+        <section id="tab-layers" class="tab-panel" data-tab-panel="layers">
+          <section class="panel-section">
+            <h3>Map Color</h3>
+            <div class="segmented" role="radiogroup" aria-label="Map metric">
+              <button type="button" data-metric="live" class="active" aria-pressed="true">Status</button>
+              <button type="button" data-metric="eui" aria-pressed="false">EUI</button>
+              <button type="button" data-metric="height" aria-pressed="false">Height</button>
+              <button type="button" data-metric="type" aria-pressed="false">Type</button>
+            </div>
+          </section>
+
+          <section class="panel-section">
+            <h3>Layers</h3>
+            <label class="toggle-row">
+              <input type="checkbox" id="toggleBuildings" checked />
+              <span>NUS buildings</span>
+            </label>
+            <label class="toggle-row">
+              <input type="checkbox" id="toggleLabels" checked />
+              <span>Building names</span>
+            </label>
+            <label class="toggle-row">
+              <input type="checkbox" id="togglePv" checked />
+              <span>PV</span>
+            </label>
+            <label class="toggle-row">
+              <input type="checkbox" id="toggleEuiLayer" />
+              <span>EUI</span>
+            </label>
+          </section>
+        </section>
+      </aside>
+    </main>
+
+    <script src="src/app.js?v=20260618-health-bars" defer></script>
+  </body>
+</html>

@@ -1,0 +1,384 @@
+{
+  "type": "FeatureCollection",
+  "name": "NUS campus EMIS sample buildings",
+  "metadata": {
+    "status": "prototype",
+    "note": "Coordinates and meter values are sample data for interaction design. Replace with verified GIS and EMIS data before publication."
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sde4",
+        "name": "School of Design and Environment 4",
+        "short_name": "SDE4",
+        "zone": "Kent Ridge",
+        "type": "Academic",
+        "area_m2": 8500,
+        "load_kw": 265,
+        "eui": 96,
+        "carbon_kg": 620,
+        "cost_sgd": 360,
+        "cooling_kw": 140,
+        "solar_kw": 64,
+        "anomaly_score": 0.28,
+        "forecast_peak_kw": 310,
+        "status": "normal",
+        "ai_summary": "Demand is below the academic building baseline because solar contribution is high and cooling load is stable.",
+        "suggested_action": "Maintain current operating schedule and monitor afternoon cooling load."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.77018, 1.29645],
+            [103.77105, 1.29645],
+            [103.77105, 1.29705],
+            [103.77018, 1.29705],
+            [103.77018, 1.29645]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "engineering-e4",
+        "name": "Engineering E4",
+        "short_name": "E4",
+        "zone": "Engineering",
+        "type": "Laboratory",
+        "area_m2": 13200,
+        "load_kw": 610,
+        "eui": 288,
+        "carbon_kg": 1560,
+        "cost_sgd": 910,
+        "cooling_kw": 360,
+        "solar_kw": 12,
+        "anomaly_score": 0.76,
+        "forecast_peak_kw": 690,
+        "status": "flagged",
+        "ai_summary": "Observed demand is above the laboratory baseline during a period with moderate weather influence.",
+        "suggested_action": "Check extended equipment operation and high-load ventilation schedules."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.77115, 1.29895],
+            [103.7721, 1.29895],
+            [103.7721, 1.29962],
+            [103.77115, 1.29962],
+            [103.77115, 1.29895]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "central-library",
+        "name": "Central Library",
+        "short_name": "CLB",
+        "zone": "Central Campus",
+        "type": "Library",
+        "area_m2": 17200,
+        "load_kw": 430,
+        "eui": 172,
+        "carbon_kg": 1040,
+        "cost_sgd": 650,
+        "cooling_kw": 250,
+        "solar_kw": 18,
+        "anomaly_score": 0.41,
+        "forecast_peak_kw": 500,
+        "status": "watch",
+        "ai_summary": "Demand is near the library baseline and is expected to increase in the late afternoon.",
+        "suggested_action": "Review study-area occupancy and cooling schedule during peak hours."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.77305, 1.29588],
+            [103.77382, 1.29588],
+            [103.77382, 1.29648],
+            [103.77305, 1.29648],
+            [103.77305, 1.29588]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "yih",
+        "name": "Yusof Ishak House",
+        "short_name": "YIH",
+        "zone": "Central Campus",
+        "type": "Student Life",
+        "area_m2": 9800,
+        "load_kw": 310,
+        "eui": 188,
+        "carbon_kg": 760,
+        "cost_sgd": 470,
+        "cooling_kw": 185,
+        "solar_kw": 8,
+        "anomaly_score": 0.55,
+        "forecast_peak_kw": 380,
+        "status": "watch",
+        "ai_summary": "Demand is consistent with student activity and food-service operation.",
+        "suggested_action": "Track evening load after activity areas close."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.77445, 1.29822],
+            [103.77518, 1.29822],
+            [103.77518, 1.29882],
+            [103.77445, 1.29882],
+            [103.77445, 1.29822]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "university-sports-centre",
+        "name": "University Sports Centre",
+        "short_name": "USC",
+        "zone": "Sports and Recreation",
+        "type": "Sports",
+        "area_m2": 14800,
+        "load_kw": 390,
+        "eui": 144,
+        "carbon_kg": 930,
+        "cost_sgd": 560,
+        "cooling_kw": 210,
+        "solar_kw": 30,
+        "anomaly_score": 0.34,
+        "forecast_peak_kw": 470,
+        "status": "normal",
+        "ai_summary": "Demand is below the sports facility baseline and solar output offsets part of daytime load.",
+        "suggested_action": "Maintain pool and hall schedule coordination."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.77532, 1.30042],
+            [103.77628, 1.30042],
+            [103.77628, 1.30112],
+            [103.77532, 1.30112],
+            [103.77532, 1.30042]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "business-school",
+        "name": "NUS Business School",
+        "short_name": "BIZ",
+        "zone": "Business",
+        "type": "Academic",
+        "area_m2": 15800,
+        "load_kw": 365,
+        "eui": 154,
+        "carbon_kg": 870,
+        "cost_sgd": 530,
+        "cooling_kw": 220,
+        "solar_kw": 16,
+        "anomaly_score": 0.32,
+        "forecast_peak_kw": 430,
+        "status": "normal",
+        "ai_summary": "Demand follows the normal teaching-day profile and is not flagged by the current baseline.",
+        "suggested_action": "Use class schedule data to refine late-afternoon forecast."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.77462, 1.29282],
+            [103.77555, 1.29282],
+            [103.77555, 1.29348],
+            [103.77462, 1.29348],
+            [103.77462, 1.29282]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "science-s16",
+        "name": "Science S16",
+        "short_name": "S16",
+        "zone": "Science",
+        "type": "Laboratory",
+        "area_m2": 11800,
+        "load_kw": 540,
+        "eui": 304,
+        "carbon_kg": 1390,
+        "cost_sgd": 820,
+        "cooling_kw": 330,
+        "solar_kw": 10,
+        "anomaly_score": 0.68,
+        "forecast_peak_kw": 615,
+        "status": "watch",
+        "ai_summary": "Laboratory demand is close to the AI flag threshold because night setback is limited.",
+        "suggested_action": "Review after-hours ventilation and plug-load schedules."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.77988, 1.29598],
+            [103.78078, 1.29598],
+            [103.78078, 1.29662],
+            [103.77988, 1.29662],
+            [103.77988, 1.29598]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "medicine",
+        "name": "Medicine and Health Sciences",
+        "short_name": "MED",
+        "zone": "Health District",
+        "type": "Healthcare",
+        "area_m2": 20500,
+        "load_kw": 760,
+        "eui": 318,
+        "carbon_kg": 2140,
+        "cost_sgd": 1280,
+        "cooling_kw": 470,
+        "solar_kw": 22,
+        "anomaly_score": 0.82,
+        "forecast_peak_kw": 845,
+        "status": "flagged",
+        "ai_summary": "Demand is above the healthcare district baseline and peak forecast remains high.",
+        "suggested_action": "Check continuous operation loads and chilled-water control sequence."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.78292, 1.29445],
+            [103.78405, 1.29445],
+            [103.78405, 1.29522],
+            [103.78292, 1.29522],
+            [103.78292, 1.29445]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "utown-src",
+        "name": "Stephen Riady Centre",
+        "short_name": "SRC",
+        "zone": "University Town",
+        "type": "Mixed Use",
+        "area_m2": 18200,
+        "load_kw": 510,
+        "eui": 198,
+        "carbon_kg": 1220,
+        "cost_sgd": 760,
+        "cooling_kw": 305,
+        "solar_kw": 36,
+        "anomaly_score": 0.48,
+        "forecast_peak_kw": 585,
+        "status": "watch",
+        "ai_summary": "Mixed-use demand is within expected range, with evening activity likely to extend the load profile.",
+        "suggested_action": "Compare food-service and event schedules with evening demand."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.77192, 1.30402],
+            [103.77292, 1.30402],
+            [103.77292, 1.30472],
+            [103.77192, 1.30472],
+            [103.77192, 1.30402]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "utown-residence",
+        "name": "University Town Residence",
+        "short_name": "UTR",
+        "zone": "University Town",
+        "type": "Residential",
+        "area_m2": 22600,
+        "load_kw": 450,
+        "eui": 136,
+        "carbon_kg": 1080,
+        "cost_sgd": 690,
+        "cooling_kw": 260,
+        "solar_kw": 20,
+        "anomaly_score": 0.39,
+        "forecast_peak_kw": 520,
+        "status": "normal",
+        "ai_summary": "Residential demand follows the expected morning and evening pattern.",
+        "suggested_action": "Use resident engagement messages during evening peak periods."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.77292, 1.30292],
+            [103.77388, 1.30292],
+            [103.77388, 1.30362],
+            [103.77292, 1.30362],
+            [103.77292, 1.30292]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ridge-view",
+        "name": "Ridge View Residential College",
+        "short_name": "RVRC",
+        "zone": "Residential",
+        "type": "Residential",
+        "area_m2": 15600,
+        "load_kw": 335,
+        "eui": 128,
+        "carbon_kg": 800,
+        "cost_sgd": 505,
+        "cooling_kw": 195,
+        "solar_kw": 26,
+        "anomaly_score": 0.31,
+        "forecast_peak_kw": 390,
+        "status": "normal",
+        "ai_summary": "Residential load is below the peer baseline and cooling demand is stable.",
+        "suggested_action": "Continue tracking evening plug-load behavior."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.77608, 1.3012],
+            [103.77702, 1.3012],
+            [103.77702, 1.30186],
+            [103.77608, 1.30186],
+            [103.77608, 1.3012]
+          ]
+        ]
+      }
+    }
+  ]
+}

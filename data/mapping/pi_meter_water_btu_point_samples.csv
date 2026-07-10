@@ -1,0 +1,598 @@
+building_or_sheet,sheet,point_name
+ALL,All points,ALUMNI.ChillerSystem.CHWHeaderBypassValve
+ALL,All points,ALUMNI.ChillerSystem.CHWHeaderDiffPressure
+ALL,All points,ALUMNI.ChillerSystem.CHWHeaderDiffPressureSp
+ALL,All points,ALUMNI.ChillerSystem.CHWHeaderFlwR
+ALL,All points,ALUMNI.ChillerSystem.CHWRHeaderPressure
+ALL,All points,ALUMNI.ChillerSystem.CHWRHeaderTemp
+ALL,All points,ALUMNI.ChillerSystem.CHWSHeaderPressure
+ALL,All points,ALUMNI.ChillerSystem.CHWSHeaderTemp
+ALL,All points,Acc-Act-En-Exp-Tot_AS1_ALL_Hourly_kWh
+ALL,All points,Acc-Act-En-Exp-Tot_AS1_ALL_Monthly_kWh
+ALL,All points,Acc-Act-En-Exp-Tot_AS1_M1_Hourly_kWh
+ALL,All points,Acc-Act-En-Exp-Tot_AS1_M1_kWh
+ALL,All points,Acc-Act-En-Exp-Tot_AS1_M1_Monthly_kWh
+ALL,All points,Acc-Act-En-Exp-Tot_AS1_M2_Hourly_kWh
+ALL,All points,Acc-Act-En-Exp-Tot_AS1_M2_kWh
+ALL,All points,Acc-Act-En-Exp-Tot_AS1_M2_Monthly_kWh
+ALL,All points,AS1 ExtG Bus Daily Consumption - E560
+ALL,All points,AS1 ExtG Bus Hourly Consumption - E560
+ALL,All points,Acc-Act-En-Exp-Tot_AS2_M1_Hourly_kWh
+ALL,All points,Acc-Act-En-Exp-Tot_AS2_M1_kWh
+ALL,All points,Acc-Act-En-Exp-Tot_AS2_M1_Monthly_kWh
+ALL,All points,AS2 IC Main Daily Consumption - E561
+ALL,All points,AS2 IC Main Hourly Consumption - E561
+ALL,All points,AS2 Total Daily Consumption
+ALL,All points,AS2 Total Hourly Consumption
+ALUMNI,ALUMNI,ALUMNI.ChillerSystem.CHWHeaderBypassValve
+ALUMNI,ALUMNI,ALUMNI.ChillerSystem.CHWHeaderDiffPressure
+ALUMNI,ALUMNI,ALUMNI.ChillerSystem.CHWHeaderDiffPressureSp
+ALUMNI,ALUMNI,ALUMNI.ChillerSystem.CHWHeaderFlwR
+ALUMNI,ALUMNI,ALUMNI.ChillerSystem.CHWRHeaderPressure
+ALUMNI,ALUMNI,ALUMNI.ChillerSystem.CHWRHeaderTemp
+ALUMNI,ALUMNI,ALUMNI.ChillerSystem.CHWSHeaderPressure
+ALUMNI,ALUMNI,ALUMNI.ChillerSystem.CHWSHeaderTemp
+AS1,AS1,Acc-Act-En-Exp-Tot_AS1_ALL_Hourly_kWh
+AS1,AS1,Acc-Act-En-Exp-Tot_AS1_ALL_Monthly_kWh
+AS1,AS1,Acc-Act-En-Exp-Tot_AS1_M1_Hourly_kWh
+AS1,AS1,Acc-Act-En-Exp-Tot_AS1_M1_kWh
+AS1,AS1,Acc-Act-En-Exp-Tot_AS1_M1_Monthly_kWh
+AS1,AS1,Acc-Act-En-Exp-Tot_AS1_M2_Hourly_kWh
+AS1,AS1,Acc-Act-En-Exp-Tot_AS1_M2_kWh
+AS1,AS1,Acc-Act-En-Exp-Tot_AS1_M2_Monthly_kWh
+AS1,AS1,AS1 ExtG Bus Daily Consumption - E560
+AS1,AS1,AS1 ExtG Bus Hourly Consumption - E560
+AS2,AS2,Acc-Act-En-Exp-Tot_AS2_M1_Hourly_kWh
+AS2,AS2,Acc-Act-En-Exp-Tot_AS2_M1_kWh
+AS2,AS2,Acc-Act-En-Exp-Tot_AS2_M1_Monthly_kWh
+AS2,AS2,AS2 IC Main Daily Consumption - E561
+AS2,AS2,AS2 IC Main Hourly Consumption - E561
+AS2,AS2,AS2 Total Daily Consumption
+AS2,AS2,AS2 Total Hourly Consumption
+AS3,AS3,Acc-Act-En-Exp-Tot_AS3_M1_Hourly_kWh
+AS3,AS3,Acc-Act-En-Exp-Tot_AS3_M1_kWh
+AS3,AS3,Acc-Act-En-Exp-Tot_AS3_M1_Monthly_kWh
+AS3,AS3,AS3 IC Main Daily Consumption - E564
+AS3,AS3,AS3 IC Main Hourly Consumption - E564
+AS3,AS3,AS3 Total Daily Consumption
+AS3,AS3,AS3 Total Hourly Consumption
+AS4,AS4,Acc-Act-En-Exp-Tot_AS4_M1_Hourly_kWh
+AS4,AS4,Acc-Act-En-Exp-Tot_AS4_M1_kWh
+AS4,AS4,Acc-Act-En-Exp-Tot_AS4_M1_Monthly_kWh
+AS5,AS5,Acc-Act-En-Exp-Tot_AS5_M1_Hourly_kWh
+AS5,AS5,Acc-Act-En-Exp-Tot_AS5_M1_kWh
+AS5,AS5,Acc-Act-En-Exp-Tot_AS5_M1_Monthly_kWh
+AS6,AS6,Acc-Act-En-Exp-Tot_AS6_M1_Hourly_kWh
+AS6,AS6,Acc-Act-En-Exp-Tot_AS6_M1_kWh
+AS6,AS6,Acc-Act-En-Exp-Tot_AS6_M1_Monthly_kWh
+AS7,AS7,Acc-Act-En-Exp-Tot_AS7_M1_Hourly_kWh
+AS7,AS7,Acc-Act-En-Exp-Tot_AS7_M1_kWh
+AS7,AS7,Acc-Act-En-Exp-Tot_AS7_M1_Monthly_kWh
+BIZ1,BIZ1,Acc-Act-En-Exp-Tot_BIZ1_M1_Hourly_kWh
+BIZ1,BIZ1,Acc-Act-En-Exp-Tot_BIZ1_M1_kWh
+BIZ1,BIZ1,Acc-Act-En-Exp-Tot_BIZ1_M1_Monthly_kWh
+BIZ1,BIZ1,BIZ1.ChillerSystem.CHWBypassValve
+BIZ1,BIZ1,BIZ1.ChillerSystem.CHWDiffPressure
+BIZ1,BIZ1,BIZ1.ChillerSystem.CHWDiffPressureSp
+BIZ1,BIZ1,BIZ1.ChillerSystem.CHWHeaderBypassValve
+BIZ1,BIZ1,BIZ1.ChillerSystem.CHWHeaderDiffPressureSp
+BIZ1,BIZ1,BIZ1.ChillerSystem.CHWRHeaderPressure
+BIZ1,BIZ1,BIZ1.ChillerSystem.CHWRHeaderTemp
+BIZ1,BIZ1,BIZ1.ChillerSystem.CHWSHeaderPressure
+BIZ1,BIZ1,BIZ1.ChillerSystem.CHWSHeaderTemp
+BIZ2,BIZ2,Acc-Act-En-Exp-Tot_BIZ2_M1_Hourly_kWh
+BIZ2,BIZ2,Acc-Act-En-Exp-Tot_BIZ2_M1_kWh
+BIZ2,BIZ2,Acc-Act-En-Exp-Tot_BIZ2_M1_Monthly_kWh
+BIZ2,BIZ2,BIZ2.AHU1-1.ChillerSystem.ChilledWaterReturnDuct.Pressure
+BIZ2,BIZ2,BIZ2.AHU1-1.ChillerSystem.ChilledWaterSupplyDuct.Pressure
+BIZ2,BIZ2,BIZ2.AHU1-1.ChillerSystem.CHWDiffPressure
+BIZ2,BIZ2,BIZ2.ChillerSystem.CHWHeaderBypassValve
+BIZ2,BIZ2,BIZ2.ChillerSystem.CHWHeaderDiffPressureSp
+BIZ2,BIZ2,BIZ2.ChillerSystem.CHWRHeaderPressure
+BIZ2,BIZ2,BIZ2.ChillerSystem.CHWRHeaderTemp
+BIZ2,BIZ2,BIZ2.ChillerSystem.CHWSHeaderPressure
+BIZ2,BIZ2,BIZ2.ChillerSystem.CHWSHeaderTemp
+CAPT,CAPT,Acc-Act-En-Exp-Tot_CAPT_M1_Hourly_kWh
+CAPT,CAPT,Acc-Act-En-Exp-Tot_CAPT_M1_kWh
+CAPT,CAPT,Acc-Act-En-Exp-Tot_CAPT_M1_Monthly_kWh
+CLB,CLB,Acc-Act-En-Exp-Tot_CLB_M1_Hourly_kWh
+CLB,CLB,Acc-Act-En-Exp-Tot_CLB_M1_kWh
+CLB,CLB,Acc-Act-En-Exp-Tot_CLB_M1_Monthly_kWh
+CLB,CLB,CLB IC1 Delivered Daily Consumption - E481
+CLB,CLB,CLB IC1 Delivered Hourly Consumption - E481
+CLB,CLB,CLB IC1 Delivered Monthly Consumption - E481
+CLB,CLB,CLB IC1 Received Daily Consumption - E481
+CLB,CLB,CLB IC1 Received Hourly Consumption - E481
+CLB,CLB,CLB IC1 Received Monthly Consumption - E481
+CLB,CLB,CLB IC2 Delivered Daily Consumption - E482
+CLB,CLB,CLB IC2 Delivered Hourly Consumption - E482
+CLB,CLB,CLB IC2 Delivered Monthly Consumption - E482
+CLB,CLB,CLB IC2 Received Daily Consumption - E482
+CLB,CLB,CLB IC2 Received Hourly Consumption - E482
+CLB,CLB,CLB IC2 Received Monthly Consumption - E482
+CLB,CLB,CLB Total Daily All Consumption
+CLB,CLB,CLB Total Daily Cooling Consumption
+CLB,CLB,CLB Total Daily Electrical Consumption
+CLB,CLB,CLB Total Hourly All Consumption
+CLB,CLB,CLB Total Hourly Cooling Consumption
+CLB,CLB,CLB Total Hourly Electrical Consumption
+CLB,CLB,CLB Total Monthly All Consumption
+CLB,CLB,CLB Total Monthly Cooling Consumption
+CLB,CLB,CLB Total Monthly Electrical Consumption
+COM1,COM1,Acc-Act-En-Exp-Tot_COM1_M1_Hourly_kWh
+COM1,COM1,Acc-Act-En-Exp-Tot_COM1_M1_kWh
+COM1,COM1,Acc-Act-En-Exp-Tot_COM1_M1_Monthly_kWh
+COM1,COM1,COM1.ChillerSystem.ChilledWaterReturnDuct.MotorisedValveStatus
+COM1,COM1,COM1.ChillerSystem.ChilledWaterReturnDuct.Pressure
+COM1,COM1,COM1.ChillerSystem.ChilledWaterSupplyDuct.FlwR
+COM1,COM1,COM1.ChillerSystem.ChilledWaterSupplyDuct.FlwRSp
+COM1,COM1,COM1.ChillerSystem.ChilledWaterSupplyDuct.FlwRSw
+COM1,COM1,COM1.ChillerSystem.ChilledWaterSupplyDuct.MotorisedValveStatus
+COM1,COM1,COM1.ChillerSystem.ChilledWaterSupplyDuct.Pressure
+COM1,COM1,COM1.ChillerSystem.ChilledWaterSupplyDuct.Temp
+COM1,COM1,COM1.ChillerSystem.CHWBypassValve
+COM1,COM1,COM1.ChillerSystem.CHWDiffPressure
+COM1,COM1,COM1.ChillerSystem.CHWDiffPressureSp
+COM1,COM1,COM1.ChillerSystem.CHWHeaderHiDiffPressure
+COM1,COM1,COM1.ChillerSystem.CHWMotorisedValveJam
+COM1,COM1,COM1.ChillerSystem.CHWMotorisedValveOpenStatus
+COM1,COM1,COM1.CHWDiffPressure
+COM2,COM2,Acc-Act-En-Exp-Tot_COM2_M1_Hourly_kWh
+COM2,COM2,Acc-Act-En-Exp-Tot_COM2_M1_kWh
+COM2,COM2,Acc-Act-En-Exp-Tot_COM2_M1_Monthly_kWh
+COM3,COM3,Acc-Act-En-Exp-Tot_COM3_M1_Hourly_kWh
+COM3,COM3,Acc-Act-En-Exp-Tot_COM3_M1_kWh
+COM3,COM3,Acc-Act-En-Exp-Tot_COM3_M1_Monthly_kWh
+COM3,COM3,COM3 IC1 Daily Consumption - E615
+COM3,COM3,COM3 IC1 Hourly Consumption - E615
+COM3,COM3,COM3 IC1 Monthly Consumption - E615
+COM3,COM3,COM3 IC2 Daily Consumption - E616
+COM3,COM3,COM3 IC2 Hourly Consumption - E616
+COM3,COM3,COM3 IC2 Monthly Consumption - E616
+COM3,COM3,COM3 Total Daily All Consumption
+COM3,COM3,COM3 Total Daily Cooling Consumption
+COM3,COM3,COM3 Total Daily Electrical Consumption
+COM3,COM3,COM3 Total Hourly All Consumption
+COM3,COM3,COM3 Total Hourly Cooling Consumption
+COM3,COM3,COM3 Total Hourly Electrical Consumption
+COM3,COM3,COM3 Total Monthly All Consumption
+COM3,COM3,COM3 Total Monthly Cooling Consumption
+COM3,COM3,COM3 Total Monthly Electrical Consumption
+COM4,COM4,COM4 IC1 Daily Consumption - E618
+COM4,COM4,COM4 IC1 Hourly Consumption - E618
+COM4,COM4,COM4 IC1 Monthly Consumption - E618
+DECK,DECK,Acc-Act-En-Exp-Tot_DECK_M1_Hourly_kWh
+DECK,DECK,Acc-Act-En-Exp-Tot_DECK_M1_kWh
+DECK,DECK,Acc-Act-En-Exp-Tot_DECK_M1_Monthly_kWh
+E1,E1,Acc-Act-En-Exp-Tot_E1_M1_Hourly_kWh
+E1,E1,Acc-Act-En-Exp-Tot_E1_M1_kWh
+E1,E1,Acc-Act-En-Exp-Tot_E1_M1_Monthly_kWh
+E1,E1,Main Meters.Calculated Building Electrical Consumption ALL_Output.a08a99f7-967b-4e13-b737-948ce0d70a1c
+E1,E1,S1 AHU Level 1 Daily Consumption - E139
+E1,E1,S1 AHU Level 1 Hourly Consumption - E139
+E1,E1,S1 AHU Level 1 Monthly Consumption - E139
+E1,E1,S1A IC1 Daily Consumption - E169
+E1,E1,S1A IC1 Hourly Consumption - E169
+E1,E1,S1A IC1 Monthly Consumption - E169
+E1,E1,S1A IC2 Daily Consumption - E170
+E1,E1,S1A IC2 Hourly Consumption - E170
+E1,E1,S1A IC2 Monthly Consumption - E170
+E1,E1,S2 S1 Main Daily Consumption - E171
+E1,E1,S2 S1 Main Hourly Consumption - E171
+E1,E1,S2 S1 Main Monthly Consumption - E171
+E1,E1,S3 - Emerg SWB Main Daily Consumption - E176
+E1,E1,S3 - Emerg SWB Main Hourly Consumption - E176
+E1,E1,S3 - Emerg SWB Main Monthly Consumption - E176
+E2,E2,Acc-Act-En-Exp-Tot_E2_M1_Hourly_kWh
+E2,E2,Acc-Act-En-Exp-Tot_E2_M1_kWh
+E2,E2,Acc-Act-En-Exp-Tot_E2_M1_Monthly_kWh
+E2,E2,Carrier_MD_device245181_md3-chiller1_chilled_water_flowrate_2
+E2,E2,Carrier_MD_device245181_md3-chiller1_chw_return_temp_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chiller1_chw_supply__temp_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chiller2_chilled_water_flowrate_2
+E2,E2,Carrier_MD_device245181_md3-chiller2_chw_return_temp_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chiller2_chw_supply__temp_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chiller3_chilled_water_flowrate_2
+E2,E2,Carrier_MD_device245181_md3-chiller3_chw_return_temp_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chiller3_chw_supply__temp_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chiller4_chilled_water_flowrate_2
+E2,E2,Carrier_MD_device245181_md3-chiller4_chw_return_temp_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chiller4_chw_supply__temp_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chwp_1_inlet_pressure_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chwp_1_outlet_pressure_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chwp_2_inlet_pressure_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chwp_2_outlet_pressure_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chwp_3_inlet_pressure_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chwp_3_outlet_pressure_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chwp_4_inlet_pressure_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chwp_4_outlet_pressure_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chw_header_return_pressure_sensor_2
+E2,E2,Carrier_MD_device245181_md3-chw_header_supply_pressure_sensor_2
+E3,E3,Acc-Act-En-Exp-Tot_E3_M1_Hourly_kWh
+E3,E3,Acc-Act-En-Exp-Tot_E3_M1_kWh
+E3,E3,Acc-Act-En-Exp-Tot_E3_M1_Monthly_kWh
+E3,E3,E3A IC1 Daily Consumption - E331
+E3,E3,E3A IC1 Hourly Consumption - E331
+E3,E3,E3A IC1 Monthly Consumption - E331
+E3,E3,E3A IC2 Daily Consumption - E332
+E3,E3,E3A IC2 Hourly Consumption - E332
+E3,E3,E3A IC2 Monthly Consumption - E332
+E3,E3,E3A SERIS IC1 Daily Consumption - E333
+E3,E3,E3A SERIS IC1 Hourly Consumption - E333
+E3,E3,E3A SERIS IC1 Monthly Consumption - E333
+E3,E3,E3A SERIS IC2 Daily Consumption - E334
+E3,E3,E3A SERIS IC2 Hourly Consumption - E334
+E3,E3,E3A SERIS IC2 Monthly Consumption - E334
+E3,E3,E3A Total Daily All Consumption
+E3,E3,E3A Total Daily Cooling Consumption
+E3,E3,E3A Total Daily Electrical Consumption
+E3,E3,E3A Total Hourly All Consumption
+E3,E3,E3A Total Hourly Cooling Consumption
+E3,E3,E3A Total Hourly Electrical Consumption
+E3,E3,E3A Total Monthly All Consumption
+E3,E3,E3A Total Monthly All Consumption Reporting
+E3,E3,E3A Total Monthly Cooling Consumption
+E3,E3,E3A Total Monthly Electrical Consumption
+E4,E4,Acc-Act-En-Exp-Tot_E4_M1_Hourly_kWh
+E4,E4,Acc-Act-En-Exp-Tot_E4_M1_kWh
+E4,E4,Acc-Act-En-Exp-Tot_E4_M1_Monthly_kWh
+E4,E4,CELC IC1 Daily Consumption - E431
+E4,E4,CELC IC1 Hourly Consumption - E431
+E4,E4,CELC IC1 Monthly Consumption - E431
+E4,E4,CELC IC2 Daily Consumption - E432
+E4,E4,CELC IC2 Hourly Consumption - E432
+E4,E4,CELC IC2 Monthly Consumption - E432
+E4,E4,PGPR B12 MAIN IC1 Daily Consumption - E465
+E4,E4,PGPR B12 MAIN IC1 Hourly Consumption - E465
+E4,E4,PGPR B12 MAIN IC1 Monthly Consumption - E465
+E4,E4,PGPR B12 MAIN IC2 Daily Consumption - E466
+E4,E4,PGPR B12 MAIN IC2 Hourly Consumption - E466
+E4,E4,PGPR B12 MAIN IC2 Monthly Consumption - E466
+E4,E4,PGPR B15 MAIN IC1 Daily Consumption - E467
+E4,E4,PGPR B15 MAIN IC1 Hourly Consumption - E467
+E4,E4,PGPR B15 MAIN IC1 Monthly Consumption - E467
+E4,E4,PGPR B15 MAIN IC2 Daily Consumption - E468
+E4,E4,PGPR B15 MAIN IC2 Hourly Consumption - E468
+E4,E4,PGPR B15 MAIN IC2 Monthly Consumption - E468
+E4,E4,PGPR B20 MAIN IC1 Daily Consumption - E469
+E4,E4,PGPR B20 MAIN IC1 Hourly Consumption - E469
+E4,E4,PGPR B20 MAIN IC1 Monthly Consumption - E469
+E4,E4,PGPR B4 Main IC2 Daily Consumption - E462
+E5,E5,Acc-Act-En-Exp-Tot_E5_ALL_Hourly_kWh
+E5,E5,Acc-Act-En-Exp-Tot_E5_ALL_Monthly_kWh
+E5,E5,Acc-Act-En-Exp-Tot_E5_M1_Hourly_kWh
+E5,E5,Acc-Act-En-Exp-Tot_E5_M1_kWh
+E5,E5,Acc-Act-En-Exp-Tot_E5_M1_Monthly_kWh
+E5,E5,Acc-Act-En-Exp-Tot_E5_M2_Hourly_kWh
+E5,E5,Acc-Act-En-Exp-Tot_E5_M2_kWh
+E5,E5,Acc-Act-En-Exp-Tot_E5_M2_Monthly_kWh
+E5,E5,CW E548 Delivered Daily Consumption
+E5,E5,CW E548 Delivered Hourly Consumption
+E5,E5,CW E548 Delivered Monthly Consumption
+E5,E5,CW E548 Received Daily Consumption
+E5,E5,CW E548 Received Hourly Consumption
+E5,E5,CW E548 Received Monthly Consumption
+E5,E5,CW E549 Delivered Daily Consumption
+E5,E5,CW E549 Delivered Hourly Consumption
+E5,E5,CW E549 Delivered Monthly Consumption
+E5,E5,CW E549 Received Daily Consumption
+E5,E5,CW E549 Received Hourly Consumption
+E5,E5,CW E549 Received Monthly Consumption
+E5,E5,S9 IC1 Daily Consumption - E553
+E5,E5,S9 IC1 Hourly Consumption - E553
+E5,E5,S9 IC1 Monthly Consumption - E553
+E5,E5,S9 IC2 Daily Consumption - E554
+E5,E5,S9 IC2 Hourly Consumption - E554
+E6,E6,E6 IC1 Daily Consumption - E351
+E6,E6,E6 IC1 Hourly Consumption - E351
+E6,E6,E6 IC1 Monthly Consumption - E351
+E6,E6,E6 IC2 Daily Consumption - E352
+E6,E6,E6 IC2 Hourly Consumption - E352
+E6,E6,E6 IC2 Monthly Consumption - E352
+E6,E6,E6 Total Daily All Consumption
+E6,E6,E6 Total Daily Cooling Consumption
+E6,E6,E6 Total Daily Electrical Consumption
+E6,E6,E6 Total Hourly All Consumption
+E6,E6,E6 Total Hourly Cooling Consumption
+E6,E6,E6 Total Hourly Electrical Consumption
+E6,E6,E6 Total Monthly All Consumption
+E6,E6,E6 Total Monthly All Consumption Reporting
+E6,E6,E6 Total Monthly Cooling Consumption
+E6,E6,E6 Total Monthly Electrical Consumption
+E6,E6,Valor House IC2 Daily Consumption - E646
+E6,E6,Valor House IC2 Hourly Consumption - E646
+E6,E6,Valor House IC2 Monthly Consumption - E646
+E7,E7,E7 MSB1 Daily Consumption - E361
+E7,E7,E7 MSB1 Hourly Consumption - E361
+E7,E7,E7 MSB1 Monthly Consumption - E361
+E7,E7,E7 MSB2 Daily Consumption - E362
+E7,E7,E7 MSB2 Hourly Consumption - E362
+E7,E7,E7 MSB2 Monthly Consumption - E362
+E7,E7,E7 MSB3 Daily Consumption - E363
+E7,E7,E7 MSB3 Hourly Consumption - E363
+E7,E7,E7 MSB3 Monthly Consumption - E363
+E7,E7,E7 Total Daily All Consumption
+E7,E7,E7 Total Daily Cooling Consumption
+E7,E7,E7 Total Daily Electrical Consumption
+E7,E7,E7 Total Hourly All Consumption
+E7,E7,E7 Total Hourly Cooling Consumption
+E7,E7,E7 Total Hourly Electrical Consumption
+E7,E7,E7 Total Monthly All Consumption
+E7,E7,E7 Total Monthly Cooling Consumption
+E7,E7,E7 Total Monthly Electrical Consumption
+E7,E7,UTR IC1 Daily Consumption - E715
+E7,E7,UTR IC1 Hourly Consumption - E715
+E7,E7,UTR IC1 Monthly Consumption - E715
+E7,E7,UTR IC2 Daily Consumption - E716
+E7,E7,UTR IC2 Hourly Consumption - E716
+E7,E7,UTR IC2 Monthly Consumption - E716
+E8,E8,Acc-Act-En-Exp-Tot_E8_M1_Hourly_kWh
+E8,E8,Acc-Act-En-Exp-Tot_E8_M1_kWh
+E8,E8,Acc-Act-En-Exp-Tot_E8_M1_Monthly_kWh
+E8,E8,E8 IC1 Daily Consumption - E427
+E8,E8,E8 IC1 Hourly Consumption - E427
+E8,E8,E8 IC1 Monthly Consumption - E427
+E8,E8,E8 IC2 Daily Consumption - E678
+E8,E8,E8 IC2 Hourly Consumption - E678
+E8,E8,E8 IC2 Monthly Consumption - E678
+E8,E8,E8 Total Daily All Consumption
+E8,E8,E8 Total Daily Cooling Consumption
+E8,E8,E8 Total Daily Electrical Consumption
+E8,E8,E8 Total Hourly All Consumption
+E8,E8,E8 Total Hourly Cooling Consumption
+E8,E8,E8 Total Hourly Electrical Consumption
+E8,E8,E8 Total Monthly All Consumption
+E8,E8,E8 Total Monthly All Consumption Reporting
+E8,E8,E8 Total Monthly Cooling Consumption
+E8,E8,E8 Total Monthly Electrical Consumption
+EA,EA,Acc-Act-En-Exp-Tot_EA_ALL_Hourly_kWh
+EA,EA,Acc-Act-En-Exp-Tot_EA_ALL_Monthly_kWh
+EA,EA,Acc-Act-En-Exp-Tot_EA_M1_Hourly_kWh
+EA,EA,Acc-Act-En-Exp-Tot_EA_M1_kWh
+EA,EA,Acc-Act-En-Exp-Tot_EA_M1_Monthly_kWh
+EA,EA,Acc-Act-En-Exp-Tot_EA_M2_Hourly_kWh
+EA,EA,Acc-Act-En-Exp-Tot_EA_M2_kWh
+EA,EA,Acc-Act-En-Exp-Tot_EA_M2_Monthly_kWh
+EA,EA,BCA Test Site_BTUReadings_BTU Cooling Load W
+EA,EA,BCA Test Site_BTUReadings_CHWF
+EA,EA,BCA Test Site_BTUReadings_CHWRT
+EA,EA,BCA Test Site_BTUReadings_CHWST
+EA,EA,BCA Test Site_BTUReadings_Energy kWh
+EA,EA,BCA Test Site_PowerMeterReadings_AHU_Energy kWh
+EA,EA,BCA Test Site_PowerMeterReadings_AHU_Power W
+EA,EA,BCA Test Site_PowerMeterReadings_Fan_Energy kWh
+EA,EA,BCA Test Site_PowerMeterReadings_Fan_Power W
+EA,EA,BCA Test Site_PowerMeterReadings_Ia
+EA,EA,BCA Test Site_PowerMeterReadings_Ib
+EA,EA,BCA Test Site_PowerMeterReadings_Ic
+EA,EA,BCA Test Site_PowerMeterReadings_PowerFactorL1-N
+EA,EA,BCA Test Site_PowerMeterReadings_PowerFactorL2-N
+EA,EA,BCA Test Site_PowerMeterReadings_PowerFactorL3-N
+EA,EA,BCA Test Site_PowerMeterReadings_Vab
+EA,EA,BCA Test Site_PowerMeterReadings_Vbc
+ERC,ERC,Acc-Act-En-Exp-Tot_ERC_M1_Hourly_kWh
+ERC,ERC,Acc-Act-En-Exp-Tot_ERC_M1_kWh
+ERC,ERC,Acc-Act-En-Exp-Tot_ERC_M1_Monthly_kWh
+HSSML,HSSML,Acc-Act-En-Exp-Tot_HSSML_M1_Hourly_kWh
+HSSML,HSSML,Acc-Act-En-Exp-Tot_HSSML_M1_kWh
+HSSML,HSSML,Acc-Act-En-Exp-Tot_HSSML_M1_Monthly_kWh
+HSSML,HSSML,HSSML.MSB-HSS Real energy L1-L3 Kwh
+HSSML,HSSML,HSSML.OG-BOX Real energy L1-L3 consumed Kwh
+HSSML,HSSML,HSSML.OG-BOX Real energy L1-L3 Kwh
+HSSML,HSSML,HSSML.SSB-AUD Real energy L1-L3 Kwh
+HSSML,HSSML,HSSML/Water Volume 1
+HSSML,HSSML,HSSML/Water Volume 2
+HSSML,HSSML,HSSML/Water Volume 3
+I-CUBE,I-CUBE,Acc-Act-En-Exp-Tot_I-CUBE_M1_Hourly_kWh
+I-CUBE,I-CUBE,Acc-Act-En-Exp-Tot_I-CUBE_M1_kWh
+I-CUBE,I-CUBE,Acc-Act-En-Exp-Tot_I-CUBE_M1_Monthly_kWh
+I4,I4,Acc-Act-En-Exp-Tot_I4_M1_Hourly_kWh
+I4,I4,Acc-Act-En-Exp-Tot_I4_M1_kWh
+I4,I4,Acc-Act-En-Exp-Tot_I4_M1_Monthly_kWh
+LT11,LT11,Acc-Act-En-Exp-Tot_LT11_M1_Hourly_kWh
+LT11,LT11,Acc-Act-En-Exp-Tot_LT11_M1_kWh
+LT11,LT11,Acc-Act-En-Exp-Tot_LT11_M1_Monthly_kWh
+LT28,LT28,Acc-Act-En-Exp-Tot_LT27-LT28-LT29_M1_Hourly_kWh
+LT28,LT28,Acc-Act-En-Exp-Tot_LT27-LT28-LT29_M1_kWh
+LT28,LT28,Acc-Act-En-Exp-Tot_LT27-LT28-LT29_M1_Monthly_kWh
+MD1,MD1,Acc-Act-En-Exp-Tot_MD10_M1_Hourly_kWh
+MD1,MD1,Acc-Act-En-Exp-Tot_MD10_M1_kWh
+MD1,MD1,Acc-Act-En-Exp-Tot_MD10_M1_Monthly_kWh
+MD1,MD1,Carrier_MD_device245178_md1-ahu-b1-a_btu_kwh_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-b1-a_chwflow_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-b1-a_chwrt_sensor_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-b1-a_chwst_sensor_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-b1-b_btu_kwh_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-b1-b_chwflow_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-b1-b_chwrt_sensor_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-b1-b_chwst_sensor_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-l1-1_btu_kwh_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-l1-1_chwflow_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-l1-1_chwrt_sensor_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-l1-1_chwst_sensor_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-l1-2_btu_kwh_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-l1-2_chwflow_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-l1-2_chwrt_sensor_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-l1-2_chwst_sensor_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-l1-3_btu_kwh_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-l1-3_chwflow_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-l1-3_chwrt_sensor_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-l1-3_chwst_sensor_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-l1-4_btu_kwh_1
+MD1,MD1,Carrier_MD_device245178_md1-ahu-l1-4_chwflow_1
+MD2,MD2,MD2 IC1 Daily Consumption - E084
+MD2,MD2,MD2 IC1 Hourly Consumption - E084
+MD2,MD2,MD2 IC1 Monthly Consumption - E084
+MD2,MD2,MD2 IC2 Daily Consumption - E085
+MD2,MD2,MD2 IC2 Hourly Consumption - E085
+MD2,MD2,MD2 IC2 Monthly Consumption - E085
+MD2,MD2,MD2 Total Daily All Consumption
+MD2,MD2,MD2 Total Daily Cooling Consumption
+MD2,MD2,MD2 Total Daily Electrical Consumption
+MD2,MD2,MD2 Total Hourly All Consumption
+MD2,MD2,MD2 Total Hourly Cooling Consumption
+MD2,MD2,MD2 Total Hourly Electrical Consumption
+MD2,MD2,MD2 Total Monthly All Consumption
+MD2,MD2,MD2 Total Monthly All Consumption Reporting
+MD2,MD2,MD2 Total Monthly Cooling Consumption
+MD2,MD2,MD2 Total Monthly Electrical Consumption
+MD6,MD6,Carrier_MD_device245177_md6-chiller1_chilled_water_flowrate_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller1_condenser_water_flowrate_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller2_chilled_water_flowrate_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller2_condenser_water_flowrate_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller3_chilled_water_flowrate_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller3_condenser_water_flowrate_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller4_chilled_water_flowrate_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller4_condenser_water_flowrate_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_1_chw_return_sensor_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_1_chw_supply_sensor_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_2_chw_return_sensor_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_2_chw_supply_sensor_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_3_chw_return_sensor_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_3_chw_supply_sensor_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_4_chw_return_sensor_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_4_chw_supply_sensor_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_plant_btu_chw_delta_temp_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_plant_btu_chw_flowrate_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_plant_btu_chw_kwr_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_plant_btu_chw_return_sensor_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_plant_btu_chw_supply_sensor_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_plant_btu_kwh_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_plant_btu_mwh_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_plant_chilled_water_loadrton_14
+MD6,MD6,Carrier_MD_device245177_md6-chiller_plant_chilled_water_load_kwr_14
+OTHER,OTHER,10 min Average Calculated Electrical Consumption
+OTHER,OTHER,Acc-Act-En-Exp-Tot_ALL_Hourly kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_ALL_Monthly_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_CnT_M1_Hourly_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_CnT_M1_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_CnT_M1_Monthly_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_MD7_M1_Hourly_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_MD7_M1_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_MD7_M1_Monthly_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_MD9_M1_Hourly_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_MD9_M1_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_MD9_M1_Monthly_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_MPSH_M1_Hourly_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_MPSH_M1_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_MPSH_M1_Monthly_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_MSL_M1_Hourly_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_MSL_M1_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_MSL_M1_Monthly_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_NUS-IT_M1_Hourly_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_NUS-IT_M1_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_NUS-IT_M1_Monthly_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_RC4_M1_Hourly_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_RC4_M1_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_RC4_M1_Monthly_kWh
+OTHER,OTHER,Acc-Act-En-Exp-Tot_RVA_M1_Hourly_kWh
+SDE1,SDE1,Acc-Act-En-Exp-Tot_SDE1_M1_Hourly_kWh
+SDE1,SDE1,Acc-Act-En-Exp-Tot_SDE1_M1_Hourly_kWh_Normalized
+SDE1,SDE1,Acc-Act-En-Exp-Tot_SDE1_M1_kWh
+SDE1,SDE1,Acc-Act-En-Exp-Tot_SDE1_M1_Monthly_kWh
+SDE1,SDE1,BACnet_AHU-SDE1-L4-1_BTU_AbsPower_kW Command
+SDE1,SDE1,BACnet_AHU-SDE1-L4-1_BTU_AbsPower_kW.PRESENT_VALUE
+SDE1,SDE1,SDE1 DBE-SDE1-5 WC Daily Consumption - E539
+SDE1,SDE1,SDE1 DBE-SDE1-5 WC Hourly Consumption - E539
+SDE1,SDE1,SDE1 DBE-SDE1-5 WC Monthly Consumption - E539
+SDE1,SDE1,SDE1 Electrical.SDE1 Tot Elec kWh
+SDE1,SDE1,SDE1 Electrical.SDE1 Tot Elec kWh_NET
+SDE1,SDE1,SDE1 ESB-SDE1-3 Daily Consumption - E540
+SDE1,SDE1,SDE1 ESB-SDE1-3 Hourly Consumption - E540
+SDE1,SDE1,SDE1 ESB-SDE1-3 Monthly Consumption - E540
+SDE1,SDE1,SDE1 Net Energy Balance.SDE1 Tot Building Kwh
+SDE1,SDE1,SDE1 Net_BTU_Elec_kWh_NET
+SDE1,SDE1,SDE1 SB-SDE1-2 Daily Consumption - E547
+SDE1,SDE1,SDE1 SB-SDE1-2 Hourly Consumption - E547
+SDE1,SDE1,SDE1 SB-SDE1-2 Monthly Consumption - E547
+SDE1,SDE1,SDE1 SB-SDE1-3 Delivered Daily Consumption - E541
+SDE1,SDE1,SDE1 SB-SDE1-3 Delivered Hourly Consumption - E541
+SDE1,SDE1,SDE1 SB-SDE1-3 Delivered Monthly Consumption - E541
+SDE1,SDE1,SDE1 SB-SDE1-3 Received Daily Consumption - E541
+SDE1,SDE1,SDE1 SB-SDE1-3 Received Hourly Consumption - E541
+SDE1,SDE1,SDE1 SB-SDE1-3 Received Monthly Consumption - E541
+SDE2,SDE2,NCE-SDE2_NCE-SDE2/FCB.Power_Meters.PWM-SDE2_AC.Watt
+SDE2,SDE2,NCE-SDE2_NCE-SDE2/FCB.Power_Meters.PWM-SDE2_AC.Watt_Hour
+SDE2,SDE2,NCE-SDE2_NCE-SDE2/FCB.Power_Meters.PWM-SDE2_MSB.Watt
+SDE2,SDE2,NCE-SDE2_NCE-SDE2/FCB.Power_Meters.PWM-SDE2_MSB.Watt_Hour
+SDE2,SDE2,NCE-SDE2_NCE-SDE2/FCB.Power_Meters.PWM-SDE2_SSB.Watt
+SDE2,SDE2,NCE-SDE2_NCE-SDE2/FCB.Power_Meters.PWM-SDE2_SSB.Watt_Hour
+SDE2,SDE2,NCE-SDE2_NCE-SDE2/M-BUS.BTU_Meters.BTU-SDE2.Calculated kW
+SDE2,SDE2,NCE-SDE2_NCE-SDE2/M-BUS.BTU_Meters.BTU-SDE2.FLOW-RATE
+SDE2,SDE2,NCE-SDE2_NCE-SDE2/M-BUS.BTU_Meters.BTU-SDE2.kW
+SDE2,SDE2,NCE-SDE2_NCE-SDE2/M-BUS.BTU_Meters.BTU-SDE2.kWH
+SDE2,SDE2,NCE-SDE2_NCE-SDE2/M-BUS.BTU_Meters.BTU-SDE2.kWH-NET
+SDE2,SDE2,NCE-SDE2_NCE-SDE2/M-BUS.BTU_Meters.BTU-SDE2.RETURN-TEMP
+SDE2,SDE2,NCE-SDE2_NCE-SDE2/M-BUS.BTU_Meters.BTU-SDE2.SUPPLY-TEMP
+SDE2,SDE2,NCE-SDE2_NCE-SDE2/M-BUS.Water_Meters.WM-SDE2.Water_Flow
+SDE2,SDE2,NCE-SDE2_NCE-SDE2/M-BUS.Water_Meters.WM-SDE2_NEW.Volume_1
+SDE2,SDE2,SDE2 Total Cooling Daily Consumption
+SDE2,SDE2,SDE2 Total Cooling Hourly Consumption
+SDE2,SDE2,SDE2 Total Cooling Monthly Consumption
+SDE3,SDE3,SDE3 FCB.GW.BTU-1.BI-6
+SDE3,SDE3,SDE3 FCB.GW.BTU-1.Energy 0
+SDE3,SDE3,SDE3 FCB.GW.BTU-1.Flow Temperature
+SDE3,SDE3,SDE3 FCB.GW.BTU-1.Power
+SDE3,SDE3,SDE3 FCB.GW.BTU-1.Return Temperature
+SDE3,SDE3,SDE3 FCB.GW.BTU-1.Temperature Difference
+SDE3,SDE3,SDE3 FCB.GW.BTU-1.Volume
+SDE3,SDE3,SDE3 FCB.GW.BTU-1.Volume 3
+SDE3,SDE3,SDE3 FCB.GW.BTU-1.Volume Flow
+SDE3,SDE3,SDE3 INC Q1 - IC1 Daily Consumption - E544
+SDE3,SDE3,SDE3 INC Q1 - IC1 Hourly Consumption - E544
+SDE3,SDE3,SDE3 INC Q1 - IC1 Monthly Consumption - E544
+SDE3,SDE3,SDE3 INC Q2 - IC2 Daily Consumption - E545
+SDE3,SDE3,SDE3 INC Q2 - IC2 Hourly Consumption - E545
+SDE3,SDE3,SDE3 INC Q2 - IC2 Monthly Consumption - E545
+SDE3,SDE3,SDE3 Total Cooling Daily Consumption
+SDE3,SDE3,SDE3 Total Cooling Hourly Consumption
+SDE4,SDE4,Act_E-Recv_SDE4_ALL_Hourly_kWh
+SDE4,SDE4,Act_E-Recv_SDE4_ALL_Hourly_kWh_Normalized
+SDE4,SDE4,Act_E-Recv_SDE4_ALL_Monthly_kWh
+SDE4,SDE4,Act_E-Recv_SDE4_M1_Hourly_kWh
+SDE4,SDE4,Act_E-Recv_SDE4_M1_kWh
+SDE4,SDE4,Act_E-Recv_SDE4_M1_Monthly_kWh
+SDE4,SDE4,Act_E-Recv_SDE4_M2_Hourly_kWh
+SDE4,SDE4,Act_E-Recv_SDE4_M2_kWh
+SDE4,SDE4,Act_E-Recv_SDE4_M2_Monthly_kWh
+SDE4,SDE4,Level 6 Wire Center.SDE4 Wire Center Level 6 Daily DX Consumption
+SDE4,SDE4,Level 6 Wire Center.SDE4 Wire Center Level 6 Hourly DX Consumption
+SDE4,SDE4,SDE4 Beehub VAV-L3-01 Airflow
+SDE4,SDE4,SDE4 Beehub VAV-L3-02 Airflow
+SDE4,SDE4,SDE4 Beehub VAV-L3-03 Airflow
+SDE4,SDE4,SDE4 Beehub VAV-L4-01-01 Airflow
+SDE4,SDE4,SDE4 Beehub VAV-L4-01-02 Airflow
+SDE4,SDE4,SDE4 Beehub VAV-L4-01-03 Airflow
+SDE4,SDE4,SDE4 Calculated Building Electrical Consumption
+SDE4,SDE4,SDE4 Calculated Building Electrical Consumption ALL
+SDE4,SDE4,SDE4 FCU_L2_01_BTU.Power_kW
+SDE4,SDE4,SDE4 FCU_L2_02_BTU.Power_kW
+SDE4,SDE4,SDE4 FCU_L2_03_BTU.Power_kW
+SDE4,SDE4,SDE4 FCU_L2_04_BTU.Power_kW
+SDE4,SDE4,SDE4 FCU_L2_05_BTU.Power_kW
+SDE4,SDE4,SDE4 FCU_L2_06_BTU.Power_kW
+SDE4 (2),SDE4 (2),Act_E-Recv_SDE4_ALL_Hourly_kWh
+SDE4 (2),SDE4 (2),Act_E-Recv_SDE4_ALL_Hourly_kWh_Normalized
+SDE4 (2),SDE4 (2),Act_E-Recv_SDE4_ALL_Monthly_kWh
+SDE4 (2),SDE4 (2),Act_E-Recv_SDE4_M1_Hourly_kWh
+SDE4 (2),SDE4 (2),Act_E-Recv_SDE4_M1_kWh
+SDE4 (2),SDE4 (2),Act_E-Recv_SDE4_M1_Monthly_kWh
+SDE4 (2),SDE4 (2),Act_E-Recv_SDE4_M2_Hourly_kWh
+SDE4 (2),SDE4 (2),Act_E-Recv_SDE4_M2_kWh
+SDE4 (2),SDE4 (2),Act_E-Recv_SDE4_M2_Monthly_kWh
+SDE4 (2),SDE4 (2),Level 6 Wire Center.SDE4 Wire Center Level 6 Daily DX Consumption
+SDE4 (2),SDE4 (2),Level 6 Wire Center.SDE4 Wire Center Level 6 Hourly DX Consumption
+SDE4 (2),SDE4 (2),SDE4 Beehub VAV-L3-01 Airflow
+SDE4 (2),SDE4 (2),SDE4 Beehub VAV-L3-02 Airflow
+SDE4 (2),SDE4 (2),SDE4 Beehub VAV-L3-03 Airflow
+SDE4 (2),SDE4 (2),SDE4 Beehub VAV-L4-01-01 Airflow
+SDE4 (2),SDE4 (2),SDE4 Beehub VAV-L4-01-02 Airflow
+SDE4 (2),SDE4 (2),SDE4 Beehub VAV-L4-01-03 Airflow
+SDE4 (2),SDE4 (2),SDE4 Calculated Building Electrical Consumption
+SDE4 (2),SDE4 (2),SDE4 Calculated Building Electrical Consumption ALL
+SDE4 (2),SDE4 (2),SDE4 FCU_L2_01_BTU.Power_kW
+SDE4 (2),SDE4 (2),SDE4 FCU_L2_02_BTU.Power_kW
+SDE4 (2),SDE4 (2),SDE4 FCU_L2_03_BTU.Power_kW
+SDE4 (2),SDE4 (2),SDE4 FCU_L2_04_BTU.Power_kW
+SDE4 (2),SDE4 (2),SDE4 FCU_L2_05_BTU.Power_kW
+SDE4 (2),SDE4 (2),SDE4 FCU_L2_06_BTU.Power_kW

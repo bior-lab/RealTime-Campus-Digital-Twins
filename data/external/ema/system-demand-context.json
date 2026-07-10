@@ -1,0 +1,161 @@
+{
+    "id":  "system-demand",
+    "title":  "System demand context",
+    "source":  "data.gov.sg / Energy Market Authority",
+    "source_url":  "https://data.gov.sg/datasets/d_ae4afbaf5bc96bde19d8ce85810ab9f4/view",
+    "retrieved_at":  "2026-06-13T01:25:56",
+    "unit":  "GWh monthly generation proxy",
+    "note":  "Monthly electricity generation is used as a grid context proxy until EMA half-hourly system demand is wired into FastAPI.",
+    "summary":  {
+                    "latest_period":  "2026-02",
+                    "latest_generation_gwh":  4630.9,
+                    "previous_generation_gwh":  5032.9,
+                    "mom_generation_pct":  -7.99
+                },
+    "values":  [
+                   {
+                       "period":  "2024-03",
+                       "year":  2024,
+                       "month":  3,
+                       "value_gwh":  4964.5
+                   },
+                   {
+                       "period":  "2024-04",
+                       "year":  2024,
+                       "month":  4,
+                       "value_gwh":  5012.3
+                   },
+                   {
+                       "period":  "2024-05",
+                       "year":  2024,
+                       "month":  5,
+                       "value_gwh":  5167.1
+                   },
+                   {
+                       "period":  "2024-06",
+                       "year":  2024,
+                       "month":  6,
+                       "value_gwh":  4909.9
+                   },
+                   {
+                       "period":  "2024-07",
+                       "year":  2024,
+                       "month":  7,
+                       "value_gwh":  5189.6
+                   },
+                   {
+                       "period":  "2024-08",
+                       "year":  2024,
+                       "month":  8,
+                       "value_gwh":  5131.9
+                   },
+                   {
+                       "period":  "2024-09",
+                       "year":  2024,
+                       "month":  9,
+                       "value_gwh":  4950.1
+                   },
+                   {
+                       "period":  "2024-10",
+                       "year":  2024,
+                       "month":  10,
+                       "value_gwh":  5095.2
+                   },
+                   {
+                       "period":  "2024-11",
+                       "year":  2024,
+                       "month":  11,
+                       "value_gwh":  4861.4
+                   },
+                   {
+                       "period":  "2024-12",
+                       "year":  2024,
+                       "month":  12,
+                       "value_gwh":  4937.6
+                   },
+                   {
+                       "period":  "2025-01",
+                       "year":  2025,
+                       "month":  1,
+                       "value_gwh":  4833.5
+                   },
+                   {
+                       "period":  "2025-02",
+                       "year":  2025,
+                       "month":  2,
+                       "value_gwh":  4460.5
+                   },
+                   {
+                       "period":  "2025-03",
+                       "year":  2025,
+                       "month":  3,
+                       "value_gwh":  4991.2
+                   },
+                   {
+                       "period":  "2025-04",
+                       "year":  2025,
+                       "month":  4,
+                       "value_gwh":  4921.2
+                   },
+                   {
+                       "period":  "2025-05",
+                       "year":  2025,
+                       "month":  5,
+                       "value_gwh":  5252.8
+                   },
+                   {
+                       "period":  "2025-06",
+                       "year":  2025,
+                       "month":  6,
+                       "value_gwh":  5148.6
+                   },
+                   {
+                       "period":  "2025-07",
+                       "year":  2025,
+                       "month":  7,
+                       "value_gwh":  5352.5
+                   },
+                   {
+                       "period":  "2025-08",
+                       "year":  2025,
+                       "month":  8,
+                       "value_gwh":  5182.4
+                   },
+                   {
+                       "period":  "2025-09",
+                       "year":  2025,
+                       "month":  9,
+                       "value_gwh":  4940.8
+                   },
+                   {
+                       "period":  "2025-10",
+                       "year":  2025,
+                       "month":  10,
+                       "value_gwh":  5195.7
+                   },
+                   {
+                       "period":  "2025-11",
+                       "year":  2025,
+                       "month":  11,
+                       "value_gwh":  5093.1
+                   },
+                   {
+                       "period":  "2025-12",
+                       "year":  2025,
+                       "month":  12,
+                       "value_gwh":  5038.1
+                   },
+                   {
+                       "period":  "2026-01",
+                       "year":  2026,
+                       "month":  1,
+                       "value_gwh":  5032.9
+                   },
+                   {
+                       "period":  "2026-02",
+                       "year":  2026,
+                       "month":  2,
+                       "value_gwh":  4630.9
+                   }
+               ]
+}

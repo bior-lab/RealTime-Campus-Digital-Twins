@@ -1,0 +1,24 @@
+{
+    "retrieved_at":  "2026-06-13T01:27:46",
+    "source":  "data.gov.sg / Energy Market Authority",
+    "datasets":  [
+                     {
+                         "id":  "electricity-consumption",
+                         "file":  "electricity-annual.json",
+                         "title":  "Electricity consumption",
+                         "source_url":  "https://data.gov.sg/datasets/d_3745e3aa98ff3c4bcfcb8e1f6dffef42/view"
+                     },
+                     {
+                         "id":  "system-demand",
+                         "file":  "system-demand-context.json",
+                         "title":  "System demand context",
+                         "source_url":  "https://data.gov.sg/datasets/d_ae4afbaf5bc96bde19d8ce85810ab9f4/view"
+                     },
+                     {
+                         "id":  "solar-pv-deployment",
+                         "file":  "solar-pv-regional.json",
+                         "title":  "Solar PV deployment",
+                         "source_url":  "https://data.gov.sg/datasets/d_cd4f91f7a1ebb2b7ceb1a70c0dbb706d/view"
+                     }
+                 ]
+}

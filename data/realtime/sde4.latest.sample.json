@@ -1,0 +1,104 @@
+[
+    {
+        "point":  "Act_E-Recv_SDE4_ALL_Hourly_kWh",
+        "building":  "SDE4",
+        "value":  0.0,
+        "time":  "2026-06-12T10:00:00+00:00"
+    },
+    {
+        "point":  "Act_E-Recv_SDE4_M1_Hourly_kWh",
+        "building":  "SDE4",
+        "value":  0.0,
+        "time":  "2026-06-12T10:00:00+00:00"
+    },
+    {
+        "point":  "Act_E-Recv_SDE4_M2_Hourly_kWh",
+        "building":  "SDE4",
+        "value":  0.0,
+        "time":  "2026-06-12T10:00:00+00:00"
+    },
+    {
+        "point":  "SDE4 Beehub CO2",
+        "building":  "SDE4",
+        "value":  450.0,
+        "time":  "2026-06-12T10:11:00+00:00"
+    },
+    {
+        "point":  "SDE4 Beehub Humidity",
+        "building":  "SDE4",
+        "value":  58.3,
+        "time":  "2026-06-12T10:11:00+00:00"
+    },
+    {
+        "point":  "SDE4 Beehub Temperature",
+        "building":  "SDE4",
+        "value":  25.7,
+        "time":  "2026-06-12T10:11:00+00:00"
+    },
+    {
+        "point":  "SDE4 Beehub Thermostat Setpoint",
+        "building":  "SDE4",
+        "value":  25.0,
+        "time":  "2026-06-12T10:11:00+00:00"
+    },
+    {
+        "point":  "SDE4 Beehub Training Room CO2",
+        "building":  "SDE4",
+        "value":  435.0,
+        "time":  "2026-06-12T10:11:00+00:00"
+    },
+    {
+        "point":  "SDE4 Beehub Training Room Humidity",
+        "building":  "SDE4",
+        "value":  66.1,
+        "time":  "2026-06-12T10:11:00+00:00"
+    },
+    {
+        "point":  "SDE4 Beehub Training Room Temperature",
+        "building":  "SDE4",
+        "value":  22.9,
+        "time":  "2026-06-12T10:11:00+00:00"
+    },
+    {
+        "point":  "SDE4 Beehub Training Room Thermostat Setpoint",
+        "building":  "SDE4",
+        "value":  26.5,
+        "time":  "2026-06-12T10:11:00+00:00"
+    },
+    {
+        "point":  "SDE4 Beehub VAV-L3-01 Airflow",
+        "building":  "SDE4",
+        "value":  163.705414,
+        "time":  "2026-06-12T10:11:00+00:00"
+    },
+    {
+        "point":  "SDE4 Beehub VAV-L3-02 Airflow",
+        "building":  "SDE4",
+        "value":  1021.77917,
+        "time":  "2026-06-12T10:11:00+00:00"
+    },
+    {
+        "point":  "SDE4 Beehub VAV-L3-03 Airflow",
+        "building":  "SDE4",
+        "value":  528.621765,
+        "time":  "2026-06-12T10:11:00+00:00"
+    },
+    {
+        "point":  "SDE4 PV_System.Total_kW_DB-PV-1-1_\u0026_2-1",
+        "building":  "SDE4",
+        "value":  -18.057148,
+        "time":  "2026-06-12T10:11:00+00:00"
+    },
+    {
+        "point":  "SDE4 PV_System.Total_kW_DB-PV-1-2_\u0026_2-2",
+        "building":  "SDE4",
+        "value":  -9.188311,
+        "time":  "2026-06-12T10:11:00+00:00"
+    },
+    {
+        "point":  "SDE4 Total Cooling Hourly Consumption",
+        "building":  "SDE4",
+        "value":  30.7933,
+        "time":  "2026-06-12T10:00:00+00:00"
+    }
+]

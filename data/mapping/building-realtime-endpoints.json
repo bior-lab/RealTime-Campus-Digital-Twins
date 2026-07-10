@@ -1,0 +1,49 @@
+{
+  "version": "2026-06-12",
+  "purpose": "NUS campus EMIS building-to-realtime endpoint mapping",
+  "public_realtime_base_url": "https://buildingdt.org/realtime/latest",
+  "buildings": [
+    {
+      "map_building_id": "sde4",
+      "building_code": "SDE4",
+      "nus_building_name": "School of Design and Environment 4",
+      "current_endpoint": "https://buildingdt.org/realtime/latest?building=SDE4",
+      "frontend_status": "connected",
+      "available_realtime_groups": [
+        "electricity_hourly_kwh",
+        "cooling_hourly_consumption",
+        "pv_total_kw",
+        "indoor_temperature",
+        "indoor_humidity",
+        "indoor_co2",
+        "vav_airflow"
+      ],
+      "missing_or_not_exposed_in_latest_endpoint": [
+        "building_water_m3",
+        "whole_building_instantaneous_kw"
+      ],
+      "fastapi_target_fields": {
+        "electricity_kw": null,
+        "electricity_kwh_latest_hour": "Act_E-Recv_SDE4_ALL_Hourly_kWh",
+        "cooling_kwh_latest_hour": "SDE4 Total Cooling Hourly Consumption",
+        "water_m3_today": null,
+        "pv_kw": [
+          "SDE4 PV_System.Total_kW_DB-PV-1-1_&_2-1",
+          "SDE4 PV_System.Total_kW_DB-PV-1-2_&_2-2"
+        ],
+        "indoor_temperature_c": [
+          "SDE4 Beehub Temperature",
+          "SDE4 Beehub Training Room Temperature"
+        ],
+        "indoor_humidity_pct": [
+          "SDE4 Beehub Humidity",
+          "SDE4 Beehub Training Room Humidity"
+        ],
+        "indoor_co2_ppm": [
+          "SDE4 Beehub CO2",
+          "SDE4 Beehub Training Room CO2"
+        ]
+      }
+    }
+  ]
+}
