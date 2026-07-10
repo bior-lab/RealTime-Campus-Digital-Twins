@@ -64,7 +64,7 @@ NUS AI-powered Campus Energy Use Dashboard
 
 ## Map Prototype
 
-Open `index.html` through a local web server. No Mapbox token is committed to this repository. For local testing, pass a temporary public token with `?mapbox_token=pk...`; the browser stores it locally for later visits. The prototype uses the Mapbox building tileset for whole-campus footprint and height extrusion, a NUS campus building registry for the current 16 focus markers and building names, a Mapbox EUI reference layer, and the live SDE4 realtime endpoint.
+Open `index.html` through a local web server. The frontend assembles its public Mapbox token from `src/config.js`, following the BIOR `Urban-Digital-Twins` pattern. For local testing with another token, pass a temporary public token with `?mapbox_token=pk...`; the browser stores it locally for later visits. The prototype uses the Mapbox building tileset for whole-campus footprint and height extrusion, a NUS campus building registry for the current 16 focus markers and building names, a Mapbox EUI reference layer, and the live SDE4 realtime endpoint.
 
 Example:
 

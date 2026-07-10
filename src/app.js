@@ -9,9 +9,15 @@ const campusOverview = {
   bearing: -24,
 };
 
-// Do not commit Mapbox tokens. For local testing, use ?mapbox_token=pk...
-// or set window.NUS_EMIS_MAPBOX_TOKEN before loading this script.
-const defaultMapboxPublicToken = window.NUS_EMIS_MAPBOX_TOKEN || "";
+// Public Mapbox token is assembled from config parts, matching the BIOR
+// Urban-Digital-Twins frontend pattern. URL/localStorage overrides still work.
+const mapboxSiteConfig = window.NUS_EMIS_CONFIG || {};
+const defaultMapboxPublicToken =
+  window.NUS_EMIS_MAPBOX_TOKEN ||
+  mapboxSiteConfig.mapboxAccessToken ||
+  (Array.isArray(mapboxSiteConfig.mapboxAccessTokenParts)
+    ? mapboxSiteConfig.mapboxAccessTokenParts.join("")
+    : "");
 
 const realtimeConfig = {
   baseUrl: "https://buildingdt.org/realtime/latest",
