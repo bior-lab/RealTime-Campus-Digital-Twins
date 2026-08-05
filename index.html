@@ -167,11 +167,47 @@
         </section>
 
         <section class="workspace-view analysis-workspace" data-workspace="weather" aria-label="Campus weather context">
-          <header class="workspace-topbar"><div><h1>Campus Weather Context</h1><p>SDE4 weather station · observations and Singapore forecast</p></div><div class="topbar-actions"><span class="source-chip"><span class="status-dot live"></span>5 streams active</span><span class="source-chip">Updated 10:30 SGT</span></div></header>
+          <header class="workspace-topbar">
+            <div><h1>Campus Weather Context</h1><p>NUS Kent Ridge · thermal conditions and short-term forecast</p></div>
+            <div class="topbar-actions"><span id="weatherSourceStatus" class="source-chip"><span class="status-dot loading"></span>Loading weather source</span><span id="weatherUpdated" class="source-chip">Awaiting update</span></div>
+          </header>
           <div class="workspace-content weather-analysis-content">
-            <div class="summary-strip weather-summary"><div><span>Air temperature</span><strong>30.4°C</strong></div><div><span>Relative humidity</span><strong>71%</strong></div><div><span>WBGT</span><strong>28.7°C</strong></div><div><span>Wind direction</span><strong>218° SW</strong></div></div>
-            <article class="dashboard-card chart-card weather-primary"><header><div><h2>Temperature and relative humidity</h2><p>Weekly observations · SDE4 Weather Station</p></div><div class="chart-legend"><span style="--series:#c4473a">Temperature</span><span style="--series:#2474cc">Humidity</span></div></header><svg class="engineering-chart weather-chart" viewBox="0 0 1000 290" preserveAspectRatio="none"><g class="chart-gridlines"><line x1="55" x2="980" y1="55" y2="55"/><line x1="55" x2="980" y1="125" y2="125"/><line x1="55" x2="980" y1="195" y2="195"/><line x1="55" x2="980" y1="265" y2="265"/></g><polyline class="chart-line red" points="55,168 130,137 205,103 280,96 355,132 430,155 505,116 580,89 655,119 730,166 805,140 880,107 955,132"/><polyline class="chart-line blue" points="55,120 130,151 205,177 280,198 355,159 430,133 505,161 580,195 655,155 730,121 805,141 880,170 955,149"/></svg></article>
-            <div class="two-chart-grid weather-lower-grid"><article class="dashboard-card chart-card"><header><div><h2>WBGT trend</h2><p>Weekly heat-stress context</p></div><span class="tag partial">Context only</span></header><svg class="engineering-chart compact" viewBox="0 0 500 170" preserveAspectRatio="none"><g class="chart-gridlines"><line x1="35" x2="485" y1="35" y2="35"/><line x1="35" x2="485" y1="90" y2="90"/><line x1="35" x2="485" y1="145" y2="145"/></g><polyline class="chart-line amber" points="35,126 110,94 185,71 260,86 335,52 410,92 485,68"/></svg></article><article class="dashboard-card forecast-card"><header><div><h2>24-hour forecast</h2><p>Singapore forecast endpoint</p></div><span class="tag info">Public API</span></header><table class="engineering-table"><thead><tr><th>Period</th><th>Forecast</th><th>Temperature</th></tr></thead><tbody><tr><td>Morning</td><td>Partly cloudy</td><td>27–31°C</td></tr><tr><td>Afternoon</td><td>Thundery showers</td><td>29–33°C</td></tr><tr><td>Evening</td><td>Cloudy</td><td>27–30°C</td></tr></tbody></table></article></div>
+            <div class="weather-toolbar">
+              <div class="weather-station-identity"><span>Reference location</span><strong>NUS Kent Ridge / SDE4</strong><small>1.2966° N, 103.7764° E</small></div>
+              <div class="weather-period-control" role="group" aria-label="Weather reporting period">
+                <button type="button" data-weather-period="24h">24 hours</button>
+                <button class="active" type="button" data-weather-period="7d">7 days</button>
+                <button type="button" data-weather-period="30d">30 days</button>
+              </div>
+            </div>
+
+            <div class="weather-kpi-strip">
+              <div class="temperature"><span>Air temperature</span><strong id="weatherTemperature">--</strong><small id="weatherTemperatureMeta">Loading current value</small></div>
+              <div class="humidity"><span>Relative humidity</span><strong id="weatherHumidity">--</strong><small id="weatherHumidityMeta">Loading current value</small></div>
+              <div class="heat"><span>Estimated WBGT</span><strong id="weatherHeatStress">--</strong><small id="weatherHeatStressMeta">Shade approximation</small></div>
+              <div class="wind"><span>Wind direction</span><strong id="weatherWind">--</strong><small id="weatherWindMeta">10 m observation</small></div>
+            </div>
+
+            <article class="dashboard-card weather-primary">
+              <header>
+                <div><h2>Thermal conditions</h2><p id="weatherChartSubtitle">Temperature and relative humidity · loading</p></div>
+                <div class="chart-legend weather-chart-legend"><span style="--series:#b33c30">Temperature · °C</span><span style="--series:#1769aa">Humidity · %RH</span></div>
+              </header>
+              <div id="weatherThermalChart" class="weather-chart-frame" aria-live="polite"><div class="weather-loading">Loading observations…</div></div>
+            </article>
+
+            <div class="weather-lower-grid">
+              <article class="dashboard-card weather-heat-card">
+                <header><div><h2>Heat-stress context</h2><p id="weatherHeatSubtitle">Estimated WBGT · shade approximation</p></div><span id="weatherHeatStatus" class="tag">Loading</span></header>
+                <div id="weatherHeatChart" class="weather-heat-chart"><div class="weather-loading">Loading heat-stress series…</div></div>
+                <footer class="weather-threshold-key"><span><i class="low"></i>&lt; 27 Low</span><span><i class="moderate"></i>27–30 Elevated</span><span><i class="high"></i>&gt; 30 High</span></footer>
+              </article>
+
+              <article class="dashboard-card weather-forecast-card">
+                <header><div><h2>Next 24 hours</h2><p>Six-hour forecast blocks · NUS coordinates</p></div><span class="tag info">Forecast</span></header>
+                <div id="weatherForecast" class="weather-forecast-list"><div class="weather-loading">Loading forecast…</div></div>
+              </article>
+            </div>
           </div>
         </section>
 
@@ -407,8 +443,8 @@
         </section>
 
         <section id="tab-weather" class="tab-panel" data-tab-panel="weather">
-          <div class="panel-intro"><h2>Campus Weather</h2><p>SDE4 weather station observations and the 24-hour Singapore forecast.</p></div>
-          <section class="panel-section compact-controls"><span class="field-label">Station</span><button class="field-control" type="button">SDE4 Weather Station</button></section>
+          <div class="panel-intro"><h2>Campus Weather</h2><p>NUS-coordinate thermal observations and short-term forecast context.</p></div>
+          <section class="panel-section compact-controls"><span class="field-label">Reference location</span><button class="field-control" type="button">NUS Kent Ridge / SDE4</button></section>
           <section class="panel-section"><div class="section-header"><h3>Latest observations</h3><span class="section-kicker">10:30 SGT</span></div><div class="live-summary weather-panel-summary"><div><span class="summary-label">Temperature</span><strong>30.4°C</strong><small>air temperature</small></div><div><span class="summary-label">Humidity</span><strong>71%</strong><small>relative humidity</small></div><div><span class="summary-label">WBGT</span><strong>28.7°C</strong><small>heat stress context</small></div><div><span class="summary-label">Wind</span><strong>SW</strong><small>218 degrees</small></div></div></section>
           <section class="panel-section"><span class="field-label">Period</span><div class="segmented local-segmented"><button class="active" type="button">Weekly</button><button type="button">Monthly</button><button type="button">Yearly</button></div></section>
           <div class="source-status-row"><span class="status-dot live"></span><div><strong>Collector status</strong><small>5 streams received in latest cycle</small></div><span class="tag good">Healthy</span></div>
@@ -434,6 +470,6 @@
     </main>
 
     <script src="src/config.js?v=20260710-mapbox" defer></script>
-    <script src="src/app.js?v=20260805-clean-building-selection" defer></script>
+    <script src="src/app.js?v=20260805-weather-workbench" defer></script>
   </body>
 </html>

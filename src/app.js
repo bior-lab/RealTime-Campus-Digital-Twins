@@ -274,6 +274,13 @@ const aiHealthConfig = {
   },
 };
 
+const weatherDashboardConfig = {
+  url: "https://api.open-meteo.com/v1/forecast",
+  latitude: 1.2966,
+  longitude: 103.7764,
+  timezone: "Asia/Singapore",
+};
+
 const brickGraphConfig = {
   places: ["SDE4"],
   graphs: {
@@ -703,6 +710,9 @@ const state = {
   activeBuildingMetric: initialBuildingMetric,
   activeMarketView: "chart",
   activeMarketInterval: "realtime",
+  activeWeatherPeriod: "7d",
+  weatherData: null,
+  weatherLoadPromise: null,
   buildingHistoryLoaded: new Set(),
 };
 
@@ -766,6 +776,23 @@ const els = {
   marketChartSubtitle: document.getElementById("marketChartSubtitle"),
   marketSeriesNote: document.getElementById("marketSeriesNote"),
   marketChartInteractive: document.getElementById("marketChartInteractive"),
+  weatherSourceStatus: document.getElementById("weatherSourceStatus"),
+  weatherUpdated: document.getElementById("weatherUpdated"),
+  weatherPeriodButtons: document.querySelectorAll("[data-weather-period]"),
+  weatherTemperature: document.getElementById("weatherTemperature"),
+  weatherTemperatureMeta: document.getElementById("weatherTemperatureMeta"),
+  weatherHumidity: document.getElementById("weatherHumidity"),
+  weatherHumidityMeta: document.getElementById("weatherHumidityMeta"),
+  weatherHeatStress: document.getElementById("weatherHeatStress"),
+  weatherHeatStressMeta: document.getElementById("weatherHeatStressMeta"),
+  weatherWind: document.getElementById("weatherWind"),
+  weatherWindMeta: document.getElementById("weatherWindMeta"),
+  weatherChartSubtitle: document.getElementById("weatherChartSubtitle"),
+  weatherThermalChart: document.getElementById("weatherThermalChart"),
+  weatherHeatSubtitle: document.getElementById("weatherHeatSubtitle"),
+  weatherHeatStatus: document.getElementById("weatherHeatStatus"),
+  weatherHeatChart: document.getElementById("weatherHeatChart"),
+  weatherForecast: document.getElementById("weatherForecast"),
   regionList: document.getElementById("regionList"),
   aiBriefList: document.getElementById("aiBriefList"),
   aiInsightList: document.getElementById("aiInsightList"),
@@ -1812,6 +1839,7 @@ function activateTab(tabName) {
   } else {
     els.tokenPanel.classList.add("hidden");
   }
+  if (tabName === "weather") loadWeatherDashboard();
 }
 
 function zoomToRegionCodes(codes) {
@@ -4709,8 +4737,351 @@ function bindMarketChartInteraction(config, initialIndex) {
   update(initialRatio);
 }
 
+function singaporeWeatherDate(value) {
+  if (!value) return null;
+  const normalized = /(?:Z|[+-]\d{2}:?\d{2})$/.test(value) ? value : `${value}:00+08:00`;
+  const date = new Date(normalized);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function compassDirection(degrees) {
+  if (!Number.isFinite(degrees)) return "--";
+  const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+  return directions[Math.round(((degrees % 360) + 360) % 360 / 45) % directions.length];
+}
+
+function estimatedWbgt(tempC, wetBulbC) {
+  if (!Number.isFinite(tempC) || !Number.isFinite(wetBulbC)) return null;
+  return 0.7 * wetBulbC + 0.3 * tempC;
+}
+
+function weatherCodeLabel(code) {
+  if (code === 0) return "Clear";
+  if ([1, 2].includes(code)) return "Partly cloudy";
+  if (code === 3) return "Overcast";
+  if ([45, 48].includes(code)) return "Haze / fog";
+  if ([51, 53, 55, 56, 57].includes(code)) return "Drizzle";
+  if ([61, 63, 65, 66, 67].includes(code)) return "Rain";
+  if ([71, 73, 75, 77].includes(code)) return "Snow";
+  if ([80, 81, 82].includes(code)) return "Showers";
+  if ([85, 86].includes(code)) return "Snow showers";
+  if ([95, 96, 99].includes(code)) return "Thunderstorms";
+  return "Variable";
+}
+
+function weatherPeriodLabel(period) {
+  return period === "24h" ? "Last 24 hours" : period === "30d" ? "Last 30 days" : "Last 7 days";
+}
+
+function weatherAxisLabel(date, period, detailed = false) {
+  if (!(date instanceof Date)) return "--";
+  if (period === "24h") {
+    return new Intl.DateTimeFormat("en-SG", { hour: "2-digit", minute: detailed ? "2-digit" : undefined, hour12: false, timeZone: "Asia/Singapore" }).format(date);
+  }
+  return new Intl.DateTimeFormat("en-SG", {
+    day: "2-digit",
+    month: "short",
+    ...(detailed ? { hour: "2-digit", minute: "2-digit", hour12: false } : {}),
+    timeZone: "Asia/Singapore",
+  }).format(date);
+}
+
+function aggregateDailyWeather(rows) {
+  const groups = new Map();
+  rows.forEach((row) => {
+    const key = new Intl.DateTimeFormat("en-CA", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: "Asia/Singapore" }).format(row.time);
+    const group = groups.get(key) || [];
+    group.push(row);
+    groups.set(key, group);
+  });
+  return [...groups.values()].map((group) => ({
+    time: group[Math.floor(group.length / 2)].time,
+    tempC: average(group.map((row) => row.tempC)),
+    humidityPct: average(group.map((row) => row.humidityPct)),
+    wetBulbC: average(group.map((row) => row.wetBulbC)),
+    windDirection: average(group.map((row) => row.windDirection)),
+    weatherCode: group[Math.floor(group.length / 2)].weatherCode,
+  }));
+}
+
+function weatherRowsForPeriod(data, period = state.activeWeatherPeriod) {
+  const hours = period === "24h" ? 24 : period === "30d" ? 24 * 30 : 24 * 7;
+  const cutoff = data.currentTime.getTime() - hours * 3_600_000;
+  const filtered = data.history.filter((row) => row.time.getTime() >= cutoff && row.time <= data.currentTime);
+  if (period === "30d") return aggregateDailyWeather(filtered).slice(-30);
+  if (period === "7d") return filtered.filter((_, index) => index % 3 === 0 || index === filtered.length - 1);
+  return filtered;
+}
+
+function weatherDeltaText(current, previous, unit, digits = 1) {
+  if (!Number.isFinite(current) || !Number.isFinite(previous)) return "No comparison available";
+  const delta = current - previous;
+  if (Math.abs(delta) < 0.05) return `Stable vs 24h · ${unit}`;
+  return `${delta > 0 ? "Up" : "Down"} ${formatNumber(Math.abs(delta), digits)}${unit} vs 24h`;
+}
+
+function weatherHeatLevel(value) {
+  if (!Number.isFinite(value)) return { label: "Unavailable", className: "" };
+  if (value < 27) return { label: "Low", className: "good" };
+  if (value < 30) return { label: "Elevated", className: "partial" };
+  return { label: "High", className: "high" };
+}
+
+async function loadWeatherDashboard({ force = false } = {}) {
+  if (state.weatherData && !force) {
+    renderWeatherDashboard();
+    return state.weatherData;
+  }
+  if (state.weatherLoadPromise && !force) return state.weatherLoadPromise;
+  if (els.weatherSourceStatus) els.weatherSourceStatus.innerHTML = '<span class="status-dot loading"></span>Loading weather source';
+
+  state.weatherLoadPromise = (async () => {
+    const params = new URLSearchParams({
+      latitude: String(weatherDashboardConfig.latitude),
+      longitude: String(weatherDashboardConfig.longitude),
+      timezone: weatherDashboardConfig.timezone,
+      current: "temperature_2m,relative_humidity_2m,apparent_temperature,wind_direction_10m",
+      hourly: "temperature_2m,relative_humidity_2m,wet_bulb_temperature_2m,wind_direction_10m,weather_code",
+      past_days: "30",
+      forecast_days: "2",
+    });
+    const response = await fetch(`${weatherDashboardConfig.url}?${params.toString()}`, { cache: "no-store" });
+    if (!response.ok) throw new Error(`Weather HTTP ${response.status}`);
+    const payload = await response.json();
+    const currentTime = singaporeWeatherDate(payload.current?.time) || new Date();
+    const times = payload.hourly?.time || [];
+    const rows = times.map((time, index) => ({
+      time: singaporeWeatherDate(time),
+      tempC: Number(payload.hourly?.temperature_2m?.[index]),
+      humidityPct: Number(payload.hourly?.relative_humidity_2m?.[index]),
+      wetBulbC: Number(payload.hourly?.wet_bulb_temperature_2m?.[index]),
+      windDirection: Number(payload.hourly?.wind_direction_10m?.[index]),
+      weatherCode: Number(payload.hourly?.weather_code?.[index]),
+    })).filter((row) => row.time && Number.isFinite(row.tempC) && Number.isFinite(row.humidityPct));
+    const nearest = [...rows].sort((a, b) => Math.abs(a.time - currentTime) - Math.abs(b.time - currentTime))[0];
+    const current = {
+      time: currentTime,
+      tempC: Number(payload.current?.temperature_2m),
+      humidityPct: Number(payload.current?.relative_humidity_2m),
+      apparentTempC: Number(payload.current?.apparent_temperature),
+      windDirection: Number(payload.current?.wind_direction_10m),
+      wetBulbC: nearest?.wetBulbC,
+    };
+    current.wbgtC = estimatedWbgt(current.tempC, current.wetBulbC);
+    state.weatherData = {
+      current,
+      currentTime,
+      history: rows.filter((row) => row.time <= currentTime),
+      forecast: rows.filter((row) => row.time > currentTime).slice(0, 24),
+    };
+    renderWeatherDashboard();
+    return state.weatherData;
+  })().catch((error) => {
+    console.error(error);
+    if (els.weatherSourceStatus) els.weatherSourceStatus.innerHTML = '<span class="status-dot error"></span>Weather source unavailable';
+    if (els.weatherUpdated) els.weatherUpdated.textContent = "Retry on next visit";
+    [els.weatherThermalChart, els.weatherHeatChart, els.weatherForecast].forEach((element) => {
+      if (element) element.innerHTML = '<div class="weather-empty"><strong>Weather data unavailable</strong><span>The public source did not return a valid response.</span></div>';
+    });
+    return null;
+  }).finally(() => {
+    state.weatherLoadPromise = null;
+  });
+  return state.weatherLoadPromise;
+}
+
+function renderWeatherThermalChart(rows, period) {
+  if (!els.weatherThermalChart || !rows.length) return;
+  const width = 1100;
+  const height = 330;
+  const plot = { left: 58, right: 62, top: 28, bottom: 45 };
+  const plotWidth = width - plot.left - plot.right;
+  const plotHeight = height - plot.top - plot.bottom;
+  const temperatures = rows.map((row) => row.tempC).filter(Number.isFinite);
+  const humidities = rows.map((row) => row.humidityPct).filter(Number.isFinite);
+  const tempMin = Math.floor(Math.min(...temperatures) - 1);
+  const tempMax = Math.ceil(Math.max(...temperatures) + 1);
+  const humidityMin = Math.max(0, Math.floor((Math.min(...humidities) - 5) / 10) * 10);
+  const humidityMax = Math.min(100, Math.ceil((Math.max(...humidities) + 5) / 10) * 10);
+  const xFor = (index) => plot.left + (index / Math.max(rows.length - 1, 1)) * plotWidth;
+  const yTemp = (value) => plot.top + (1 - (value - tempMin) / Math.max(tempMax - tempMin, 1)) * plotHeight;
+  const yHumidity = (value) => plot.top + (1 - (value - humidityMin) / Math.max(humidityMax - humidityMin, 1)) * plotHeight;
+  const tempPoints = rows.map((row, index) => `${xFor(index).toFixed(1)},${yTemp(row.tempC).toFixed(1)}`).join(" ");
+  const humidityPoints = rows.map((row, index) => `${xFor(index).toFixed(1)},${yHumidity(row.humidityPct).toFixed(1)}`).join(" ");
+  const grid = Array.from({ length: 5 }, (_, index) => {
+    const ratio = index / 4;
+    const y = plot.top + ratio * plotHeight;
+    const temp = tempMax - ratio * (tempMax - tempMin);
+    const humidity = humidityMax - ratio * (humidityMax - humidityMin);
+    return `<line x1="${plot.left}" x2="${width - plot.right}" y1="${y}" y2="${y}"></line><text x="${plot.left - 12}" y="${y + 4}" text-anchor="end">${formatNumber(temp, 0)}°</text><text x="${width - plot.right + 12}" y="${y + 4}">${formatNumber(humidity, 0)}%</text>`;
+  }).join("");
+  const tickIndexes = [...new Set(Array.from({ length: 6 }, (_, index) => Math.round(index * (rows.length - 1) / 5)) )];
+  const ticks = tickIndexes.map((index) => `<text x="${xFor(index)}" y="${height - 14}" text-anchor="middle">${weatherAxisLabel(rows[index].time, period)}</text>`).join("");
+  const hits = rows.map((_, index) => {
+    const start = index === 0 ? plot.left : (xFor(index - 1) + xFor(index)) / 2;
+    const end = index === rows.length - 1 ? width - plot.right : (xFor(index) + xFor(index + 1)) / 2;
+    return `<rect class="weather-chart-hit" data-weather-index="${index}" x="${start}" y="${plot.top}" width="${Math.max(1, end - start)}" height="${plotHeight}" tabindex="0"></rect>`;
+  }).join("");
+  els.weatherThermalChart.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Temperature and humidity time series">
+      <text class="weather-axis-unit" x="${plot.left}" y="14">Temperature °C</text><text class="weather-axis-unit right" x="${width - plot.right}" y="14">Relative humidity %</text>
+      <g class="weather-chart-grid">${grid}</g><g class="weather-chart-axis">${ticks}</g>
+      <polyline class="weather-series temperature" points="${tempPoints}"></polyline>
+      <polyline class="weather-series humidity" points="${humidityPoints}"></polyline>
+      <line class="weather-hover-line" y1="${plot.top}" y2="${height - plot.bottom}" hidden></line>
+      <circle class="weather-hover-dot temperature" r="5" hidden></circle><circle class="weather-hover-dot humidity" r="5" hidden></circle>
+      <g>${hits}</g>
+    </svg>
+    <div class="weather-chart-tooltip" role="status" hidden></div>
+  `;
+  bindWeatherThermalInteraction({ rows, period, width, xFor, yTemp, yHumidity });
+}
+
+function bindWeatherThermalInteraction({ rows, period, width, xFor, yTemp, yHumidity }) {
+  const frame = els.weatherThermalChart;
+  const tooltip = frame.querySelector(".weather-chart-tooltip");
+  const line = frame.querySelector(".weather-hover-line");
+  const tempDot = frame.querySelector(".weather-hover-dot.temperature");
+  const humidityDot = frame.querySelector(".weather-hover-dot.humidity");
+  const hide = () => { tooltip.hidden = true; line.hidden = true; tempDot.hidden = true; humidityDot.hidden = true; };
+  const show = (index) => {
+    const row = rows[index];
+    const x = xFor(index);
+    line.setAttribute("x1", x); line.setAttribute("x2", x); line.hidden = false;
+    tempDot.setAttribute("cx", x); tempDot.setAttribute("cy", yTemp(row.tempC)); tempDot.hidden = false;
+    humidityDot.setAttribute("cx", x); humidityDot.setAttribute("cy", yHumidity(row.humidityPct)); humidityDot.hidden = false;
+    const wbgt = estimatedWbgt(row.tempC, row.wetBulbC);
+    tooltip.innerHTML = `<header>${weatherAxisLabel(row.time, period, true)}</header><div><span><i class="temperature"></i>Temperature</span><strong>${formatNumber(row.tempC, 1)} °C</strong></div><div><span><i class="humidity"></i>Humidity</span><strong>${formatNumber(row.humidityPct, 0)} %RH</strong></div><small>Est. WBGT ${formatNumber(wbgt, 1)} °C</small>`;
+    tooltip.hidden = false;
+    const pixelX = (x / width) * frame.clientWidth;
+    tooltip.style.left = `${Math.max(112, Math.min(frame.clientWidth - 112, pixelX))}px`;
+    tooltip.classList.toggle("align-right", pixelX > frame.clientWidth * 0.78);
+  };
+  frame.querySelectorAll("[data-weather-index]").forEach((hit) => {
+    const index = Number(hit.dataset.weatherIndex);
+    hit.addEventListener("pointerenter", () => show(index));
+    hit.addEventListener("pointermove", () => show(index));
+    hit.addEventListener("focus", () => show(index));
+    hit.addEventListener("blur", hide);
+  });
+  frame.addEventListener("pointerleave", hide);
+}
+
+function renderWeatherHeatChart(rows, period) {
+  if (!els.weatherHeatChart || !rows.length) return;
+  const values = rows.map((row) => estimatedWbgt(row.tempC, row.wetBulbC));
+  const width = 560;
+  const height = 205;
+  const plot = { left: 42, right: 18, top: 20, bottom: 36 };
+  const min = 23;
+  const max = Math.max(33, Math.ceil(Math.max(...values.filter(Number.isFinite)) + 1));
+  const xFor = (index) => plot.left + (index / Math.max(rows.length - 1, 1)) * (width - plot.left - plot.right);
+  const yFor = (value) => plot.top + (1 - (value - min) / (max - min)) * (height - plot.top - plot.bottom);
+  const points = values.map((value, index) => `${xFor(index).toFixed(1)},${yFor(value).toFixed(1)}`).join(" ");
+  const band = (low, high, className) => {
+    const top = yFor(Math.min(high, max));
+    const bottom = yFor(Math.max(low, min));
+    return `<rect class="${className}" x="${plot.left}" y="${top}" width="${width - plot.left - plot.right}" height="${Math.max(0, bottom - top)}"></rect>`;
+  };
+  const ticks = [24, 27, 30, 33].filter((value) => value <= max).map((value) => `<line x1="${plot.left}" x2="${width - plot.right}" y1="${yFor(value)}" y2="${yFor(value)}"></line><text x="${plot.left - 8}" y="${yFor(value) + 3}" text-anchor="end">${value}°</text>`).join("");
+  const current = values.at(-1);
+  const peak = Math.max(...values.filter(Number.isFinite));
+  els.weatherHeatChart.innerHTML = `
+    <div class="weather-heat-summary"><div><span>Current</span><strong>${formatNumber(current, 1)} °C</strong></div><div><span>Period peak</span><strong>${formatNumber(peak, 1)} °C</strong></div></div>
+    <div class="weather-heat-plot"><svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Estimated WBGT trend">
+      <g class="weather-risk-bands">${band(min, 27, "low")}${band(27, 30, "moderate")}${band(30, max, "high")}</g>
+      <g class="weather-heat-grid">${ticks}</g><polyline class="weather-heat-series" points="${points}"></polyline>
+      <circle class="weather-heat-current" cx="${xFor(values.length - 1)}" cy="${yFor(current)}" r="4"></circle>
+      <line class="weather-heat-hover-line" y1="${plot.top}" y2="${height - plot.bottom}" hidden></line><circle class="weather-heat-hover-dot" r="4" hidden></circle>
+    </svg><div class="weather-heat-tooltip" role="status" hidden></div></div>
+  `;
+  bindWeatherHeatInteraction({ rows, values, period, width, xFor, yFor });
+}
+
+function bindWeatherHeatInteraction({ rows, values, period, width, xFor, yFor }) {
+  const frame = els.weatherHeatChart.querySelector(".weather-heat-plot");
+  const tooltip = frame?.querySelector(".weather-heat-tooltip");
+  const line = frame?.querySelector(".weather-heat-hover-line");
+  const dot = frame?.querySelector(".weather-heat-hover-dot");
+  if (!frame || !tooltip || !line || !dot) return;
+  const hide = () => { tooltip.hidden = true; line.hidden = true; dot.hidden = true; };
+  const show = (event) => {
+    const bounds = frame.getBoundingClientRect();
+    const ratio = Math.min(1, Math.max(0, (event.clientX - bounds.left) / Math.max(bounds.width, 1)));
+    const index = Math.round(ratio * (values.length - 1));
+    const value = values[index];
+    const x = xFor(index);
+    line.setAttribute("x1", x); line.setAttribute("x2", x); line.hidden = false;
+    dot.setAttribute("cx", x); dot.setAttribute("cy", yFor(value)); dot.hidden = false;
+    const level = weatherHeatLevel(value);
+    tooltip.innerHTML = `<span>${weatherAxisLabel(rows[index].time, period, true)}</span><strong>${formatNumber(value, 1)} °C</strong><small>${level.label} heat stress</small>`;
+    tooltip.hidden = false;
+    const pixelX = (x / width) * frame.clientWidth;
+    tooltip.style.left = `${Math.max(70, Math.min(frame.clientWidth - 70, pixelX))}px`;
+  };
+  frame.addEventListener("pointermove", show);
+  frame.addEventListener("pointerleave", hide);
+}
+
+function renderWeatherForecast(rows) {
+  if (!els.weatherForecast) return;
+  if (!rows.length) {
+    els.weatherForecast.innerHTML = '<div class="weather-empty"><strong>Forecast unavailable</strong><span>No future periods were returned.</span></div>';
+    return;
+  }
+  const groups = Array.from({ length: 4 }, (_, index) => rows.slice(index * 6, index * 6 + 6)).filter((group) => group.length);
+  els.weatherForecast.innerHTML = groups.map((group) => {
+    const first = group[0];
+    const last = group.at(-1);
+    const temps = group.map((row) => row.tempC);
+    const humidities = group.map((row) => row.humidityPct);
+    const codes = group.map((row) => row.weatherCode);
+    const code = codes.sort((a, b) => codes.filter((item) => item === a).length - codes.filter((item) => item === b).length).at(-1);
+    const time = `${weatherAxisLabel(first.time, "24h")}–${weatherAxisLabel(new Date(last.time.getTime() + 3_600_000), "24h")}`;
+    return `<div class="weather-forecast-row"><time>${time}</time><div><strong>${escapeHtml(weatherCodeLabel(code))}</strong><span>${formatNumber(Math.min(...temps), 0)}–${formatNumber(Math.max(...temps), 0)} °C</span></div><dl><div><dt>Humidity</dt><dd>${formatNumber(average(humidities), 0)}%</dd></div><div><dt>Wind</dt><dd>${compassDirection(average(group.map((row) => row.windDirection)))}</dd></div></dl></div>`;
+  }).join("");
+}
+
+function renderWeatherDashboard() {
+  const data = state.weatherData;
+  if (!data) return;
+  const current = data.current;
+  const prior = [...data.history].reverse().find((row) => row.time <= new Date(data.currentTime.getTime() - 23 * 3_600_000));
+  const heat = weatherHeatLevel(current.wbgtC);
+  if (els.weatherSourceStatus) els.weatherSourceStatus.innerHTML = '<span class="status-dot live"></span>Open-Meteo · live';
+  if (els.weatherUpdated) els.weatherUpdated.textContent = `Updated ${new Intl.DateTimeFormat("en-SG", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Singapore" }).format(current.time)} SGT`;
+  els.weatherTemperature.textContent = `${formatNumber(current.tempC, 1)} °C`;
+  els.weatherTemperatureMeta.textContent = weatherDeltaText(current.tempC, prior?.tempC, " °C");
+  els.weatherHumidity.textContent = `${formatNumber(current.humidityPct, 0)} %`;
+  els.weatherHumidityMeta.textContent = weatherDeltaText(current.humidityPct, prior?.humidityPct, " pp", 0);
+  els.weatherHeatStress.textContent = `${formatNumber(current.wbgtC, 1)} °C`;
+  els.weatherHeatStressMeta.textContent = `${heat.label} · estimated in shade`;
+  els.weatherWind.textContent = `${formatNumber(current.windDirection, 0)}° ${compassDirection(current.windDirection)}`;
+  els.weatherWindMeta.textContent = `Feels like ${formatNumber(current.apparentTempC, 1)} °C`;
+  els.weatherHeatStatus.textContent = heat.label;
+  els.weatherHeatStatus.className = `tag ${heat.className}`.trim();
+  const rows = weatherRowsForPeriod(data);
+  const aggregation = state.activeWeatherPeriod === "30d" ? "daily means" : state.activeWeatherPeriod === "7d" ? "3-hour samples" : "hourly samples";
+  els.weatherChartSubtitle.textContent = `${weatherPeriodLabel(state.activeWeatherPeriod)} · ${aggregation} · Open-Meteo`;
+  els.weatherHeatSubtitle.textContent = `${weatherPeriodLabel(state.activeWeatherPeriod)} · estimated WBGT in shade`;
+  renderWeatherThermalChart(rows, state.activeWeatherPeriod);
+  renderWeatherHeatChart(rows, state.activeWeatherPeriod);
+  renderWeatherForecast(data.forecast);
+}
+
+function setWeatherPeriod(period) {
+  state.activeWeatherPeriod = ["24h", "7d", "30d"].includes(period) ? period : "7d";
+  els.weatherPeriodButtons.forEach((button) => {
+    const active = button.dataset.weatherPeriod === state.activeWeatherPeriod;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  renderWeatherDashboard();
+}
+
 function bindControls() {
   els.tabButtons.forEach((button) => button.addEventListener("click", () => activateTab(button.dataset.tab)));
+  els.weatherPeriodButtons.forEach((button) => button.addEventListener("click", () => setWeatherPeriod(button.dataset.weatherPeriod)));
   document.querySelectorAll(".local-segmented").forEach((control) => {
     control.addEventListener("click", (event) => {
       const button = event.target.closest("button");
@@ -4963,6 +5334,7 @@ renderMarketHeatmap();
 renderBuildingAnalytics();
 setMarketView(state.activeMarketView);
 renderMarketInterval(state.activeMarketInterval);
+setWeatherPeriod(state.activeWeatherPeriod);
 activateTab(state.activeTab);
 
 const initialMapboxToken = getInitialMapboxToken();
