@@ -6,90 +6,40 @@
     <title>NUS Campus EMIS Dashboard</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="vendor/mapbox-gl/mapbox-gl.css" />
-    <link rel="stylesheet" href="src/styles.css?v=20260615-layer-labels" />
+    <link rel="stylesheet" href="src/styles.css?v=20260717-building-chart-upgrade" />
     <script src="vendor/mapbox-gl/mapbox-gl.js"></script>
   </head>
   <body>
     <main class="app-shell">
       <aside class="rail" aria-label="Primary navigation">
+        <div class="rail-product" aria-label="Campus EMIS">Campus<br />EMIS</div>
         <nav class="rail-nav">
           <button type="button" class="active" data-tab="overview" aria-pressed="true">
-            <span class="rail-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false">
-                <path d="M4 19V5" />
-                <path d="M4 19h16" />
-                <path d="M8 16v-5" />
-                <path d="M12 16V8" />
-                <path d="M16 16v-3" />
-              </svg>
-            </span>
+            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 18V6l9-3 9 3v12l-9 3-9-3Z"/><path d="M12 3v18"/><path d="m3 6 9 3 9-3"/></svg></span>
             Overview
           </button>
           <button type="button" data-tab="buildings" aria-pressed="false">
-            <span class="rail-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false">
-                <path d="M4 21V7l8-4 8 4v14" />
-                <path d="M9 21v-5h6v5" />
-                <path d="M8 10h.01" />
-                <path d="M12 10h.01" />
-                <path d="M16 10h.01" />
-                <path d="M8 14h.01" />
-                <path d="M16 14h.01" />
-              </svg>
-            </span>
+            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-5h6v5"/><path d="M8 10h.01M12 10h.01M16 10h.01M8 14h.01M16 14h.01"/></svg></span>
             Buildings
           </button>
-          <button type="button" data-tab="context" aria-pressed="false">
-            <span class="rail-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false">
-                <path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z" />
-                <path d="M3 12h18" />
-                <path d="M12 3c2.4 2.5 3.6 5.5 3.6 9S14.4 18.5 12 21" />
-                <path d="M12 3c-2.4 2.5-3.6 5.5-3.6 9S9.6 18.5 12 21" />
-              </svg>
-            </span>
-            Context
+          <button type="button" data-tab="market" aria-pressed="false">
+            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="m7 15 4-4 3 2 5-7"/><path d="M16 6h3v3"/></svg></span>
+            Market
           </button>
-          <button type="button" data-tab="ai" aria-pressed="false">
-            <span class="rail-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false">
-                <path d="M12 3v4" />
-                <path d="M12 17v4" />
-                <path d="M3 12h4" />
-                <path d="M17 12h4" />
-                <path d="M8.5 8.5 6 6" />
-                <path d="m18 18-2.5-2.5" />
-                <path d="m15.5 8.5 2.5-2.5" />
-                <path d="M6 18l2.5-2.5" />
-                <path d="M10 10h4v4h-4z" />
-              </svg>
-            </span>
-            AI
+          <button type="button" data-tab="weather" aria-pressed="false">
+            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M17 17H7a4 4 0 1 1 1.1-7.85A5.5 5.5 0 0 1 18.5 11 3 3 0 0 1 17 17Z"/><path d="M12 2v3M4.9 4.9 7 7M19.1 4.9 17 7"/></svg></span>
+            Weather
           </button>
-          <button type="button" data-tab="layers" aria-pressed="false">
-            <span class="rail-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false">
-                <path d="m12 3 9 5-9 5-9-5 9-5Z" />
-                <path d="m3 12 9 5 9-5" />
-                <path d="m3 16 9 5 9-5" />
-              </svg>
-            </span>
-            Layers
+          <button type="button" data-tab="data" aria-pressed="false">
+            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"/><path d="m16 17 1.5 1.5L21 15"/></svg></span>
+            Data
           </button>
         </nav>
         <div class="rail-spacer"></div>
-        <button type="button" class="rail-settings" aria-label="Settings">
-          <span class="rail-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" focusable="false">
-              <path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z" />
-              <path d="M19.4 15a1.8 1.8 0 0 0 .36 2l.06.06a2.1 2.1 0 0 1-3 3l-.06-.06a1.8 1.8 0 0 0-2-.36 1.8 1.8 0 0 0-1.1 1.66V21a2.1 2.1 0 0 1-4.2 0v-.09a1.8 1.8 0 0 0-1.1-1.66 1.8 1.8 0 0 0-2 .36l-.06.06a2.1 2.1 0 0 1-3-3l.06-.06a1.8 1.8 0 0 0 .36-2 1.8 1.8 0 0 0-1.66-1.1H2a2.1 2.1 0 0 1 0-4.2h.09a1.8 1.8 0 0 0 1.66-1.1 1.8 1.8 0 0 0-.36-2l-.06-.06a2.1 2.1 0 0 1 3-3l.06.06a1.8 1.8 0 0 0 2 .36 1.8 1.8 0 0 0 1.1-1.66V2a2.1 2.1 0 0 1 4.2 0v.09a1.8 1.8 0 0 0 1.1 1.66 1.8 1.8 0 0 0 2-.36l.06-.06a2.1 2.1 0 0 1 3 3l-.06.06a1.8 1.8 0 0 0-.36 2 1.8 1.8 0 0 0 1.66 1.1H22a2.1 2.1 0 0 1 0 4.2h-.09A1.8 1.8 0 0 0 19.4 15Z" />
-            </svg>
-          </span>
-          Settings
-        </button>
+        <div class="rail-version"><span aria-hidden="true">i</span>Local build</div>
       </aside>
 
-      <section class="map-stage" aria-label="NUS campus map">
+      <section class="map-stage" data-active-workspace="overview" aria-label="NUS campus map and analysis workspace">
         <div id="map" class="map"></div>
 
         <div id="tokenPanel" class="token-panel" role="dialog" aria-labelledby="tokenTitle">
@@ -115,6 +65,147 @@
           <span id="realtimeStatusDot" class="status-dot"></span>
           <span id="realtimeStatusText">Realtime API pending</span>
         </div>
+
+        <section class="workspace-view overview-workspace active" data-workspace="overview" aria-label="Campus monitoring overview">
+          <header class="workspace-topbar">
+            <div><h1>Campus Monitoring Overview</h1><p>Selected NUS buildings · map metric: data coverage</p></div>
+            <div class="topbar-actions"><span class="source-chip"><span class="status-dot live"></span>Collectors healthy</span><span class="source-chip">Updated <strong id="overviewUpdated">--</strong></span></div>
+          </header>
+          <div class="overview-map-modes segmented engineering-segmented" role="group" aria-label="Overview map metric">
+            <button type="button" data-metric="live" class="active" aria-pressed="true">Coverage</button>
+            <button type="button" data-metric="electricity" aria-pressed="false">Electricity</button>
+            <button type="button" data-metric="cooling" aria-pressed="false">Cooling</button>
+            <button type="button" data-metric="pv" aria-pressed="false">PV</button>
+            <button type="button" data-metric="eui" aria-pressed="false">EUI</button>
+          </div>
+          <aside class="performance-drawer" aria-label="Building performance coverage">
+            <header><div><h2>Building Performance</h2><p>Coverage and latest source status</p></div><span class="tag info">16 selected</span></header>
+            <div id="overviewBuildingPerformance" class="performance-list"></div>
+            <footer><div><span>SDE4 weather</span><strong>30.4°C · 71% RH</strong></div><div><span>USEP provisional</span><strong>142.6 S$/MWh</strong></div></footer>
+          </aside>
+        </section>
+
+        <section class="workspace-view analysis-workspace" data-workspace="buildings" aria-label="Building performance analysis">
+          <header class="workspace-topbar">
+            <div><h1>Building Energy Analysis</h1><p id="buildingWorkspaceSubtitle">Weekly comparison · selected metered buildings</p></div>
+            <div class="topbar-actions"><button id="openRealtimeWorkspace" class="toolbar-button" type="button">Realtime detail</button><span class="source-chip">Public API · hourly</span></div>
+          </header>
+          <div class="workspace-content building-analysis-content">
+            <div class="summary-strip">
+              <div><span>Selected buildings</span><strong id="buildingAnalysisSelectionCount">3</strong><small>maximum four</small></div>
+              <div><span>Period</span><strong id="buildingAnalysisPeriod">Weekly</strong><small id="buildingAnalysisAggregation">complete days</small></div>
+              <div><span>Primary metric</span><strong id="buildingAnalysisMetric">Electricity</strong><small id="buildingAnalysisUnit">kWh consumption</small></div>
+              <div><span>Data available</span><strong id="buildingAnalysisCoverage">--</strong><small>selected meter groups</small></div>
+            </div>
+            <div class="building-performance-grid">
+              <article class="dashboard-card chart-card building-primary-chart">
+                <header class="building-chart-header"><div><h2 id="buildingChartTitle">Electricity consumption</h2><p id="buildingChartSubtitle">Daily totals · weekly view · kWh</p></div><div id="buildingChartLegend" class="chart-legend building-chart-legend"></div></header>
+                <div id="buildingChartKpis" class="building-chart-kpis" aria-label="Selected portfolio energy summary"></div>
+                <div id="buildingPerformanceChart" class="generated-chart" aria-label="Selected building performance comparison"></div>
+              </article>
+              <article class="dashboard-card portfolio-ranking-card">
+                <header><div><h2>Selected portfolio</h2><p id="buildingRankingSubtitle">Weekly electricity total</p></div><span class="tag info">Ranked</span></header>
+                <div id="buildingPortfolioTotals" class="portfolio-ranking"></div>
+              </article>
+            </div>
+            <article class="dashboard-card comparison-card">
+              <header><div><h2>Building comparison</h2><p id="buildingComparisonSubtitle">Weekly and month-to-date totals · mapped hourly streams</p></div></header>
+              <div class="table-scroll"><table class="engineering-table building-comparison-table"><thead><tr id="buildingComparisonHead"><th>Building</th><th>Weekly electricity</th><th>MTD electricity</th><th>Weekly cooling</th><th>MTD cooling</th><th>Weekly PV</th><th>Coverage</th><th>Latest record</th></tr></thead><tbody id="buildingComparisonBody"></tbody></table></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="workspace-view analysis-workspace" data-workspace="market" aria-label="Singapore wholesale electricity market">
+          <header class="workspace-topbar">
+            <div><h1>Singapore Wholesale Energy Price</h1><p>Uniform Singapore Energy Price · EMC / NEMS market context</p></div>
+            <div class="topbar-actions"><span class="source-chip"><span class="status-dot partial"></span>Provisional</span><span class="source-chip">Period 35 · 17 Jul 2026</span></div>
+          </header>
+          <div class="workspace-content market-analysis-content">
+            <div class="market-kpi-strip" aria-label="Latest Singapore market values">
+              <div><span>USEP</span><strong>214.19</strong><small>S$/MWh · provisional</small></div>
+              <div><span>System demand</span><strong>7,617</strong><small>MW</small></div>
+              <div><span>Solar output</span><strong>386</strong><small>MW</small></div>
+              <div><span>VCP</span><strong>252.68</strong><small>S$/MWh</small></div>
+            </div>
+            <article class="dashboard-card market-data-card">
+              <header class="market-card-toolbar">
+                <div><h2 id="marketChartTitle">Real-time Energy Prices and Demand</h2><p id="marketChartSubtitle">Half-hour trading periods · 17 Jul 2026</p></div>
+                <div class="segmented market-view-toggle" role="group" aria-label="Market data view"><button class="active" type="button" data-market-view="chart" aria-pressed="true">Chart</button><button type="button" data-market-view="table" aria-pressed="false">Table</button></div>
+              </header>
+              <div class="market-view-panel" data-market-view-panel="chart">
+                <div class="market-series-header"><div class="chart-legend"><span style="--series:#cf7400">USEP</span><span style="--series:#64788c">Period average</span></div><span id="marketSeriesNote">Past and published periods</span></div>
+                <div id="marketChartInteractive" class="market-chart-interactive">
+                  <svg class="engineering-chart market-chart" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-label="USEP intraday price">
+                    <g class="chart-gridlines"><line x1="66" x2="978" y1="30" y2="30"/><line x1="66" x2="978" y1="92" y2="92"/><line x1="66" x2="978" y1="154" y2="154"/><line x1="66" x2="978" y1="216" y2="216"/><line x1="66" x2="978" y1="258" y2="258"/></g>
+                    <g class="market-y-axis"><text x="12" y="34">300</text><text x="12" y="96">225</text><text x="12" y="158">150</text><text x="20" y="220">75</text><text x="27" y="262">0</text></g>
+                    <path class="chart-area amber" d="M66 214 L90 209 L114 218 L138 221 L162 211 L186 204 L210 193 L234 181 L258 171 L282 156 L306 125 L330 97 L354 108 L378 142 L402 161 L426 165 L450 155 L474 147 L498 140 L522 133 L546 143 L570 149 L594 154 L618 142 L642 128 L666 103 L690 75 L714 56 L738 80 L762 115 L786 135 L810 143 L834 133 L858 123 L882 113 L906 99 L930 108 L954 96 L978 83 L978 258 L66 258Z"/>
+                    <polyline class="chart-line amber" points="66,214 90,209 114,218 138,221 162,211 186,204 210,193 234,181 258,171 282,156 306,125 330,97 354,108 378,142 402,161 426,165 450,155 474,147 498,140 522,133 546,143 570,149 594,154 618,142 642,128 666,103 690,75 714,56 738,80 762,115 786,135 810,143 834,133 858,123 882,113 906,99 930,108 954,96 978,83"/>
+                    <line class="average-line" x1="66" x2="978" y1="161" y2="161"/>
+                    <g class="chart-axis"><text x="66" y="288">00:00</text><text x="282" y="288">06:00</text><text x="498" y="288">12:00</text><text x="714" y="288">18:00</text><text x="940" y="288">24:00</text></g>
+                  </svg>
+                  <div class="market-crosshair"></div><div class="market-tooltip"><strong>214.2 S$/MWh</strong><span>17 Jul 2026 · Period 35</span><small>21.42 cents/kWh · provisional</small></div>
+                </div>
+              </div>
+              <div class="market-view-panel hidden" data-market-view-panel="table">
+                <div class="table-scroll market-table-scroll"><table class="engineering-table market-period-table"><thead><tr><th>Date</th><th>Period</th><th>Demand<br>MW</th><th>Solar<br>MW</th><th>TCL<br>MW</th><th>USEP<br>S$/MWh</th><th>EHEUR<br>S$/MWh</th><th>LCP<br>S$/MWh</th><th>RUSEP<br>S$/MWh</th><th>MAP</th><th>MAPT</th><th>TPC</th></tr></thead><tbody>
+                  <tr><td>17 Jul 2026</td><td>10:00-10:30</td><td>7,343.210</td><td>676.220</td><td>0.000</td><td>201.70</td><td>-0.97</td><td>0.00</td><td>201.70</td><td>296.89</td><td>591.75</td><td>No</td></tr>
+                  <tr><td>17 Jul 2026</td><td>10:30-11:00</td><td>7,321.650</td><td>748.970</td><td>0.000</td><td>215.99</td><td>-1.04</td><td>0.00</td><td>215.99</td><td>298.34</td><td>591.75</td><td>No</td></tr>
+                  <tr><td>17 Jul 2026</td><td>11:00-11:30</td><td>7,344.880</td><td>718.640</td><td>0.000</td><td>221.07</td><td>-1.05</td><td>0.00</td><td>221.07</td><td>298.74</td><td>591.75</td><td>No</td></tr>
+                  <tr><td>17 Jul 2026</td><td>11:30-12:00</td><td>7,214.497</td><td>825.380</td><td>0.000</td><td>214.41</td><td>-1.03</td><td>0.00</td><td>214.41</td><td>299.01</td><td>591.75</td><td>No</td></tr>
+                  <tr><td>17 Jul 2026</td><td>12:00-12:30</td><td>7,198.528</td><td>770.500</td><td>0.000</td><td>214.01</td><td>-1.02</td><td>0.00</td><td>214.01</td><td>299.26</td><td>591.75</td><td>No</td></tr>
+                  <tr><td>17 Jul 2026</td><td>12:30-13:00</td><td>7,243.169</td><td>713.280</td><td>0.000</td><td>213.56</td><td>-1.02</td><td>0.00</td><td>213.56</td><td>299.52</td><td>591.75</td><td>No</td></tr>
+                  <tr><td>17 Jul 2026</td><td>13:00-13:30</td><td>7,405.981</td><td>557.750</td><td>0.000</td><td>201.77</td><td>-1.07</td><td>0.00</td><td>201.77</td><td>300.52</td><td>591.75</td><td>No</td></tr>
+                  <tr class="market-row-current"><td>17 Jul 2026</td><td>13:30-14:00</td><td>7,616.550</td><td>385.850</td><td>0.000</td><td><strong>214.19</strong></td><td>-1.17</td><td>0.00</td><td>214.19</td><td>301.78</td><td>591.75</td><td>No</td></tr>
+                  <tr class="market-row-future"><td>17 Jul 2026</td><td>14:00-14:30</td><td>7,374.715</td><td>646.300</td><td>0.000</td><td>201.61</td><td>-1.10</td><td>0.00</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+                  <tr class="market-row-future"><td>17 Jul 2026</td><td>14:30-15:00</td><td>7,402.979</td><td>627.100</td><td>0.000</td><td>201.82</td><td>-1.13</td><td>0.00</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+                </tbody></table></div>
+                <div class="market-state-key"><span><i class="past"></i>Past</span><span><i class="current"></i>Current</span><span><i class="future"></i>Future</span></div>
+              </div>
+            </article>
+            <article class="dashboard-card rolling-card market-performance-card"><header><div><h2>Rolling Price Performance</h2><p>Change against previous equivalent period · S$/MWh</p></div></header><table class="engineering-table rolling-price-table"><thead><tr><th>Period</th><th>Average price</th><th>Trend</th><th>Change</th><th>Peak</th></tr></thead><tbody><tr><td><strong>Today</strong></td><td><div class="average-meter"><span style="--value:61%"></span><strong>121.4</strong></div></td><td><svg class="sparkline" viewBox="0 0 96 24" preserveAspectRatio="none"><polyline points="2,19 13,18 24,20 35,16 46,13 57,15 68,10 79,7 94,9"/><circle cx="94" cy="9" r="2"/></svg></td><td><span class="change-up">↑ 8.4%</span></td><td><strong>238.7</strong></td></tr><tr><td><strong>7 Days</strong></td><td><div class="average-meter"><span style="--value:67%"></span><strong>132.8</strong></div></td><td><svg class="sparkline" viewBox="0 0 96 24" preserveAspectRatio="none"><polyline points="2,8 13,11 24,9 35,13 46,12 57,16 68,14 79,17 94,15"/><circle cx="94" cy="15" r="2"/></svg></td><td><span class="change-down">↓ 3.1%</span></td><td><strong>414.2</strong></td></tr><tr><td><strong>30 Days</strong></td><td><div class="average-meter"><span style="--value:74%"></span><strong>146.5</strong></div></td><td><svg class="sparkline" viewBox="0 0 96 24" preserveAspectRatio="none"><polyline points="2,18 13,14 24,16 35,10 46,12 57,8 68,11 79,6 94,7"/><circle cx="94" cy="7" r="2"/></svg></td><td><span class="change-up">↑ 6.7%</span></td><td><strong>626.0</strong></td></tr></tbody></table></article>
+          </div>
+        </section>
+
+        <section class="workspace-view analysis-workspace" data-workspace="weather" aria-label="Campus weather context">
+          <header class="workspace-topbar"><div><h1>Campus Weather Context</h1><p>SDE4 weather station · observations and Singapore forecast</p></div><div class="topbar-actions"><span class="source-chip"><span class="status-dot live"></span>5 streams active</span><span class="source-chip">Updated 10:30 SGT</span></div></header>
+          <div class="workspace-content weather-analysis-content">
+            <div class="summary-strip weather-summary"><div><span>Air temperature</span><strong>30.4°C</strong></div><div><span>Relative humidity</span><strong>71%</strong></div><div><span>WBGT</span><strong>28.7°C</strong></div><div><span>Wind direction</span><strong>218° SW</strong></div></div>
+            <article class="dashboard-card chart-card weather-primary"><header><div><h2>Temperature and relative humidity</h2><p>Weekly observations · SDE4 Weather Station</p></div><div class="chart-legend"><span style="--series:#c4473a">Temperature</span><span style="--series:#2474cc">Humidity</span></div></header><svg class="engineering-chart weather-chart" viewBox="0 0 1000 290" preserveAspectRatio="none"><g class="chart-gridlines"><line x1="55" x2="980" y1="55" y2="55"/><line x1="55" x2="980" y1="125" y2="125"/><line x1="55" x2="980" y1="195" y2="195"/><line x1="55" x2="980" y1="265" y2="265"/></g><polyline class="chart-line red" points="55,168 130,137 205,103 280,96 355,132 430,155 505,116 580,89 655,119 730,166 805,140 880,107 955,132"/><polyline class="chart-line blue" points="55,120 130,151 205,177 280,198 355,159 430,133 505,161 580,195 655,155 730,121 805,141 880,170 955,149"/></svg></article>
+            <div class="two-chart-grid weather-lower-grid"><article class="dashboard-card chart-card"><header><div><h2>WBGT trend</h2><p>Weekly heat-stress context</p></div><span class="tag partial">Context only</span></header><svg class="engineering-chart compact" viewBox="0 0 500 170" preserveAspectRatio="none"><g class="chart-gridlines"><line x1="35" x2="485" y1="35" y2="35"/><line x1="35" x2="485" y1="90" y2="90"/><line x1="35" x2="485" y1="145" y2="145"/></g><polyline class="chart-line amber" points="35,126 110,94 185,71 260,86 335,52 410,92 485,68"/></svg></article><article class="dashboard-card forecast-card"><header><div><h2>24-hour forecast</h2><p>Singapore forecast endpoint</p></div><span class="tag info">Public API</span></header><table class="engineering-table"><thead><tr><th>Period</th><th>Forecast</th><th>Temperature</th></tr></thead><tbody><tr><td>Morning</td><td>Partly cloudy</td><td>27–31°C</td></tr><tr><td>Afternoon</td><td>Thundery showers</td><td>29–33°C</td></tr><tr><td>Evening</td><td>Cloudy</td><td>27–30°C</td></tr></tbody></table></article></div>
+          </div>
+        </section>
+
+        <section class="workspace-view analysis-workspace" data-workspace="data" aria-label="Data coverage and source health">
+          <header class="workspace-topbar"><div><h1>Data Coverage and Source Health</h1><p>Engineering view · mapping confidence, freshness, and availability</p></div><div class="topbar-actions"><span class="source-chip">Public API · live</span></div></header>
+          <div class="workspace-content data-analysis-content">
+            <div class="summary-strip"><div><span>Buildings mapped</span><strong>14 / 16</strong><small>selected building set</small></div><div><span>Current energy points</span><strong>43</strong><small>standardized latest records</small></div><div><span>Fast points</span><strong>13</strong><small>SDE4 configured streams</small></div><div><span>Missing buildings</span><strong>2</strong><small>Ventus and S1A</small></div></div>
+            <article class="dashboard-card coverage-card">
+              <header><div><h2>Building × metric coverage</h2><p>Latest standardized points exposed by the public API</p></div><div class="coverage-key"><span class="tag good">Mapped</span><span class="tag partial">Partial</span><span class="tag">Missing</span></div></header>
+              <div class="table-scroll"><table class="engineering-table coverage-table">
+                <thead><tr><th>Building</th><th>Electricity</th><th>Cooling</th><th>PV</th><th>Latest source</th><th>Cadence</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>SDE4</strong></td><td><span class="matrix">–</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag partial">Partial</span></td></tr>
+                  <tr><td><strong>SDE3</strong></td><td><span class="matrix">–</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag partial">Partial</span></td></tr>
+                  <tr><td><strong>SDE2</strong></td><td><span class="matrix">–</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag partial">Partial</span></td></tr>
+                  <tr><td><strong>SDE1</strong></td><td><span class="matrix">–</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag partial">Partial</span></td></tr>
+                  <tr><td><strong>E3A</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
+                  <tr><td><strong>T-LAB</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
+                  <tr><td><strong>E8</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
+                  <tr><td><strong>E6</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
+                  <tr><td><strong>COM3</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
+                  <tr><td><strong>S9</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
+                  <tr><td><strong>CELS</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
+                  <tr><td><strong>MD1</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
+                  <tr><td><strong>MD2</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
+                  <tr><td><strong>MD6</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
+                  <tr><td><strong>Ventus</strong></td><td><span class="matrix">–</span></td><td><span class="matrix">–</span></td><td><span class="matrix">–</span></td><td>—</td><td>—</td><td><span class="tag">Missing</span></td></tr>
+                  <tr><td><strong>S1A</strong></td><td><span class="matrix">–</span></td><td><span class="matrix">–</span></td><td><span class="matrix">–</span></td><td>—</td><td>—</td><td><span class="tag">Missing</span></td></tr>
+                </tbody>
+              </table></div>
+            </article>
+            <article class="dashboard-card source-health-card"><header><div><h2>Source health</h2><p>Collector and public-context services</p></div></header><table class="engineering-table"><thead><tr><th>Source</th><th>Role</th><th>Expected cadence</th><th>Latest record</th><th>Status</th></tr></thead><tbody><tr><td><strong>PI hourly collector</strong></td><td>Building electricity, cooling, PV</td><td>Hourly</td><td>Current API cycle</td><td><span class="tag good">Healthy</span></td></tr><tr><td><strong>SDE4 weather station</strong></td><td>Campus weather context</td><td>Collector cycle</td><td>Collector managed</td><td><span class="tag good">Healthy</span></td></tr><tr><td><strong>EMC / NEMS</strong></td><td>Wholesale market context</td><td>30 minutes</td><td>Period 35</td><td><span class="tag partial">Provisional</span></td></tr></tbody></table></article>
+          </div>
+        </section>
 
         <div id="trendModal" class="trend-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="trendModalTitle">
           <section class="trend-modal">
@@ -208,15 +299,19 @@
           </div>
           <div class="panel-title-block">
             <p class="eyebrow">NUS Campus EMIS</p>
-            <h2>Campus Operations</h2>
-            <p class="panel-note">Realtime campus status, external energy context, and AI triage.</p>
+            <h2>Energy Monitoring</h2>
           </div>
         </header>
 
         <section id="tab-overview" class="tab-panel active" data-tab-panel="overview">
+          <div class="panel-intro"><h2>Campus Overview</h2><p>Spatial orientation, monitoring coverage, and latest source status.</p></div>
+          <section class="panel-section compact-controls">
+            <span class="field-label">Building group</span>
+            <button class="field-control" type="button">All selected buildings</button>
+          </section>
           <section class="panel-section">
             <div class="section-header">
-              <h3>Live Building Snapshot</h3>
+              <h3>Live Portfolio</h3>
               <span id="overviewCoverage" class="section-kicker">Live coverage</span>
             </div>
             <div class="live-summary" aria-label="Campus summary">
@@ -242,28 +337,29 @@
           <section class="panel-section">
             <div class="section-header">
               <h3>Campus Regions</h3>
-              <span class="section-kicker">Focus markers</span>
+              <span class="section-kicker">16 selected</span>
             </div>
             <div id="regionList" class="region-list"></div>
           </section>
-
-          <section class="panel-section ai-brief">
-            <div class="section-header">
-              <h3>AI Triage</h3>
-              <span class="section-kicker">Current rules</span>
-            </div>
-            <div id="aiBriefList" class="ai-list"></div>
-          </section>
+          <div id="aiBriefList" class="hidden" aria-hidden="true"></div>
         </section>
 
         <section id="tab-buildings" class="tab-panel" data-tab-panel="buildings">
+          <div class="panel-intro"><h2>Building Portfolio</h2><p>Compare mapped energy streams across selected campus buildings.</p></div>
           <section class="panel-section">
-            <h3>Find Building</h3>
-            <input id="buildingSearch" class="search-input" type="search" placeholder="Search focus buildings" />
+            <div class="section-header"><h3>Select buildings</h3><span id="buildingSelectionCount" class="section-kicker">3 / 4</span></div>
+            <input id="buildingSearch" class="search-input" type="search" placeholder="Search building code or name" />
             <div id="buildingList" class="building-list"></div>
           </section>
 
-          <section class="panel-section building-card" aria-live="polite">
+          <section class="panel-section analysis-controls">
+            <span class="field-label">Reporting period</span>
+            <div class="segmented local-segmented building-period-control" role="group" aria-label="Building reporting period"><button class="active" type="button" data-building-period="weekly" aria-pressed="true">Weekly</button><button type="button" data-building-period="monthly" aria-pressed="false">Monthly</button><button type="button" data-building-period="yearly" aria-pressed="false">Yearly</button></div>
+            <span class="field-label">Metric</span>
+            <div class="segmented local-segmented building-metric-control" role="group" aria-label="Building energy metric"><button class="active" type="button" data-building-metric="electricity" aria-pressed="true">Electricity</button><button type="button" data-building-metric="cooling" aria-pressed="false">Cooling</button><button type="button" data-building-metric="pv" aria-pressed="false">PV</button></div>
+          </section>
+
+          <section class="panel-section building-card building-snapshot" aria-live="polite">
             <div class="building-card-header">
               <div>
                 <p class="eyebrow" id="buildingZone">Selected building</p>
@@ -272,34 +368,15 @@
               <span id="buildingStatus" class="status-pill">Ready</span>
             </div>
             <div id="buildingBlocks" class="block-chip-list hidden"></div>
-            <dl class="metric-list">
-              <div>
-                <dt>Electricity</dt>
-                <dd id="buildingElectricity">-</dd>
-              </div>
-              <div>
-                <dt>Cooling</dt>
-                <dd id="buildingCooling">-</dd>
-              </div>
-              <div>
-                <dt>Water</dt>
-                <dd id="buildingWater">-</dd>
-              </div>
-              <div>
-                <dt>PV</dt>
-                <dd id="buildingPv">-</dd>
-              </div>
-              <div>
-                <dt>EUI</dt>
-                <dd id="buildingEui">-</dd>
-              </div>
-              <div>
-                <dt>Updated</dt>
-                <dd id="buildingUpdated">-</dd>
-              </div>
+            <dl class="metric-list engineering-metric-list">
+              <div><dt>Electricity</dt><dd id="buildingElectricity">-</dd></div>
+              <div><dt>Cooling</dt><dd id="buildingCooling">-</dd></div>
+              <div><dt>Water</dt><dd id="buildingWater">-</dd></div>
+              <div><dt>PV</dt><dd id="buildingPv">-</dd></div>
+              <div><dt>EUI</dt><dd id="buildingEui">-</dd></div>
+              <div><dt>Updated</dt><dd id="buildingUpdated">-</dd></div>
             </dl>
             <p id="buildingInsight" class="insight-text">Live data is available for mapped buildings. SDE4 currently uses the realtime API endpoint.</p>
-            <button id="zoomSelected" class="full-button" type="button" disabled>Zoom to selected building</button>
           </section>
 
           <section id="realtimeTrends" class="panel-section realtime-trends hidden" aria-live="polite">
@@ -320,119 +397,43 @@
           </details>
         </section>
 
-        <section id="tab-ai" class="tab-panel" data-tab-panel="ai">
-          <section class="panel-section ai-health-monitor">
-            <div class="section-header">
-              <h3>Health Monitor Dashboard</h3>
-              <button id="aiHealthRefresh" class="text-button" type="button">Refresh</button>
-            </div>
-            <div id="aiHealthKpis" class="ai-health-kpis" aria-label="AI health monitoring summary"></div>
-            <div class="ai-health-grid">
-              <article class="ai-chart-card">
-                <div class="section-header">
-                  <h3>Live Building Health Status</h3>
-                  <span id="aiClusterMeta" class="section-kicker">SDE4</span>
-                </div>
-                <div id="aiClusterChart" class="ai-cluster-chart"></div>
-              </article>
-              <article class="ai-chart-card">
-                <div class="section-header">
-                  <h3>SDE4 Diagnostic Evidence</h3>
-                  <span class="section-kicker">Last 7 days</span>
-                </div>
-                <div id="aiRegimeTimeline" class="ai-regime-timeline"></div>
-              </article>
-            </div>
-            <div id="aiLlmSummary" class="ai-llm-summary"></div>
-            <article class="ai-agent-window" aria-label="AI operations agent">
-              <div class="section-header">
-                <div>
-                  <h3>AI Agent</h3>
-                  <span id="aiAgentStatus" class="section-kicker">Evidence agent</span>
-                </div>
-              </div>
-              <div id="aiAgentMessages" class="ai-agent-messages" aria-live="polite"></div>
-              <div id="aiAgentSuggestions" class="ai-agent-suggestions">
-                <button type="button" data-agent-prompt="Explain the current cooling regime">Current regime</button>
-                <button type="button" data-agent-prompt="What should I check first?">Checks</button>
-                <button type="button" data-agent-prompt="How is weather affecting cooling?">Weather coupling</button>
-                <button type="button" data-agent-prompt="What data gaps limit confidence?">Data gaps</button>
-              </div>
-              <form id="aiAgentPromptForm" class="ai-agent-input">
-                <input id="aiAgentPromptInput" type="text" autocomplete="off" placeholder="Ask about SDE4 cooling health" />
-                <button type="submit">Send</button>
-              </form>
-            </article>
-          </section>
-
-          <section class="panel-section">
-            <div class="section-header">
-              <h3>AI Insights</h3>
-              <span class="section-kicker">Evidence first</span>
-            </div>
-            <div id="aiInsightList" class="ai-list"></div>
-          </section>
+        <section id="tab-market" class="tab-panel" data-tab-panel="market">
+          <div class="panel-intro"><h2>Wholesale Market</h2><p>Singapore market prices and demand for campus energy context.</p></div>
+          <section class="panel-section compact-controls"><span class="field-label">Data product</span><button class="field-control" type="button">Real-time Energy Prices and Demand</button></section>
+          <section class="panel-section"><span class="field-label">Market interval</span><div class="segmented local-segmented market-range-control" role="group" aria-label="Market reporting interval"><button class="active" type="button" data-market-interval="realtime" aria-pressed="true">Real-time</button><button type="button" data-market-interval="72-periods" aria-pressed="false">72 periods</button><button type="button" data-market-interval="7-days" aria-pressed="false">7 days</button></div></section>
+          <section class="market-snapshot" aria-label="Current market snapshot"><div><span>USEP</span><strong>214.19</strong><small>S$/MWh</small></div><div><span>Demand</span><strong>7,617</strong><small>MW</small></div><div><span>Solar</span><strong>386</strong><small>MW</small></div><div><span>VCP</span><strong>252.68</strong><small>S$/MWh</small></div></section>
+          <section class="panel-section market-session"><div class="section-header"><h3>Market session</h3><span class="tag partial">Provisional</span></div><dl><div><dt>Trading date</dt><dd>17 Jul 2026</dd></div><div><dt>Current period</dt><dd>35 / 48</dd></div><div><dt>Published at</dt><dd>13:31 SGT</dd></div><div><dt>Source</dt><dd>EMC / NEMS</dd></div></dl></section>
+          <div class="panel-notice">Wholesale market context only. This is not the NUS contracted tariff or an electricity bill estimate.</div>
         </section>
 
-        <section id="tab-context" class="tab-panel" data-tab-panel="context">
-          <section class="panel-section external-data">
-            <div class="section-header">
-              <h3>External Energy Context</h3>
-              <span class="section-kicker">EMA / data.gov.sg</span>
-            </div>
-            <div id="externalDataGrid" class="external-data-grid">
-              <button type="button" class="external-data-card" data-external="system-demand">
-                <strong>System demand</strong>
-                <span>Useful for grid context and peak-period annotation.</span>
-              </button>
-              <button type="button" class="external-data-card" data-external="electricity-consumption">
-                <strong>Electricity consumption</strong>
-                <span>Useful for national and sector baseline comparison.</span>
-              </button>
-              <button type="button" class="external-data-card" data-external="solar-pv-deployment">
-                <strong>Solar PV deployment</strong>
-                <span>Useful for PV capacity and adoption benchmarking.</span>
-              </button>
-            </div>
-            <div id="externalVizPanel" class="external-viz-panel" aria-live="polite"></div>
-          </section>
+        <section id="tab-weather" class="tab-panel" data-tab-panel="weather">
+          <div class="panel-intro"><h2>Campus Weather</h2><p>SDE4 weather station observations and the 24-hour Singapore forecast.</p></div>
+          <section class="panel-section compact-controls"><span class="field-label">Station</span><button class="field-control" type="button">SDE4 Weather Station</button></section>
+          <section class="panel-section"><div class="section-header"><h3>Latest observations</h3><span class="section-kicker">10:30 SGT</span></div><div class="live-summary weather-panel-summary"><div><span class="summary-label">Temperature</span><strong>30.4°C</strong><small>air temperature</small></div><div><span class="summary-label">Humidity</span><strong>71%</strong><small>relative humidity</small></div><div><span class="summary-label">WBGT</span><strong>28.7°C</strong><small>heat stress context</small></div><div><span class="summary-label">Wind</span><strong>SW</strong><small>218 degrees</small></div></div></section>
+          <section class="panel-section"><span class="field-label">Period</span><div class="segmented local-segmented"><button class="active" type="button">Weekly</button><button type="button">Monthly</button><button type="button">Yearly</button></div></section>
+          <div class="source-status-row"><span class="status-dot live"></span><div><strong>Collector status</strong><small>5 streams received in latest cycle</small></div><span class="tag good">Healthy</span></div>
+          <div id="externalVizPanel" class="hidden" aria-hidden="true"></div>
         </section>
 
-        <section id="tab-layers" class="tab-panel" data-tab-panel="layers">
-          <section class="panel-section">
-            <h3>Map Color</h3>
-            <div class="segmented" role="radiogroup" aria-label="Map metric">
-              <button type="button" data-metric="live" class="active" aria-pressed="true">Status</button>
-              <button type="button" data-metric="eui" aria-pressed="false">EUI</button>
-              <button type="button" data-metric="height" aria-pressed="false">Height</button>
-              <button type="button" data-metric="type" aria-pressed="false">Type</button>
-            </div>
-          </section>
-
-          <section class="panel-section">
-            <h3>Layers</h3>
-            <label class="toggle-row">
-              <input type="checkbox" id="toggleBuildings" checked />
-              <span>NUS buildings</span>
-            </label>
-            <label class="toggle-row">
-              <input type="checkbox" id="toggleLabels" checked />
-              <span>Building names</span>
-            </label>
-            <label class="toggle-row">
-              <input type="checkbox" id="togglePv" checked />
-              <span>PV</span>
-            </label>
-            <label class="toggle-row">
-              <input type="checkbox" id="toggleEuiLayer" />
-              <span>EUI</span>
-            </label>
-          </section>
+        <section id="tab-data" class="tab-panel" data-tab-panel="data">
+          <div class="panel-intro"><h2>Data Status</h2><p>Point coverage, source freshness, and mapping confidence for engineering review.</p></div>
+          <section class="panel-section"><div class="live-summary data-panel-summary"><div><span class="summary-label">Buildings mapped</span><strong>14</strong><small>of 16 selected</small></div><div><span class="summary-label">Active streams</span><strong>43</strong><small>current standardized points</small></div><div><span class="summary-label">Legacy aliases</span><strong>46</strong><small>retained for migration</small></div><div><span class="summary-label">Missing</span><strong>2</strong><small>building mappings</small></div></div></section>
+          <section class="panel-section"><span class="field-label">Filter</span><div class="segmented local-segmented"><button class="active" type="button">All</button><button type="button">Partial</button><button type="button">Missing</button></div></section>
+          <section class="panel-section source-stack"><h3>System sources</h3><div class="source-status-row"><span class="status-dot live"></span><div><strong>PI hourly collector</strong><small>23 configured points</small></div><span class="tag good">Healthy</span></div><div class="source-status-row"><span class="status-dot live"></span><div><strong>SG context collector</strong><small>90–91 points per cycle</small></div><span class="tag good">Healthy</span></div><div class="source-status-row"><span class="status-dot partial"></span><div><strong>EMC price collector</strong><small>Provisional values</small></div><span class="tag partial">Review</span></div></section>
         </section>
+
+        <div class="compatibility-hooks hidden" aria-hidden="true">
+          <button type="button" data-metric="height" aria-pressed="false"></button>
+          <button type="button" data-metric="type" aria-pressed="false"></button>
+          <input type="checkbox" id="toggleBuildings" checked />
+          <input type="checkbox" id="toggleLabels" checked />
+          <input type="checkbox" id="togglePv" checked />
+          <input type="checkbox" id="toggleEuiLayer" />
+        </div>
       </aside>
     </main>
 
     <script src="src/config.js?v=20260710-mapbox" defer></script>
-    <script src="src/app.js?v=20260710-mapbox-config" defer></script>
+    <script src="src/app.js?v=20260805-standardized-building-points" defer></script>
   </body>
 </html>

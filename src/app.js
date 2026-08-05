@@ -19,9 +19,63 @@ const defaultMapboxPublicToken =
     ? mapboxSiteConfig.mapboxAccessTokenParts.join("")
     : "");
 
+const apiBuildingAliases = {
+  "T-LAB": "TLAB",
+};
+
+function apiBuildingCode(buildingCode) {
+  return apiBuildingAliases[buildingCode] || buildingCode;
+}
+
+function frontendBuildingCode(buildingCode) {
+  return buildingCode === "TLAB" ? "T-LAB" : buildingCode;
+}
+
+const buildingMetricCapabilities = {
+  CELS: ["electricity", "cooling"],
+  COM3: ["electricity", "cooling"],
+  E3: ["pv"],
+  E3A: ["electricity", "cooling"],
+  E6: ["electricity", "cooling"],
+  E7: ["electricity", "cooling"],
+  E8: ["electricity", "cooling"],
+  MD1: ["electricity", "cooling"],
+  MD2: ["electricity", "cooling"],
+  MD6: ["electricity", "cooling"],
+  S9: ["electricity", "cooling"],
+  SDE1: ["cooling"],
+  SDE2: ["cooling"],
+  SDE3: ["cooling", "pv"],
+  SDE4: ["cooling", "pv", "co2", "temperature", "humidity", "airflow"],
+  "T-LAB": ["electricity", "cooling"],
+};
+
+const pvHistoryPoints = {
+  E3: ["E3 M1_hourly_generation"],
+  SDE3: ["SDE3 M1_hourly_generation", "SDE3 M2_hourly_generation"],
+  SDE4: ["SDE4 solar_m1_hourly_energy", "SDE4 solar_m2_hourly_energy"],
+};
+
 const realtimeConfig = {
   baseUrl: "https://buildingdt.org/realtime/latest",
-  liveBuildings: ["SDE4"],
+  liveBuildings: [
+    { code: "CELS" },
+    { code: "COM3" },
+    { code: "E3" },
+    { code: "E3A" },
+    { code: "E6" },
+    { code: "E7" },
+    { code: "E8" },
+    { code: "MD1" },
+    { code: "MD2" },
+    { code: "MD6" },
+    { code: "S9" },
+    { code: "SDE1" },
+    { code: "SDE2" },
+    { code: "SDE3" },
+    { code: "SDE4" },
+    { code: "T-LAB", requestCode: "TLAB" },
+  ],
   refreshMs: 60_000,
 };
 
@@ -31,7 +85,7 @@ const historyConfig = {
   metrics: [
     {
       key: "electricity",
-      point: (building) => `${building} Calculated Building Electrical Consumption ALL`,
+      point: (building) => `${apiBuildingCode(building)} hourly_electrical_consumption`,
       label: "Electricity",
       metric: "Electricity demand",
       unit: "kWh/h",
@@ -43,7 +97,7 @@ const historyConfig = {
     },
     {
       key: "cooling",
-      point: (building) => `${building} Total Cooling Hourly Consumption`,
+      point: (building) => `${apiBuildingCode(building)} hourly_cooling_consumption`,
       label: "Cooling",
       metric: "Cooling energy",
       unit: "kWh/h",
@@ -55,11 +109,7 @@ const historyConfig = {
     },
     {
       key: "pv",
-      point: (building) => `Act_E-Recv_${building}_ALL_Hourly_kWh`,
-      componentPoints: (building) => [
-        `Act_E-Recv_${building}_M1_Hourly_kWh`,
-        `Act_E-Recv_${building}_M2_Hourly_kWh`,
-      ],
+      points: (building) => pvHistoryPoints[building] || [],
       label: "PV generation",
       metric: "PV hourly generation",
       unit: "kWh/h",
@@ -118,6 +168,94 @@ const historyConfig = {
       color: "#ef7c00",
     },
   ],
+};
+
+const buildingMetricMeta = {
+  electricity: { label: "Electricity", title: "Electricity consumption", unit: "kWh" },
+  cooling: { label: "Cooling", title: "Cooling energy", unit: "kWh" },
+  pv: { label: "PV", title: "PV generation", unit: "kWh" },
+};
+
+const buildingModelDefinitions = {
+  SDE4: { color: "#1769aa", coverage: "Partial" },
+  SDE3: { color: "#7c5cc4", coverage: "Partial" },
+  SDE2: { color: "#5d7f9d", coverage: "Partial" },
+  SDE1: { color: "#7895ad", coverage: "Partial" },
+  E3A: { color: "#386fa4", coverage: "Mapped" },
+  "T-LAB": { color: "#586b7b", coverage: "Mapped" },
+  E8: { color: "#c66f00", coverage: "Mapped" },
+  E6: { color: "#187c70", coverage: "Mapped" },
+  COM3: { color: "#3f7d6b", coverage: "Mapped" },
+  S9: { color: "#6f5c8f", coverage: "Mapped" },
+  CELS: { color: "#a24747", coverage: "Mapped" },
+  MD1: { color: "#b05278", coverage: "Mapped" },
+  MD2: { color: "#c06c84", coverage: "Mapped" },
+  MD6: { color: "#8f4c6b", coverage: "Mapped" },
+};
+
+const buildingPerformanceModel = Object.fromEntries(
+  Object.entries(buildingModelDefinitions).map(([building, definition]) => [building, {
+    ...definition,
+    updated: "Awaiting history",
+    electricity: null,
+    cooling: null,
+    pv: null,
+  }]),
+);
+
+const buildingHistoryPointMap = Object.fromEntries(
+  Object.keys(buildingModelDefinitions).map((building) => {
+    const apiCode = apiBuildingCode(building);
+    const capabilities = buildingMetricCapabilities[building] || [];
+    const points = {};
+    if (capabilities.includes("electricity")) points.electricity = `${apiCode} hourly_electrical_consumption`;
+    if (capabilities.includes("cooling")) points.cooling = `${apiCode} hourly_cooling_consumption`;
+    if (capabilities.includes("pv")) points.pv = pvHistoryPoints[building] || [];
+    return [building, points];
+  }),
+);
+
+const marketRealtimeValues = [
+  80.2, 84.9, 77.6, 75.1, 83.8, 89.2, 101.4, 113.6, 125.9, 138.3, 153.1, 183.8,
+  217.6, 206.3, 169.2, 144.1, 134.8, 131.9, 140.6, 149.4, 156.8, 164.2, 171.5, 158.7,
+  153.6, 148.1, 161.4, 178.2, 202.4, 224.6, 263.2, 287.1, 255.8, 218.4, 214.19, 169.3,
+  163.5, 174.1, 184.8, 195.2, 205.6, 217.4, 231.2, 220.7, 229.8, 216.3, 226.9, 238.7,
+];
+
+const marketIntervalConfig = {
+  realtime: {
+    title: "Real-time Energy Prices and Demand",
+    subtitle: "Half-hour trading periods · 17 Jul 2026",
+    note: "Past and published periods",
+    values: marketRealtimeValues,
+    tickIndexes: [0, 12, 24, 36, 47],
+    tickLabels: ["00:00", "06:00", "12:00", "18:00", "24:00"],
+    tooltipLabel: (index) => {
+      const minutes = index * 30;
+      return `Period ${index + 1} · ${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+    },
+  },
+  "72-periods": {
+    title: "72-Period Price Trend",
+    subtitle: "Latest 36 hours · half-hour trading periods",
+    note: "Rolling 72-period market window",
+    values: Array.from({ length: 72 }, (_, index) => {
+      const base = marketRealtimeValues[(index + 24) % marketRealtimeValues.length];
+      return Number((base * (0.91 + 0.08 * Math.sin(index / 6))).toFixed(2));
+    }),
+    tickIndexes: [0, 18, 36, 54, 71],
+    tickLabels: ["16 Jul 02:00", "16 Jul 11:00", "16 Jul 20:00", "17 Jul 05:00", "17 Jul 13:30"],
+    tooltipLabel: (index) => `Rolling period ${index + 1} of 72`,
+  },
+  "7-days": {
+    title: "7-Day Daily Average USEP",
+    subtitle: "Daily average, minimum and peak context",
+    note: "Daily averages · provisional values",
+    values: [132.8, 126.4, 141.6, 138.2, 150.7, 145.9, 121.4],
+    tickIndexes: [0, 1, 2, 3, 4, 5, 6],
+    tickLabels: ["11 Jul", "12 Jul", "13 Jul", "14 Jul", "15 Jul", "16 Jul", "17 Jul"],
+    tooltipLabel: (index) => `${11 + index} Jul 2026 · daily average`,
+  },
 };
 
 const aiHealthConfig = {
@@ -202,7 +340,7 @@ const brickGraphConfig = {
               kind: "System",
               brickClass: "brick:Electrical_System",
               status: "Live mapped",
-              description: "PV hourly generation is mapped through the ALL meter, with M1/M2 retained as breakdown streams.",
+              description: "PV hourly generation is calculated from the standardized M1 and M2 energy streams.",
               source: "Public realtime endpoint",
             },
             {
@@ -279,7 +417,7 @@ const brickGraphConfig = {
               description: "Main public cooling hourly stream is attached here.",
               source: "@chilled water and refrigerant loops .pdf; public realtime endpoint",
               metricKey: "cooling",
-              pointNames: ["SDE4 Total Cooling Hourly Consumption"],
+              pointNames: ["SDE4 hourly_cooling_consumption"],
             },
             {
               id: "pv-meter",
@@ -287,13 +425,13 @@ const brickGraphConfig = {
               kind: "Electrical meters",
               brickClass: "brick:Electrical_Meter",
               status: "Live mapped",
-              description: "ALL is the primary hourly generation stream. M1 and M2 are child meter breakdowns.",
+              description: "The standardized M1 and M2 hourly energy points are combined for the dashboard PV total.",
               source: "Public realtime endpoint",
               metricKey: "pv",
               pointNames: [
-                "Act_E-Recv_SDE4_ALL_Hourly_kWh",
-                "Act_E-Recv_SDE4_M1_Hourly_kWh",
-                "Act_E-Recv_SDE4_M2_Hourly_kWh",
+                "SDE4 hourly_all_consumption",
+                "SDE4 solar_m1_hourly_energy",
+                "SDE4 solar_m2_hourly_energy",
               ],
             },
             {
@@ -323,21 +461,21 @@ const brickGraphConfig = {
               kind: "Point",
               brickClass: "brick:Energy_Sensor",
               status: "Live",
-              description: "SDE4 Total Cooling Hourly Consumption.",
+              description: "Standardized SDE4 hourly cooling energy point.",
               source: "Public realtime endpoint",
               metricKey: "cooling",
-              pointNames: ["SDE4 Total Cooling Hourly Consumption"],
+              pointNames: ["SDE4 hourly_cooling_consumption"],
             },
             {
               id: "pv-all-point",
-              title: "PV ALL hourly",
+              title: "PV hourly total",
               kind: "Point",
               brickClass: "brick:Energy_Sensor",
               status: "Live",
-              description: "Primary PV generation stream for SDE4.",
+              description: "Published total aligned with the standardized SDE4 PV module streams.",
               source: "Public realtime endpoint",
               metricKey: "pv",
-              pointNames: ["Act_E-Recv_SDE4_ALL_Hourly_kWh"],
+              pointNames: ["SDE4 hourly_all_consumption"],
             },
             {
               id: "pv-module-points",
@@ -345,11 +483,11 @@ const brickGraphConfig = {
               kind: "Point set",
               brickClass: "brick:Energy_Sensor",
               status: "Breakdown",
-              description: "Module-level PV generation breakdown. Keep under PV meter, not as the dashboard primary value.",
+              description: "Standardized module-level PV energy points combined by the dashboard.",
               source: "Public realtime endpoint",
               pointNames: [
-                "Act_E-Recv_SDE4_M1_Hourly_kWh",
-                "Act_E-Recv_SDE4_M2_Hourly_kWh",
+                "SDE4 solar_m1_hourly_energy",
+                "SDE4 solar_m2_hourly_energy",
               ],
             },
             {
@@ -464,7 +602,10 @@ const colorModeConfig = {
   type: { label: "Building type" },
   eui: { label: "EUI 2023" },
   height: { label: "Building height" },
-  live: { label: "Operational status" },
+  live: { label: "Data coverage" },
+  electricity: { label: "Electricity demand" },
+  cooling: { label: "Cooling energy" },
+  pv: { label: "PV generation" },
 };
 
 const focusBuildings = [
@@ -517,6 +658,15 @@ const focusRegions = [
   },
 ];
 
+const requestedWorkspace = new URLSearchParams(window.location.search).get("tab");
+const initialWorkspace = ["overview", "buildings", "market", "weather", "data"].includes(requestedWorkspace)
+  ? requestedWorkspace
+  : "overview";
+const requestedBuildingPeriod = new URLSearchParams(window.location.search).get("period");
+const initialBuildingPeriod = ["weekly", "monthly", "yearly"].includes(requestedBuildingPeriod) ? requestedBuildingPeriod : "weekly";
+const requestedBuildingMetric = new URLSearchParams(window.location.search).get("metric");
+const initialBuildingMetric = ["electricity", "cooling", "pv"].includes(requestedBuildingMetric) ? requestedBuildingMetric : "electricity";
+
 const state = {
   map: null,
   data: null,
@@ -528,7 +678,7 @@ const state = {
   displayFeatureBySourceId: new Map(),
   metric: "live",
   selectedId: null,
-  activeTab: "overview",
+  activeTab: initialWorkspace,
   activeExternalDataset: "electricity-consumption",
   externalPanelOpen: false,
   externalData: {},
@@ -545,7 +695,14 @@ const state = {
   activeMapboxToken: "",
   activeMapboxTokenSource: "default",
   mapAuthFallbackInProgress: false,
+  mapTokenIssue: "",
   refreshTimer: null,
+  selectedComparisonBuildings: new Set(["SDE4", "E6", "E8"]),
+  activeBuildingPeriod: initialBuildingPeriod,
+  activeBuildingMetric: initialBuildingMetric,
+  activeMarketView: "chart",
+  activeMarketInterval: "realtime",
+  buildingHistoryLoaded: new Set(),
 };
 
 window.__nusCampusEmis = state;
@@ -563,6 +720,8 @@ const els = {
   realtimeStatusText: document.getElementById("realtimeStatusText"),
   tabButtons: document.querySelectorAll("[data-tab]"),
   tabPanels: document.querySelectorAll("[data-tab-panel]"),
+  workspaceViews: document.querySelectorAll("[data-workspace]"),
+  mapStage: document.querySelector(".map-stage"),
   metricButtons: document.querySelectorAll("[data-metric]"),
   toggleBuildings: document.getElementById("toggleBuildings"),
   toggleLabels: document.getElementById("toggleLabels"),
@@ -570,11 +729,42 @@ const els = {
   toggleEuiLayer: document.getElementById("toggleEuiLayer"),
   buildingSearch: document.getElementById("buildingSearch"),
   buildingList: document.getElementById("buildingList"),
+  buildingSelectionCount: document.getElementById("buildingSelectionCount"),
+  buildingPeriodButtons: document.querySelectorAll("[data-building-period]"),
+  buildingMetricButtons: document.querySelectorAll("[data-building-metric]"),
+  buildingWorkspaceSubtitle: document.getElementById("buildingWorkspaceSubtitle"),
+  buildingAnalysisSelectionCount: document.getElementById("buildingAnalysisSelectionCount"),
+  buildingAnalysisPeriod: document.getElementById("buildingAnalysisPeriod"),
+  buildingAnalysisAggregation: document.getElementById("buildingAnalysisAggregation"),
+  buildingAnalysisMetric: document.getElementById("buildingAnalysisMetric"),
+  buildingAnalysisUnit: document.getElementById("buildingAnalysisUnit"),
+  buildingAnalysisCoverage: document.getElementById("buildingAnalysisCoverage"),
+  buildingChartTitle: document.getElementById("buildingChartTitle"),
+  buildingChartSubtitle: document.getElementById("buildingChartSubtitle"),
+  buildingChartLegend: document.getElementById("buildingChartLegend"),
+  buildingChartKpis: document.getElementById("buildingChartKpis"),
+  buildingPerformanceChart: document.getElementById("buildingPerformanceChart"),
+  buildingRankingSubtitle: document.getElementById("buildingRankingSubtitle"),
+  buildingPortfolioTotals: document.getElementById("buildingPortfolioTotals"),
+  buildingComparisonSubtitle: document.getElementById("buildingComparisonSubtitle"),
+  buildingComparisonHead: document.getElementById("buildingComparisonHead"),
+  buildingComparisonBody: document.getElementById("buildingComparisonBody"),
   summaryElectricity: document.getElementById("summaryElectricity"),
   summaryCooling: document.getElementById("summaryCooling"),
   summaryWater: document.getElementById("summaryWater"),
   summaryPv: document.getElementById("summaryPv"),
   overviewCoverage: document.getElementById("overviewCoverage"),
+  overviewUpdated: document.getElementById("overviewUpdated"),
+  overviewBuildingPerformance: document.getElementById("overviewBuildingPerformance"),
+  openRealtimeWorkspace: document.getElementById("openRealtimeWorkspace"),
+  marketHeatmap: document.getElementById("marketHeatmap"),
+  marketViewButtons: document.querySelectorAll("[data-market-view]"),
+  marketViewPanels: document.querySelectorAll("[data-market-view-panel]"),
+  marketIntervalButtons: document.querySelectorAll("[data-market-interval]"),
+  marketChartTitle: document.getElementById("marketChartTitle"),
+  marketChartSubtitle: document.getElementById("marketChartSubtitle"),
+  marketSeriesNote: document.getElementById("marketSeriesNote"),
+  marketChartInteractive: document.getElementById("marketChartInteractive"),
   regionList: document.getElementById("regionList"),
   aiBriefList: document.getElementById("aiBriefList"),
   aiInsightList: document.getElementById("aiInsightList"),
@@ -604,7 +794,6 @@ const els = {
   buildingEui: document.getElementById("buildingEui"),
   buildingUpdated: document.getElementById("buildingUpdated"),
   buildingInsight: document.getElementById("buildingInsight"),
-  zoomSelected: document.getElementById("zoomSelected"),
   realtimeTrends: document.getElementById("realtimeTrends"),
   trendView: document.getElementById("trendView"),
   trendSummary: document.getElementById("trendSummary"),
@@ -664,11 +853,13 @@ function setTokenError(message = "") {
 }
 
 function showTokenPanel(message = "") {
+  state.mapTokenIssue = message;
   setTokenError(message);
-  els.tokenPanel.classList.remove("hidden");
+  els.tokenPanel.classList.toggle("hidden", state.activeTab !== "overview");
 }
 
 function hideTokenPanel() {
+  state.mapTokenIssue = "";
   setTokenError("");
   els.tokenPanel.classList.add("hidden");
 }
@@ -1301,12 +1492,16 @@ function sum(values) {
 
 function classifyRealtimePoints(points) {
   const byName = (pattern) => points.filter((item) => pattern.test(item.point || ""));
-  const allElectricity = byName(/Calculated Building Electrical Consumption|Electrical.*Consumption|Power_Meters/i);
-  const allCooling = byName(/Total Cooling Hourly Consumption|BTU|Cooling/i);
+  const standardizedElectricity = byName(/ hourly_electrical_consumption$/i);
+  const legacyElectricity = byName(/Calculated Building Electrical Consumption|Total Hourly Electrical Consumption|Electrical.*Consumption|Power_Meters/i);
+  const standardizedCooling = byName(/ hourly_cooling_consumption$/i);
+  const legacyCooling = byName(/Total Cooling Hourly Consumption|Total Hourly Cooling Consumption|BTU/i);
+  const totalEnergyPoints = byName(/ hourly_all_consumption$/i);
   const allWater = byName(/Water|Volume/i);
-  const pvAll = byName(/Act_E-Recv_.*_ALL_Hourly_kWh/i);
-  const pvComponents = byName(/Act_E-Recv_.*_M[12]_Hourly_kWh/i);
-  const pvInverterPower = byName(/PV_System.*Total_kW|PV/i);
+  const standardizedPvComponents = byName(/(?: M[12]_hourly_generation| solar_m[12]_hourly_energy)$/i);
+  const legacyPvAll = byName(/Act_E-Recv_.*_ALL_Hourly_kWh/i);
+  const legacyPvComponents = byName(/Act_E-Recv_.*_M[12]_Hourly_kWh/i);
+  const pvInverterPower = byName(/PV_System.*Total_kW/i);
   const temp = byName(/Temperature$/i);
   const humidity = byName(/Humidity$/i);
   const co2 = byName(/CO2$/i);
@@ -1317,27 +1512,39 @@ function classifyRealtimePoints(points) {
     .sort()
     .at(-1);
 
-  const electricityAll = allElectricity.find((item) => /ALL_Hourly_kWh/i.test(item.point || ""));
-  const electricityValue = electricityAll ? Number(electricityAll.value) : sum(allElectricity.map((item) => item.value));
-  const coolingValue = sum(allCooling.map((item) => item.value));
+  const electricityPoints = standardizedElectricity.length ? standardizedElectricity : legacyElectricity;
+  const coolingPoints = standardizedCooling.length ? standardizedCooling : legacyCooling;
+  const pvComponentPoints = standardizedPvComponents.length ? standardizedPvComponents : legacyPvComponents;
+  const pvPrimaryPoint = legacyPvAll[0] || null;
+  const pvPoints = standardizedPvComponents.length
+    ? standardizedPvComponents
+    : pvPrimaryPoint
+      ? [pvPrimaryPoint]
+      : pvComponentPoints.length
+        ? pvComponentPoints
+        : pvInverterPower;
+  const electricityValue = sum(electricityPoints.map((item) => item.value));
+  const coolingValue = sum(coolingPoints.map((item) => item.value));
   const waterValue = sum(allWater.map((item) => item.value));
-  const pvAllPoint = pvAll[0];
-  const pvGeneration = pvAllPoint ? Number(pvAllPoint.value) : sum(pvComponents.map((item) => item.value));
+  const pvGeneration = pvPrimaryPoint && !standardizedPvComponents.length
+    ? Number(pvPrimaryPoint.value)
+    : sum(pvPoints.map((item) => item.value));
 
   return {
     points,
     updateTime,
     electricityHourlyKwh: Number.isFinite(electricityValue) ? electricityValue : null,
     coolingHourlyKwh: Number.isFinite(coolingValue) ? coolingValue : null,
+    totalEnergyHourlyKwh: sum(totalEnergyPoints.map((item) => item.value)),
     waterM3: Number.isFinite(waterValue) ? waterValue : null,
     pvKw: Number.isFinite(pvGeneration) ? pvGeneration : null,
     pvUnit: "kWh/h",
-    pvPrimaryPoint: pvAllPoint || null,
-    electricityPoints: allElectricity,
-    coolingPoints: allCooling,
+    pvPrimaryPoint,
+    electricityPoints,
+    coolingPoints,
     waterPoints: allWater,
-    pvPoints: pvAllPoint ? [pvAllPoint] : pvComponents,
-    pvComponentPoints: pvComponents,
+    pvPoints,
+    pvComponentPoints,
     pvInverterPowerPoints: pvInverterPower,
     indoorTemperatureC: average(temp.map((item) => item.value)),
     indoorHumidityPct: average(humidity.map((item) => item.value)),
@@ -1398,25 +1605,30 @@ function refreshDerivedData() {
 
 async function loadRealtime() {
   setRealtimeStatus("", "Realtime API loading");
-  const results = await Promise.allSettled(
-    realtimeConfig.liveBuildings.map(async (building) => {
-      const response = await fetch(`${realtimeConfig.baseUrl}?building=${encodeURIComponent(building)}`, {
-        cache: "no-store",
-      });
-      if (!response.ok) throw new Error(`${building}: HTTP ${response.status}`);
-      const payload = await response.json();
-      return [building, classifyRealtimePoints(normalizeRealtimePayload(payload))];
-    }),
-  );
+  const response = await fetch(`${realtimeConfig.baseUrl}?building=`, { cache: "no-store" });
+  if (!response.ok) throw new Error(`Realtime API: HTTP ${response.status}`);
+  const points = normalizeRealtimePayload(await response.json());
+  const configuredBuildings = new Set(realtimeConfig.liveBuildings.map((entry) => (
+    typeof entry === "string" ? entry : entry.code
+  )));
+  const grouped = new Map();
+  points.forEach((point) => {
+    const apiCode = String(point.building || "").trim().toUpperCase();
+    const building = frontendBuildingCode(apiCode);
+    if (!building || !configuredBuildings.has(building)) return;
+    if (!grouped.has(building)) grouped.set(building, []);
+    grouped.get(building).push(point);
+  });
 
-  let liveCount = 0;
-  results.forEach((result) => {
-    if (result.status === "fulfilled") {
-      const [building, classified] = result.value;
-      state.realtimeByBuilding[building] = classified;
-      liveCount += 1;
+  state.realtimeByBuilding = {};
+  grouped.forEach((buildingPoints, building) => {
+    const classified = classifyRealtimePoints(buildingPoints);
+    state.realtimeByBuilding[building] = classified;
+    if (buildingPerformanceModel[building] && classified.updateTime) {
+      buildingPerformanceModel[building].updated = formatTimestamp(classified.updateTime);
     }
   });
+  const liveCount = [...grouped.keys()].filter((code) => priorityBuildingCodes.has(code)).length;
 
   if (liveCount > 0) setRealtimeStatus("live", `${liveCount} building live`);
   else setRealtimeStatus("error", "Realtime API unavailable");
@@ -1429,7 +1641,7 @@ async function loadRealtime() {
   renderBuildingList();
   if (state.selectedId) {
     const selected = state.displayFeatures.find((feature) => feature.properties.id === state.selectedId);
-    if (selected) selectBuilding(selected);
+    if (selected) selectBuilding(selected, { activate: false });
   }
 }
 
@@ -1449,7 +1661,10 @@ async function loadData() {
   refreshDerivedData();
   updateSummary();
   renderBuildingList();
+  const defaultBuilding = state.displayFeatures.find((feature) => String(feature.properties.short_name || "").toUpperCase() === "SDE4");
+  if (defaultBuilding) selectBuilding(defaultBuilding, { activate: false });
   renderExternalDataPanel(state.activeExternalDataset, { open: false });
+  await loadBuildingPerformanceHistory();
 }
 
 async function loadJson(path) {
@@ -1493,7 +1708,9 @@ function visibleFeatures() {
 }
 
 function liveBuildingCodes() {
-  return Object.keys(state.realtimeByBuilding).filter((code) => state.realtimeByBuilding[code]);
+  return Object.keys(state.realtimeByBuilding).filter((code) => (
+    state.realtimeByBuilding[code] && priorityBuildingCodes.has(code)
+  ));
 }
 
 function sumLiveMetric(accessor) {
@@ -1514,6 +1731,31 @@ function liveCoverageText() {
   return `${liveCount}/${focusBuildings.length} buildings live`;
 }
 
+function renderOverviewBuildingPerformance() {
+  if (!els.overviewBuildingPerformance) return;
+  const priorityCodes = ["SDE4", "SDE3", "SDE2", "E6", "E8", "T-LAB", "COM3", "S1A"];
+  els.overviewBuildingPerformance.innerHTML = priorityCodes
+    .map((code) => {
+      const live = state.realtimeByBuilding[code];
+      const hasElectricity = Number.isFinite(Number(live?.electricityHourlyKwh));
+      const hasCooling = Number.isFinite(Number(live?.coolingHourlyKwh));
+      const hasPv = Number.isFinite(Number(live?.pvKw));
+      const streamCount = [hasElectricity, hasCooling, hasPv].filter(Boolean).length;
+      const status = streamCount === 3 ? "Complete" : streamCount > 0 ? "Mapped" : "Pending";
+      const tone = streamCount === 3 ? "good" : streamCount > 0 ? "partial" : "";
+      const coverage = streamCount === 3 ? 100 : streamCount === 2 ? 76 : streamCount === 1 ? 48 : 20;
+      const streams = [hasElectricity && "Electricity", hasCooling && "Cooling", hasPv && "PV"].filter(Boolean);
+      return `
+        <button type="button" class="performance-row" data-performance-building="${code}">
+          <strong>${code}</strong>
+          <span class="performance-meter"><i style="width:${coverage}%"></i><small>${streams.join(" · ") || "Mapping in progress"}</small></span>
+          <span class="tag ${tone}">${status}</span>
+        </button>
+      `;
+    })
+    .join("");
+}
+
 function updateSummary() {
   const electricity = sumLiveMetric((live) => live.electricityHourlyKwh);
   const cooling = sumLiveMetric((live) => live.coolingHourlyKwh);
@@ -1524,11 +1766,25 @@ function updateSummary() {
   els.summaryCooling.textContent = cooling === null ? "-" : formatMetric(cooling, "kWh/h", 1);
   els.summaryWater.textContent = water === null ? "Pending" : formatMetric(water, "m3", 1);
   els.summaryPv.textContent = pv === null ? "-" : formatLivePvMetric(pv);
+  const latestUpdate = liveBuildingCodes()
+    .map((code) => state.realtimeByBuilding[code]?.updateTime)
+    .filter(Boolean)
+    .sort()
+    .at(-1);
+  if (els.overviewUpdated) {
+    els.overviewUpdated.textContent = latestUpdate
+      ? new Intl.DateTimeFormat("en-SG", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Singapore" }).format(new Date(latestUpdate))
+      : "Awaiting data";
+  }
+  renderOverviewBuildingPerformance();
   renderAiInsights();
   renderRegionList();
 }
 
 function activateTab(tabName) {
+  closeTrendModal();
+  closeBrickModal();
+  setExternalPanelOpen(false);
   state.activeTab = tabName;
   els.tabButtons.forEach((button) => {
     const active = button.dataset.tab === tabName;
@@ -1536,13 +1792,24 @@ function activateTab(tabName) {
     button.setAttribute("aria-pressed", String(active));
   });
   els.tabPanels.forEach((panel) => {
-    panel.classList.toggle("active", panel.dataset.tabPanel === tabName);
+    const active = panel.dataset.tabPanel === tabName;
+    panel.classList.toggle("active", active);
+    panel.hidden = !active;
   });
-  if (tabName === "context") {
-    renderExternalDataPanel(state.activeExternalDataset, { open: true });
-  }
-  if (tabName === "ai") {
-    renderAiHealthMonitor();
+  els.workspaceViews.forEach((view) => {
+    const active = view.dataset.workspace === tabName;
+    view.classList.toggle("active", active);
+    view.hidden = !active;
+  });
+  if (els.mapStage) els.mapStage.dataset.activeWorkspace = tabName;
+  if (tabName === "overview") {
+    if (state.mapTokenIssue) {
+      setTokenError(state.mapTokenIssue);
+      els.tokenPanel.classList.remove("hidden");
+    }
+    window.setTimeout(() => state.map?.resize(), 0);
+  } else {
+    els.tokenPanel.classList.add("hidden");
   }
 }
 
@@ -2337,28 +2604,457 @@ function renderExternalDataPanel(datasetId = state.activeExternalDataset, option
   setExternalPanelOpen(open);
 }
 
+function selectedBuildingCodes() {
+  return [...state.selectedComparisonBuildings].filter((code) => buildingPerformanceModel[code]);
+}
+
+function formatEnergyTotal(value) {
+  if (!Number.isFinite(value)) return "Not mapped";
+  return `${Math.round(value).toLocaleString("en-SG")} kWh`;
+}
+
+function formatEnergyCompact(value) {
+  if (!Number.isFinite(value)) return "No data";
+  if (Math.abs(value) >= 1000) {
+    const digits = Math.abs(value) >= 100_000 ? 0 : 1;
+    return `${(value / 1000).toLocaleString("en-SG", { minimumFractionDigits: digits, maximumFractionDigits: digits })} MWh`;
+  }
+  return `${Math.round(value).toLocaleString("en-SG")} kWh`;
+}
+
+function niceChartStep(value) {
+  if (!Number.isFinite(value) || value <= 0) return 1;
+  const power = 10 ** Math.floor(Math.log10(value));
+  const fraction = value / power;
+  const niceFraction = fraction <= 1 ? 1 : fraction <= 2 ? 2 : fraction <= 2.5 ? 2.5 : fraction <= 5 ? 5 : 10;
+  return niceFraction * power;
+}
+
+function buildingDateLabels(count) {
+  const now = new Date();
+  return Array.from({ length: count }, (_, index) => {
+    const date = new Date(now.getTime() - (count - index - 1) * 86_400_000);
+    return date.toISOString().slice(0, 10);
+  });
+}
+
+function formatBuildingChartDate(value, includeWeekday = false) {
+  const date = new Date(`${value}T00:00:00+08:00`);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("en-SG", {
+    ...(includeWeekday ? { weekday: "short" } : {}),
+    day: "2-digit",
+    month: "short",
+  }).format(date);
+}
+
+function formatBuildingChartLabel(value, period, includeWeekday = false) {
+  if (period === "yearly") {
+    const date = new Date(`${value}-01T00:00:00+08:00`);
+    if (Number.isNaN(date.getTime())) return value;
+    return new Intl.DateTimeFormat("en-SG", {
+      month: includeWeekday ? "long" : "short",
+      ...(includeWeekday ? { year: "numeric" } : {}),
+    }).format(date);
+  }
+  return formatBuildingChartDate(value, includeWeekday);
+}
+
+function aggregateHistoryBySingaporeDay(rows) {
+  const daily = new Map();
+  rows.forEach((row) => {
+    const timestamp = new Date(row.t || row.time || row.timestamp);
+    const value = Number(row.v ?? row.value);
+    if (Number.isNaN(timestamp.getTime()) || !Number.isFinite(value)) return;
+    const singaporeDate = new Date(timestamp.getTime() + 8 * 60 * 60 * 1000);
+    const key = singaporeDate.toISOString().slice(0, 10);
+    daily.set(key, (daily.get(key) || 0) + value);
+  });
+  const keys = [...daily.keys()].sort();
+  if (!keys.length) return null;
+
+  const singaporeToday = new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const today = new Date(`${singaporeToday}T00:00:00Z`);
+  const yesterday = new Date(today.getTime() - 86_400_000);
+  const weeklyLabels = Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(yesterday.getTime() - (6 - index) * 86_400_000);
+    return date.toISOString().slice(0, 10);
+  });
+  const monthStart = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1));
+  const monthlyLabels = Array.from({ length: yesterday.getUTCDate() }, (_, index) => {
+    const date = new Date(monthStart.getTime() + index * 86_400_000);
+    return date.toISOString().slice(0, 10);
+  }).filter((key) => key < singaporeToday);
+  const year = today.getUTCFullYear();
+  const yearlyLabels = Array.from({ length: today.getUTCMonth() + 1 }, (_, index) => `${year}-${String(index + 1).padStart(2, "0")}`);
+  const yearly = yearlyLabels.map((month) => {
+    const values = [...daily.entries()]
+      .filter(([key]) => key < singaporeToday && key.startsWith(`${month}-`))
+      .map(([, value]) => value);
+    return values.length ? sum(values) : null;
+  });
+  const valueFor = (key) => daily.has(key) ? daily.get(key) : null;
+  return {
+    weekly: weeklyLabels.map(valueFor),
+    weeklyLabels,
+    monthly: monthlyLabels.map(valueFor),
+    monthlyLabels,
+    yearly,
+    yearlyLabels,
+    latest: rows.at(-1)?.t || rows.at(-1)?.time || rows.at(-1)?.timestamp,
+    sourceStart: rows[0]?.t || rows[0]?.time || rows[0]?.timestamp,
+  };
+}
+
+async function loadBuildingPerformanceHistory(buildingCodes = selectedBuildingCodes()) {
+  const requestedBuildings = [...new Set(buildingCodes)].filter((building) => buildingHistoryPointMap[building]);
+  const requests = requestedBuildings.flatMap((building) =>
+    Object.entries(buildingHistoryPointMap[building]).flatMap(([metric, pointDefinition]) => {
+      const historyKey = `${building}:${metric}`;
+      if (state.buildingHistoryLoaded.has(historyKey)) return [];
+      const points = Array.isArray(pointDefinition) ? pointDefinition : [pointDefinition];
+      if (!points.length) return [];
+      return [(async () => {
+        const apiCode = apiBuildingCode(building);
+        const responses = await Promise.allSettled(points.map(async (point) => {
+          const params = new URLSearchParams({ building: apiCode, point, start: "-365d", stop: "now()", limit: "20000" });
+          const response = await fetch(`${historyConfig.meterBaseUrl}?${params.toString()}`, { cache: "no-store" });
+          if (!response.ok) throw new Error(`${building} ${point}: HTTP ${response.status}`);
+          const payload = await response.json();
+          return Array.isArray(payload?.points) ? payload.points : [];
+        }));
+        const rowSets = responses.filter((result) => result.status === "fulfilled").map((result) => result.value);
+        if (!rowSets.length) throw new Error(`${building} ${metric}: history unavailable`);
+        const mergedByTimestamp = new Map();
+        rowSets.flat().forEach((row) => {
+          const timestamp = row.t || row.time || row.timestamp;
+          const value = Number(row.v ?? row.value);
+          if (!timestamp || !Number.isFinite(value)) return;
+          const existing = mergedByTimestamp.get(timestamp) || { t: timestamp, v: 0 };
+          existing.v += value;
+          mergedByTimestamp.set(timestamp, existing);
+        });
+        const mergedRows = [...mergedByTimestamp.values()].sort((a, b) => new Date(a.t) - new Date(b.t));
+        const aggregated = aggregateHistoryBySingaporeDay(mergedRows);
+        if (!aggregated) throw new Error(`${building} ${metric}: no history`);
+        return { building, metric, aggregated, historyKey };
+      })()];
+    }),
+  );
+  const results = await Promise.allSettled(requests);
+  results.forEach((result) => {
+    if (result.status !== "fulfilled") return;
+    const { building, metric, aggregated, historyKey } = result.value;
+    buildingPerformanceModel[building][metric] = {
+      weekly: aggregated.weekly,
+      weeklyLabels: aggregated.weeklyLabels,
+      monthly: aggregated.monthly,
+      monthlyLabels: aggregated.monthlyLabels,
+      yearly: aggregated.yearly,
+      yearlyLabels: aggregated.yearlyLabels,
+      sourceStart: aggregated.sourceStart,
+    };
+    state.buildingHistoryLoaded.add(historyKey);
+    if (aggregated.latest) buildingPerformanceModel[building].updated = formatTimestamp(aggregated.latest);
+  });
+  renderBuildingList();
+  renderBuildingAnalytics();
+}
+
+function bindBuildingChartInteraction({ width, plot, labels, series, xFor, yFor, period }) {
+  const frame = els.buildingPerformanceChart.querySelector(".building-chart-frame");
+  if (!frame) return;
+  const tooltip = frame.querySelector(".building-chart-tooltip");
+  const crosshair = frame.querySelector(".building-hover-line");
+  const hoverDots = frame.querySelectorAll(".building-hover-dot");
+  const hits = frame.querySelectorAll("[data-building-chart-index]");
+
+  const hide = () => {
+    tooltip.hidden = true;
+    crosshair.hidden = true;
+    hoverDots.forEach((dot) => { dot.hidden = true; });
+  };
+
+  const show = (index) => {
+    const x = xFor(index);
+    crosshair.setAttribute("x1", x);
+    crosshair.setAttribute("x2", x);
+    crosshair.hidden = false;
+    hoverDots.forEach((dot) => {
+      const item = series.find((entry) => entry.code === dot.dataset.seriesCode);
+      const value = item?.values[index];
+      if (!Number.isFinite(value)) {
+        dot.hidden = true;
+        return;
+      }
+      dot.setAttribute("cx", x);
+      dot.setAttribute("cy", yFor(value));
+      dot.hidden = false;
+    });
+
+    const rows = series.map((item) => {
+      const value = item.values[index];
+      const compact = formatEnergyCompact(value);
+      const exact = compact.includes("MWh") ? `<small>${Math.round(value).toLocaleString("en-SG")} kWh</small>` : "";
+      return `<div><span><i style="--series:${item.model.color}"></i>${item.code}</span><strong>${compact}${exact}</strong></div>`;
+    }).join("");
+    tooltip.innerHTML = `<header>${formatBuildingChartLabel(labels[index], period, true)}</header>${rows}`;
+    tooltip.hidden = false;
+
+    const pixelX = (x / width) * frame.clientWidth;
+    const tooltipHalf = Math.min(145, frame.clientWidth / 3);
+    const left = Math.max(tooltipHalf, Math.min(frame.clientWidth - tooltipHalf, pixelX));
+    tooltip.style.left = `${left}px`;
+    tooltip.classList.toggle("align-right", pixelX > frame.clientWidth * 0.72);
+  };
+
+  hits.forEach((hit) => {
+    const index = Number(hit.dataset.buildingChartIndex);
+    hit.addEventListener("pointerenter", () => show(index));
+    hit.addEventListener("pointermove", () => show(index));
+    hit.addEventListener("focus", () => show(index));
+    hit.addEventListener("blur", hide);
+  });
+  frame.addEventListener("pointerleave", hide);
+}
+
+function renderBuildingAnalytics() {
+  if (!els.buildingPerformanceChart) return;
+  const metric = buildingMetricMeta[state.activeBuildingMetric];
+  const period = state.activeBuildingPeriod;
+  const codes = selectedBuildingCodes();
+  const periodLabel = period === "yearly" ? "Yearly" : period === "monthly" ? "Monthly" : "Weekly";
+  const spanLabel = period === "yearly" ? "Year to date" : period === "monthly" ? "Month to date" : "Last 7 complete days";
+  const labelKey = `${period}Labels`;
+  const selectedSeries = codes
+    .map((code) => {
+      const model = buildingPerformanceModel[code];
+      const metricData = model?.[state.activeBuildingMetric];
+      return { code, model, values: metricData?.[period], labels: metricData?.[labelKey], sourceStart: metricData?.sourceStart };
+    })
+    .filter((item) => Array.isArray(item.values));
+  const series = selectedSeries.filter((item) => item.values.some((value) => Number.isFinite(value)));
+  const unavailable = codes.filter((code) => !series.some((item) => item.code === code));
+  const pointCount = Math.max(0, ...series.map((item) => item.values.length));
+  const labels = series.find((item) => Array.isArray(item.labels) && item.labels.length === pointCount)?.labels || buildingDateLabels(pointCount);
+  const sourceStart = selectedSeries
+    .map((item) => item.sourceStart)
+    .filter(Boolean)
+    .sort((a, b) => new Date(a) - new Date(b))[0];
+
+  els.buildingPeriodButtons.forEach((button) => {
+    const active = button.dataset.buildingPeriod === period;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  els.buildingMetricButtons.forEach((button) => {
+    const active = button.dataset.buildingMetric === state.activeBuildingMetric;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  els.buildingSelectionCount.textContent = `${codes.length} / 4`;
+  els.buildingAnalysisSelectionCount.textContent = String(codes.length);
+  els.buildingAnalysisPeriod.textContent = periodLabel;
+  if (els.buildingAnalysisAggregation) els.buildingAnalysisAggregation.textContent = period === "yearly" ? "monthly aggregation" : "complete-day aggregation";
+  els.buildingAnalysisMetric.textContent = metric.label;
+  els.buildingAnalysisUnit.textContent = period === "yearly" ? "monthly energy totals" : "daily energy totals";
+  els.buildingAnalysisCoverage.textContent = `${series.length} / ${codes.length || 0}`;
+  els.buildingWorkspaceSubtitle.textContent = `${periodLabel} energy comparison · selected meter groups`;
+  els.buildingChartTitle.textContent = `${period === "yearly" ? "Monthly" : "Daily"} ${metric.label.toLowerCase()} profile`;
+  els.buildingRankingSubtitle.textContent = `${period === "yearly" ? "Available YTD" : periodLabel} ${metric.label.toLowerCase()} contribution`;
+
+  const totalFinite = (values) => values.filter((value) => Number.isFinite(value)).reduce((total, value) => total + value, 0);
+  const totals = series.map((item) => ({ ...item, total: totalFinite(item.values) }));
+  const periodTotal = totalFinite(totals.map((item) => item.total));
+  const portfolioValues = Array.from({ length: pointCount }, (_, index) => {
+    const values = series.map((item) => item.values[index]).filter((value) => Number.isFinite(value));
+    return values.length ? totalFinite(values) : null;
+  });
+  const availablePortfolioValues = portfolioValues.filter((value) => Number.isFinite(value));
+  const averageValue = availablePortfolioValues.length ? totalFinite(availablePortfolioValues) / availablePortfolioValues.length : null;
+  const peakValue = availablePortfolioValues.length ? Math.max(...availablePortfolioValues) : null;
+  const peakIndex = Number.isFinite(peakValue) ? portfolioValues.indexOf(peakValue) : -1;
+  const chartValues = series.flatMap((item) => item.values).filter((value) => Number.isFinite(value));
+  const chartRawMax = chartValues.length ? Math.max(...chartValues) : 0;
+  const chartDivisor = metric.unit === "kWh" && chartRawMax >= 1000 ? 1000 : 1;
+  const chartUnit = chartDivisor === 1000 ? "MWh" : metric.unit;
+  const coverageNote = period === "yearly" && sourceStart ? ` · API coverage from ${formatTimestamp(sourceStart).split(",")[0]}` : "";
+
+  els.buildingChartSubtitle.textContent = `${spanLabel} · ${period === "yearly" ? "monthly" : "daily"} totals · ${chartUnit}${coverageNote} · hover to inspect`;
+  els.buildingChartLegend.innerHTML = [
+    ...totals.map(({ code, model, total }) => `<span style="--series:${model.color}"><b>${code}</b><small>${formatEnergyCompact(total)}</small></span>`),
+    ...unavailable.map((code) => `<span class="unavailable" style="--series:#9aa7b3"><b>${code}</b><small>No reported data</small></span>`),
+  ].join("");
+  els.buildingChartKpis.innerHTML = `
+    <div><span>Portfolio energy</span><strong>${series.length ? formatEnergyCompact(periodTotal) : "--"}</strong><small>${periodLabel.toLowerCase()} selected total</small></div>
+    <div><span>${period === "yearly" ? "Monthly" : "Daily"} average</span><strong>${Number.isFinite(averageValue) ? formatEnergyCompact(averageValue) : "--"}</strong><small>available reporting periods</small></div>
+    <div><span>Peak ${period === "yearly" ? "month" : "day"}</span><strong>${Number.isFinite(peakValue) ? formatEnergyCompact(peakValue) : "--"}</strong><small>${peakIndex >= 0 ? formatBuildingChartLabel(labels[peakIndex], period, true) : "No reported data"}</small></div>
+    <div><span>Series available</span><strong>${series.length} / ${codes.length}</strong><small>${unavailable.length ? `${unavailable.join(", ")} unavailable` : "all selected streams"}</small></div>
+  `;
+
+  if (!series.length) {
+    els.buildingPerformanceChart.innerHTML = '<div class="building-chart-empty"><strong>No reported data</strong><p>The selected buildings do not expose usable values for this metric and period.</p></div>';
+  } else {
+    const width = 1120;
+    const height = 390;
+    const plot = { left: 82, right: 26, top: 24, bottom: 62 };
+    const plotWidth = width - plot.left - plot.right;
+    const plotHeight = height - plot.top - plot.bottom;
+    const scaledMax = chartRawMax / chartDivisor;
+    const step = niceChartStep(scaledMax / 4);
+    const axisMax = Math.max(step * 4, Math.ceil(scaledMax / step) * step);
+    const xFor = (index) => period === "yearly"
+      ? plot.left + ((index + 0.5) / Math.max(pointCount, 1)) * plotWidth
+      : plot.left + (index / Math.max(pointCount - 1, 1)) * plotWidth;
+    const yFor = (value) => plot.top + (1 - (value / chartDivisor) / axisMax) * plotHeight;
+    const grid = Array.from({ length: 5 }, (_, index) => {
+      const ratio = index / 4;
+      const y = plot.top + ratio * plotHeight;
+      const value = axisMax * (1 - ratio);
+      const label = value.toLocaleString("en-SG", { maximumFractionDigits: chartUnit === "MWh" ? 1 : 0 });
+      return `<line x1="${plot.left}" x2="${width - plot.right}" y1="${y}" y2="${y}"></line><text x="${plot.left - 14}" y="${y + 4}" text-anchor="end">${label}</text>`;
+    }).join("");
+    const allTickIndexes = Array.from({ length: pointCount }, (_, index) => index);
+    const tickStep = period === "monthly" ? Math.max(1, Math.ceil(Math.max(pointCount - 1, 1) / 5)) : 1;
+    const tickIndexes = period === "monthly"
+      ? [...new Set([...allTickIndexes.filter((index) => index % tickStep === 0), pointCount - 1])]
+      : allTickIndexes;
+    const ticks = tickIndexes.filter((index) => index < pointCount).map((index) => {
+      const date = new Date(`${labels[index]}T00:00:00+08:00`);
+      const weekday = period === "weekly" ? new Intl.DateTimeFormat("en-SG", { weekday: "short" }).format(date) : "";
+      return `<text x="${xFor(index)}" y="${height - 30}" text-anchor="middle"><tspan x="${xFor(index)}">${period === "weekly" ? weekday : formatBuildingChartLabel(labels[index], period)}</tspan>${period === "weekly" ? `<tspan x="${xFor(index)}" dy="14">${formatBuildingChartDate(labels[index])}</tspan>` : ""}</text>`;
+    }).join("");
+    const lines = period === "yearly" ? "" : series.map(({ model, values }) => {
+      const segments = [];
+      let active = [];
+      values.forEach((value, index) => {
+        if (Number.isFinite(value)) active.push(`${xFor(index).toFixed(1)},${yFor(value).toFixed(1)}`);
+        else if (active.length) { segments.push(active); active = []; }
+      });
+      if (active.length) segments.push(active);
+      const paths = segments.map((points) => `<polyline points="${points.join(" ")}"></polyline>`).join("");
+      const circles = pointCount <= 10 ? values.map((value, index) => Number.isFinite(value) ? `<circle cx="${xFor(index).toFixed(1)}" cy="${yFor(value).toFixed(1)}" r="3"></circle>` : "").join("") : "";
+      return `<g class="generated-series" style="--series:${model.color}">${paths}${circles}</g>`;
+    }).join("");
+    const bars = period !== "yearly" ? "" : series.map(({ code, model, values }, seriesIndex) => {
+      const groupWidth = Math.min(92, (plotWidth / Math.max(pointCount, 1)) * 0.72);
+      const barWidth = Math.max(4, groupWidth / Math.max(series.length, 1));
+      return values.map((value, index) => {
+        if (!Number.isFinite(value)) return "";
+        const x = xFor(index) - groupWidth / 2 + seriesIndex * barWidth + 1;
+        const y = yFor(value);
+        return `<rect class="generated-bar" data-series-code="${code}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${Math.max(2, barWidth - 2).toFixed(1)}" height="${Math.max(1, height - plot.bottom - y).toFixed(1)}" rx="1"></rect>`;
+      }).join("");
+    }).map((rects, index) => `<g class="generated-series generated-bars" style="--series:${series[index].model.color}">${rects}</g>`).join("");
+    const hoverDots = series.map(({ code, model }) => `<circle class="building-hover-dot" data-series-code="${code}" style="--series:${model.color}" r="5" hidden></circle>`).join("");
+    const hits = Array.from({ length: pointCount }, (_, index) => {
+      const start = index === 0 ? plot.left : (xFor(index - 1) + xFor(index)) / 2;
+      const end = index === pointCount - 1 ? width - plot.right : (xFor(index) + xFor(index + 1)) / 2;
+      return `<rect class="building-chart-hit" data-building-chart-index="${index}" x="${start}" y="${plot.top}" width="${end - start}" height="${plotHeight}" tabindex="0" aria-label="Inspect ${formatBuildingChartLabel(labels[index], period, true)}"></rect>`;
+    }).join("");
+    els.buildingPerformanceChart.innerHTML = `
+      <div class="building-chart-frame">
+        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${periodLabel} ${metric.label} comparison">
+          <text class="generated-unit" x="${plot.left}" y="13">${chartUnit} per ${period === "yearly" ? "month" : "day"}</text>
+          <g class="generated-grid">${grid}</g>
+          <g class="generated-axis">${ticks}</g>
+          ${lines}
+          ${bars}
+          <line class="building-hover-line" y1="${plot.top}" y2="${height - plot.bottom}" hidden></line>
+          ${hoverDots}
+          <g class="building-chart-hits">${hits}</g>
+        </svg>
+        <div class="building-chart-tooltip" role="status" hidden></div>
+      </div>
+    `;
+    bindBuildingChartInteraction({ width, plot, labels, series, xFor, yFor, period });
+  }
+
+  const ranked = totals.sort((a, b) => b.total - a.total);
+  const rankingMax = Math.max(...ranked.map((item) => item.total), 1);
+  const rankingRows = ranked.map(({ code, model, total }, index) => {
+    const share = periodTotal ? (total / periodTotal) * 100 : 0;
+    return `<div class="portfolio-rank-row"><span>${String(index + 1).padStart(2, "0")}</span><div class="portfolio-rank-label"><strong>${code}</strong><small>${share.toFixed(0)}% of selected</small></div><div class="portfolio-bar"><i style="width:${(total / rankingMax) * 100}%;--series:${model.color}"></i></div><em>${formatEnergyCompact(total)}</em></div>`;
+  });
+  const unavailableRows = unavailable.map((code) => `<div class="portfolio-rank-row unavailable"><span>--</span><div class="portfolio-rank-label"><strong>${code}</strong><small>Meter unavailable</small></div><div class="portfolio-bar"></div><em>No data</em></div>`);
+  els.buildingPortfolioTotals.innerHTML = [...rankingRows, ...unavailableRows].join("") || '<p class="empty-note">No mapped values for this metric.</p>';
+
+  if (period === "yearly") {
+    els.buildingComparisonSubtitle.textContent = "Available year-to-date totals · monthly aggregation from historical API";
+    els.buildingComparisonHead.innerHTML = "<th>Building</th><th>YTD electricity</th><th>YTD cooling</th><th>YTD PV</th><th>API coverage from</th><th>Coverage</th><th>Latest record</th>";
+  } else {
+    els.buildingComparisonSubtitle.textContent = "Weekly and month-to-date totals · mapped hourly streams";
+    els.buildingComparisonHead.innerHTML = "<th>Building</th><th>Weekly electricity</th><th>MTD electricity</th><th>Weekly cooling</th><th>MTD cooling</th><th>Weekly PV</th><th>Coverage</th><th>Latest record</th>";
+  }
+  els.buildingComparisonBody.innerHTML = codes.map((code) => {
+    const model = buildingPerformanceModel[code];
+    const coverageClass = model.coverage === "Partial" ? "partial" : "good";
+    if (period === "yearly") {
+      const starts = [model.electricity?.sourceStart, model.cooling?.sourceStart, model.pv?.sourceStart]
+        .filter(Boolean)
+        .sort((a, b) => new Date(a) - new Date(b));
+      const coverageStart = starts.length ? formatTimestamp(starts[0]).split(",")[0] : "Not available";
+      return `<tr><td><strong>${code}</strong></td><td>${model.electricity ? formatEnergyTotal(totalFinite(model.electricity.yearly || [])) : "Not mapped"}</td><td>${model.cooling ? formatEnergyTotal(totalFinite(model.cooling.yearly || [])) : "Not mapped"}</td><td>${model.pv ? formatEnergyTotal(totalFinite(model.pv.yearly || [])) : "Not mapped"}</td><td>${coverageStart}</td><td><span class="tag ${coverageClass}">${model.coverage}</span></td><td>${model.updated}</td></tr>`;
+    }
+    return `<tr><td><strong>${code}</strong></td><td>${formatEnergyTotal(sum(model.electricity?.weekly || []))}</td><td>${formatEnergyTotal(sum(model.electricity?.monthly || []))}</td><td>${formatEnergyTotal(sum(model.cooling?.weekly || []))}</td><td>${formatEnergyTotal(sum(model.cooling?.monthly || []))}</td><td>${formatEnergyTotal(sum(model.pv?.weekly || []))}</td><td><span class="tag ${coverageClass}">${model.coverage}</span></td><td>${model.updated}</td></tr>`;
+  }).join("");
+}
+
+function setMarketView(view) {
+  state.activeMarketView = view;
+  els.marketViewButtons.forEach((button) => {
+    const active = button.dataset.marketView === view;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  els.marketViewPanels.forEach((panel) => panel.classList.toggle("hidden", panel.dataset.marketViewPanel !== view));
+}
+
 function renderBuildingList() {
-  const features = visibleFeatures().slice().sort((a, b) => a.properties.short_name.localeCompare(b.properties.short_name));
+  const selectionOrder = selectedBuildingCodes();
+  const features = visibleFeatures().slice().sort((a, b) => {
+    const aCode = String(a.properties.short_name || "").toUpperCase();
+    const bCode = String(b.properties.short_name || "").toUpperCase();
+    const aSelected = state.selectedComparisonBuildings.has(aCode) ? 0 : 1;
+    const bSelected = state.selectedComparisonBuildings.has(bCode) ? 0 : 1;
+    if (aSelected !== bSelected) return aSelected - bSelected;
+    if (!aSelected) return selectionOrder.indexOf(aCode) - selectionOrder.indexOf(bCode);
+    return aCode.localeCompare(bCode);
+  });
   els.buildingList.innerHTML = "";
   features.forEach((feature) => {
     const props = feature.properties;
+    const code = String(props.short_name || "").toUpperCase();
+    const model = buildingPerformanceModel[code];
+    const selected = state.selectedComparisonBuildings.has(code);
     const item = document.createElement("button");
     item.type = "button";
-    item.className = "building-list-item";
+    item.className = `building-list-item${selected ? " selected" : ""}${model ? "" : " unavailable"}`;
+    item.setAttribute("aria-pressed", String(selected));
     item.innerHTML = `
-      <span>${props.short_name}</span>
+      <span class="building-select-indicator" aria-hidden="true">${selected ? "✓" : ""}</span>
       <div class="building-list-text">
-        <strong>${props.name}</strong>
-        ${props.grouped_marker ? `<small>${props.child_summary}</small>` : ""}
+        <strong><b>${props.short_name}</b>${String(props.name).toUpperCase() === code ? (model ? "Mapped meter group" : "Campus building") : props.name}</strong>
+        <small>${model ? `${model.coverage} · latest ${model.updated}` : "Registry only · meter mapping pending"}</small>
       </div>
+      <em>${model ? "Mapped" : "Pending"}</em>
     `;
     item.addEventListener("click", () => {
       activateTab("buildings");
       selectBuilding(feature);
-      zoomToFeature(feature, 17);
+      if (model) {
+        if (selected && state.selectedComparisonBuildings.size > 1) state.selectedComparisonBuildings.delete(code);
+        else if (!selected && state.selectedComparisonBuildings.size < 4) state.selectedComparisonBuildings.add(code);
+      }
+      renderBuildingList();
+      renderBuildingAnalytics();
+      if (model && state.selectedComparisonBuildings.has(code)) {
+        loadBuildingPerformanceHistory([code]).catch((error) => console.error(error));
+      }
     });
     els.buildingList.appendChild(item);
   });
+  if (els.buildingSelectionCount) els.buildingSelectionCount.textContent = `${state.selectedComparisonBuildings.size} / 4`;
 }
 
 function realtimePlaceLabel(buildingCode) {
@@ -2368,6 +3064,7 @@ function realtimePlaceLabel(buildingCode) {
 }
 
 function historyDefinitionsForPlace(buildingCode = state.activeRealtimeBuilding) {
+  const capabilities = buildingMetricCapabilities[buildingCode] || [];
   return historyConfig.metrics.map((template) => {
     const point = typeof template.point === "function" ? template.point(buildingCode) : template.point;
     const points = typeof template.points === "function" ? template.points(buildingCode) : template.points;
@@ -2379,7 +3076,7 @@ function historyDefinitionsForPlace(buildingCode = state.activeRealtimeBuilding)
       points,
       componentPoints,
     };
-  });
+  }).filter((definition) => capabilities.includes(definition.key));
 }
 
 function historyPointByKey(key, buildingCode = state.activeRealtimeBuilding) {
@@ -2406,7 +3103,7 @@ function historyUrl(definition, pointName) {
     stop: "now()",
     limit: "50000",
   });
-  if (definition.source === "meter") params.set("building", definition.building);
+  if (definition.source === "meter") params.set("building", apiBuildingCode(definition.building));
   const baseUrl = definition.source === "meter" ? historyConfig.meterBaseUrl : historyConfig.beehubBaseUrl;
   return `${baseUrl}?${params.toString()}`;
 }
@@ -2693,7 +3390,7 @@ function renderBarChart(rows, definition) {
 
 function renderTrendPlaceSelector() {
   if (!els.trendPlaceSelect) return;
-  const places = realtimeConfig.liveBuildings;
+  const places = realtimeConfig.liveBuildings.map((entry) => (typeof entry === "string" ? entry : entry.code));
   if (!places.includes(state.activeRealtimeBuilding)) state.activeRealtimeBuilding = places[0] || "SDE4";
   els.trendPlaceSelect.innerHTML = places
     .map((building) => `<option value="${escapeHtml(building)}">${escapeHtml(realtimePlaceLabel(building))}</option>`)
@@ -2871,7 +3568,11 @@ function liveMeterSummaryCards(live) {
     {
       label: "PV generation",
       value: formatLivePvMetric(live.pvKw),
-      note: `ALL hourly generation primary${pvComponentCount ? `; ${pvComponentCount} module breakdowns` : ""}`,
+      note: live.pvKw === null
+        ? "not mapped for this building"
+        : pvComponentCount
+          ? `${pvComponentCount} standardized PV streams combined`
+          : "live hourly generation meter",
     },
   ];
 }
@@ -3238,7 +3939,7 @@ function renderRealtimeTrends(feature) {
       `;
     });
   els.trendSummary.innerHTML = [...liveCards, ...historyCards].join("");
-  els.trendNote.textContent = "PV uses the ALL hourly generation point as the primary series. M1 and M2 are retained as meter-level breakdowns.";
+  els.trendNote.textContent = "Energy trends use standardized hourly points. PV combines the available M1 and M2 generation streams.";
 }
 
 function renderRealtimePoints(feature) {
@@ -3274,11 +3975,11 @@ function renderRealtimePoints(feature) {
   renderRealtimeTrends(feature);
 }
 
-function selectBuilding(feature) {
+function selectBuilding(feature, options = {}) {
   const props = feature.properties;
   const buildingCode = String(props.short_name || "").toUpperCase();
   const live = state.realtimeByBuilding[buildingCode];
-  activateTab("buildings");
+  if (options.activate !== false) activateTab("buildings");
   state.selectedId = props.id;
   if (live) state.activeRealtimeBuilding = buildingCode;
   els.buildingZone.textContent = `${props.zone} / ${props.type}`;
@@ -3308,7 +4009,6 @@ function selectBuilding(feature) {
     : props.grouped_marker
       ? `${props.child_count} mapped footprints are grouped under this marker. Blocks: ${props.child_summary}.`
       : `${props.ai_summary} ${props.suggested_action}`;
-  els.zoomSelected.disabled = false;
   renderRealtimePoints(feature);
 
   if (state.map?.getSource("selected-building")) {
@@ -3935,6 +4635,9 @@ function updateMetric(metric) {
     eui: euiColorExpression(),
     height: heightColorExpression(),
     live: liveMappingColorExpression(),
+    electricity: colorExpression("electricity"),
+    cooling: colorExpression("cooling"),
+    pv: colorExpression("pv"),
   };
   const buildingColor = colorByMode[metric] || buildingModelColorExpression();
   state.map.setPaintProperty("buildings-fill", "fill-color", buildingColor);
@@ -3969,8 +4672,135 @@ function fitCampus() {
   });
 }
 
+function renderMarketHeatmap() {
+  if (!els.marketHeatmap) return;
+  const labels = ["P1", "P9", "P17", "P25", "P33", "P41"];
+  const levels = [2, 1, 3, 4, 1, 2, 3, 1, 2, 4, 1, 2, 3, 4, 1, 2, 3, 2, 1, 3, 4, 2, 1, 3, 2, 4, 1, 2];
+  els.marketHeatmap.innerHTML = labels
+    .map((label, row) => {
+      const cells = Array.from({ length: 14 }, (_, column) => {
+        const level = levels[(row * 7 + column * 3) % levels.length];
+        return `<i data-level="${level}" title="${label} · day ${column + 1}"></i>`;
+      }).join("");
+      return `<span>${label}</span><div>${cells}</div>`;
+    })
+    .join("");
+}
+
+function renderMarketInterval(interval = state.activeMarketInterval) {
+  const config = marketIntervalConfig[interval] || marketIntervalConfig.realtime;
+  state.activeMarketInterval = interval;
+  els.marketIntervalButtons.forEach((button) => {
+    const active = button.dataset.marketInterval === interval;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  els.marketChartTitle.textContent = config.title;
+  els.marketChartSubtitle.textContent = config.subtitle;
+  els.marketSeriesNote.textContent = config.note;
+  setMarketView("chart");
+
+  const width = 1000;
+  const height = 300;
+  const plot = { left: 66, right: 22, top: 30, bottom: 42 };
+  const values = config.values;
+  const maxValue = Math.max(50, Math.ceil(Math.max(...values, 1) / 50) * 50);
+  const xFor = (index) => plot.left + (index / Math.max(values.length - 1, 1)) * (width - plot.left - plot.right);
+  const yFor = (value) => plot.top + (1 - value / maxValue) * (height - plot.top - plot.bottom);
+  const grid = Array.from({ length: 5 }, (_, index) => {
+    const ratio = index / 4;
+    const y = plot.top + ratio * (height - plot.top - plot.bottom);
+    const value = Math.round(maxValue * (1 - ratio));
+    return `<line x1="${plot.left}" x2="${width - plot.right}" y1="${y}" y2="${y}"></line><text x="${plot.left - 16}" y="${y + 4}" text-anchor="end">${value}</text>`;
+  }).join("");
+  const points = values.map((value, index) => `${xFor(index).toFixed(1)},${yFor(value).toFixed(1)}`).join(" ");
+  const baseline = height - plot.bottom;
+  const areaPath = `M${xFor(0).toFixed(1)},${baseline} L${points.replaceAll(" ", " L")} L${xFor(values.length - 1).toFixed(1)},${baseline} Z`;
+  const averageValue = average(values) || 0;
+  const averageY = yFor(averageValue);
+  const ticks = config.tickIndexes.map((index, tickIndex) => `<text x="${xFor(index)}" y="${height - 13}" text-anchor="middle">${config.tickLabels[tickIndex]}</text>`).join("");
+  els.marketChartInteractive.innerHTML = `
+    <svg class="engineering-chart market-chart" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="${escapeHtml(config.title)}">
+      <g class="chart-gridlines market-generated-grid">${grid}</g>
+      <path class="chart-area amber" d="${areaPath}"></path>
+      <polyline class="chart-line amber" points="${points}"></polyline>
+      <line class="average-line" x1="${plot.left}" x2="${width - plot.right}" y1="${averageY}" y2="${averageY}"></line>
+      <g class="chart-axis">${ticks}</g>
+    </svg>
+    <div class="market-crosshair"></div>
+    <div class="market-tooltip"><strong>-- S$/MWh</strong><span>--</span><small>--</small></div>
+  `;
+  bindMarketChartInteraction(config, interval === "realtime" ? 34 : values.length - 1);
+}
+
+function bindMarketChartInteraction(config, initialIndex) {
+  const frame = els.marketChartInteractive;
+  const crosshair = frame?.querySelector(".market-crosshair");
+  const tooltip = frame?.querySelector(".market-tooltip");
+  if (!frame || !crosshair || !tooltip) return;
+  const values = config.values;
+  const update = (ratio) => {
+    const clamped = Math.min(Math.max(ratio, 0.02), 0.98);
+    const index = Math.round(clamped * (values.length - 1));
+    const value = values[index];
+    crosshair.style.left = `${(clamped * 100).toFixed(1)}%`;
+    tooltip.style.left = `${Math.min(Math.max(clamped * 100 + (clamped > 0.72 ? -18 : 1), 3), 82)}%`;
+    tooltip.querySelector("strong").textContent = `${formatNumber(value, 1)} S$/MWh`;
+    tooltip.querySelector("span").textContent = config.tooltipLabel(index);
+    tooltip.querySelector("small").textContent = `${formatNumber(value / 10, 2)} cents/kWh · provisional`;
+  };
+  frame.addEventListener("pointermove", (event) => {
+    const bounds = frame.getBoundingClientRect();
+    update((event.clientX - bounds.left) / bounds.width);
+  });
+  const initialRatio = initialIndex / Math.max(values.length - 1, 1);
+  frame.addEventListener("pointerleave", () => update(initialRatio));
+  update(initialRatio);
+}
+
 function bindControls() {
   els.tabButtons.forEach((button) => button.addEventListener("click", () => activateTab(button.dataset.tab)));
+  document.querySelectorAll(".local-segmented").forEach((control) => {
+    control.addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button) return;
+      control.querySelectorAll("button").forEach((item) => item.classList.toggle("active", item === button));
+    });
+  });
+  els.overviewBuildingPerformance?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-performance-building]");
+    if (!button) return;
+    const code = button.dataset.performanceBuilding;
+    const feature = state.displayFeatures.find((item) => String(item.properties.short_name || "").toUpperCase() === code);
+    if (!feature) return;
+    selectBuilding(feature);
+    zoomToFeature(feature, 17);
+  });
+  els.openRealtimeWorkspace?.addEventListener("click", () => openTrendModal(state.activeHistoryKey || "electricity"));
+  els.buildingPeriodButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      state.activeBuildingPeriod = button.dataset.buildingPeriod;
+      els.buildingPeriodButtons.forEach((item) => {
+        const active = item === button;
+        item.classList.toggle("active", active);
+        item.setAttribute("aria-pressed", String(active));
+      });
+      renderBuildingAnalytics();
+    });
+  });
+  els.buildingMetricButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      state.activeBuildingMetric = button.dataset.buildingMetric;
+      els.buildingMetricButtons.forEach((item) => {
+        const active = item === button;
+        item.classList.toggle("active", active);
+        item.setAttribute("aria-pressed", String(active));
+      });
+      renderBuildingAnalytics();
+    });
+  });
+  els.marketViewButtons.forEach((button) => button.addEventListener("click", () => setMarketView(button.dataset.marketView)));
+  els.marketIntervalButtons.forEach((button) => button.addEventListener("click", () => renderMarketInterval(button.dataset.marketInterval)));
   els.externalDataButtons.forEach((button) => {
     button.addEventListener("click", () => renderExternalDataPanel(button.dataset.external));
   });
@@ -4049,10 +4879,6 @@ function bindControls() {
     state.activeBrickBuilding = event.target.value;
     state.activeBrickNodeId = "sde4";
     renderBrickGraph();
-  });
-  els.zoomSelected.addEventListener("click", () => {
-    const feature = state.displayFeatures?.find((item) => item.properties.id === state.selectedId);
-    if (feature) zoomToFeature(feature);
   });
   els.trendView?.addEventListener("click", () => openTrendModal(state.activeHistoryKey || "electricity"));
   els.trendClose?.addEventListener("click", closeTrendModal);
@@ -4182,6 +5008,11 @@ els.tokenForm.addEventListener("submit", (event) => {
 });
 
 bindControls();
+renderMarketHeatmap();
+renderBuildingAnalytics();
+setMarketView(state.activeMarketView);
+renderMarketInterval(state.activeMarketInterval);
+activateTab(state.activeTab);
 
 const initialMapboxToken = getInitialMapboxToken();
 if (initialMapboxToken.token) {
