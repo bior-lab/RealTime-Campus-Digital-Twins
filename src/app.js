@@ -696,6 +696,7 @@ const state = {
   activeMapboxTokenSource: "default",
   mapAuthFallbackInProgress: false,
   mapTokenIssue: "",
+  mapClickHandler: null,
   refreshTimer: null,
   selectedComparisonBuildings: new Set(["SDE4", "E6", "E8"]),
   activeBuildingPeriod: initialBuildingPeriod,
@@ -4011,64 +4012,6 @@ function selectBuilding(feature, options = {}) {
       : `${props.ai_summary} ${props.suggested_action}`;
   renderRealtimePoints(feature);
 
-  if (state.map?.getSource("selected-building")) {
-    state.map.getSource("selected-building").setData(feature);
-  }
-}
-
-function popupHtml(props) {
-  return buildingPopupHtml(props);
-}
-
-function mapboxBuildingPopupHtml(props, catalogFeature = null, displayFeature = null) {
-  const catalog = catalogFeature?.properties;
-  const display = displayFeature?.properties;
-  const merged = {
-    ...(display || catalog || {}),
-    mapbox_building_type: props.building_type || "",
-    mapbox_height_m: props.height_m ?? null,
-    mapbox_eui_2023: props.eui_2023 ?? null,
-    selected_footprint_name: display?.grouped_marker ? catalog?.name || "" : "",
-  };
-  return buildingPopupHtml(merged);
-}
-
-function popupTitle(props) {
-  if (!props.short_name) return props.name || "Building";
-  if (!props.name || props.name === props.short_name) return props.short_name;
-  return `${props.short_name} - ${props.name}`;
-}
-
-function buildingPopupHtml(props) {
-  const live = state.realtimeByBuilding[String(props.short_name || "").toUpperCase()];
-  const electricity = live ? live.electricityHourlyKwh : props.electricity_metric ?? props.load_kw;
-  const cooling = live ? live.coolingHourlyKwh : props.cooling_metric ?? props.cooling_kw;
-  const water = live ? live.waterM3 : props.water_metric ?? props.water_m3_today;
-  const pv = live ? live.pvKw : props.pv_metric ?? props.solar_kw;
-  const eui = props.eui ?? props.mapbox_eui_2023;
-  const height = Number(props.mapbox_height_m);
-  return `
-    <article class="popup-card">
-      <header class="popup-card-header">
-        <span>${props.short_name || "NUS"}</span>
-        <h4>${popupTitle(props)}</h4>
-        <p>${props.zone || "NUS Campus"} / ${props.type || "Building"}</p>
-      </header>
-      ${props.selected_footprint_name ? `<p class="popup-inline"><strong>Footprint</strong>${props.selected_footprint_name}</p>` : ""}
-      ${props.child_summary ? `<p class="popup-inline"><strong>Blocks</strong>${props.child_summary}</p>` : ""}
-      <div class="popup-metrics">
-        <div><span>Electricity</span><strong>${formatMetric(electricity, live ? "kWh/h" : "kW", 1)}</strong></div>
-        <div><span>Cooling</span><strong>${formatMetric(cooling, live ? "kWh/h" : "kW", 1)}</strong></div>
-        <div><span>Water</span><strong>${formatMetric(water, "m3", 1)}</strong></div>
-        <div><span>PV</span><strong>${live ? formatLivePvMetric(pv) : formatMetric(pv, "kW", 0)}</strong></div>
-      </div>
-      <div class="popup-meta">
-        <span>Height: ${Number.isFinite(height) ? `${formatNumber(height, 1)} m` : "No data"}</span>
-        <span>EUI: ${formatMetric(eui, "kWh/m2-yr", 0)}</span>
-        ${props.mapbox_building_type ? `<span>Mapbox type: ${props.mapbox_building_type}</span>` : ""}
-      </div>
-    </article>
-  `;
 }
 
 function zoomToFeature(feature, maxZoom = 16.5) {
@@ -4194,11 +4137,6 @@ function addMapLayers() {
     type: "geojson",
     data: state.regionAreaData,
   });
-  state.map.addSource("selected-building", {
-    type: "geojson",
-    data: { type: "FeatureCollection", features: [] },
-  });
-
   state.map.addLayer({
     id: "campus-boundary-fill",
     type: "fill",
@@ -4363,17 +4301,6 @@ function addMapLayers() {
     },
   });
   state.map.addLayer({
-    id: "selected-outline",
-    type: "circle",
-    source: "selected-building",
-    paint: {
-      "circle-color": "rgba(0, 61, 124, 0)",
-      "circle-radius": 19,
-      "circle-stroke-color": "#003d7c",
-      "circle-stroke-width": 4,
-    },
-  });
-  state.map.addLayer({
     id: "pv-markers",
     type: "circle",
     source: "building-points",
@@ -4505,17 +4432,6 @@ function addMapLayers() {
     },
   });
 
-  state.map.on("click", "buildings-fill", (event) => {
-    const feature = event.features[0];
-    const catalogFeature = catalogFeatureBySourceId(feature.properties.source_id);
-    const displayFeature = displayFeatureBySourceId(feature.properties.source_id);
-    const mergedFeature = mergeCatalogAndMapbox(displayFeature || catalogFeature, feature.properties);
-    if (mergedFeature) selectBuilding(mergedFeature);
-    new mapboxgl.Popup({ maxWidth: "460px" })
-      .setLngLat(event.lngLat)
-      .setHTML(mapboxBuildingPopupHtml(feature.properties, catalogFeature, displayFeature))
-      .addTo(state.map);
-  });
   state.map.on("mouseenter", "buildings-fill", () => {
     state.map.getCanvas().style.cursor = "pointer";
   });
@@ -4531,13 +4447,6 @@ function addMapLayers() {
     "building-marker-dot",
     "building-marker-label",
   ].forEach((layer) => {
-    state.map.on("click", layer, (event) => {
-      const feature = event.features[0];
-      const sourceFeature =
-        state.data.features.find((item) => item.properties.id === feature.properties.id) || feature;
-      selectBuilding(sourceFeature);
-      new mapboxgl.Popup({ maxWidth: "460px" }).setLngLat(event.lngLat).setHTML(popupHtml(sourceFeature.properties)).addTo(state.map);
-    });
     state.map.on("mouseenter", layer, () => {
       state.map.getCanvas().style.cursor = "pointer";
     });
@@ -4547,11 +4456,6 @@ function addMapLayers() {
   });
 
   ["region-area-fill", "region-area-outline"].forEach((layer) => {
-    state.map.on("click", layer, (event) => {
-      const feature = event.features[0];
-      const region = focusRegions.find((item) => item.label === feature.properties.label);
-      if (region) zoomToRegionCodes(region.codes);
-    });
     state.map.on("mouseenter", layer, () => {
       state.map.getCanvas().style.cursor = "pointer";
     });
@@ -4568,14 +4472,6 @@ function addMapLayers() {
     "zone-count-label",
     "zone-label",
   ].forEach((layer) => {
-    state.map.on("click", layer, (event) => {
-      const feature = event.features[0];
-      const regionCodes = String(feature.properties.codes || "")
-        .split(",")
-        .map((code) => code.trim())
-        .filter(Boolean);
-      zoomToRegionCodes(regionCodes);
-    });
     state.map.on("mouseenter", layer, () => {
       state.map.getCanvas().style.cursor = "pointer";
     });
@@ -4583,6 +4479,61 @@ function addMapLayers() {
       state.map.getCanvas().style.cursor = "";
     });
   });
+
+  const zoneClickLayers = [
+    "zone-marker-outer",
+    "zone-marker-middle",
+    "zone-marker-halo",
+    "zone-marker-dot",
+    "zone-count-label",
+    "zone-label",
+  ];
+  const buildingMarkerClickLayers = [
+    "priority-marker-halo",
+    "priority-marker-dot",
+    "priority-marker-label",
+    "building-marker-halo",
+    "building-marker-dot",
+    "building-marker-label",
+  ];
+  const regionClickLayers = ["region-area-fill", "region-area-outline"];
+
+  if (state.mapClickHandler) state.map.off("click", state.mapClickHandler);
+  state.mapClickHandler = (event) => {
+    const zoneFeature = state.map.queryRenderedFeatures(event.point, { layers: zoneClickLayers })[0];
+    if (zoneFeature) {
+      const regionCodes = String(zoneFeature.properties.codes || "")
+        .split(",")
+        .map((code) => code.trim())
+        .filter(Boolean);
+      zoomToRegionCodes(regionCodes);
+      return;
+    }
+
+    const markerFeature = state.map.queryRenderedFeatures(event.point, { layers: buildingMarkerClickLayers })[0];
+    if (markerFeature) {
+      const sourceFeature =
+        state.data.features.find((item) => item.properties.id === markerFeature.properties.id) || markerFeature;
+      selectBuilding(sourceFeature);
+      return;
+    }
+
+    const mapboxFeature = state.map.queryRenderedFeatures(event.point, { layers: ["buildings-fill"] })[0];
+    if (mapboxFeature) {
+      const catalogFeature = catalogFeatureBySourceId(mapboxFeature.properties.source_id);
+      const displayFeature = displayFeatureBySourceId(mapboxFeature.properties.source_id);
+      const mergedFeature = mergeCatalogAndMapbox(displayFeature || catalogFeature, mapboxFeature.properties);
+      if (mergedFeature) selectBuilding(mergedFeature);
+      return;
+    }
+
+    const regionFeature = state.map.queryRenderedFeatures(event.point, { layers: regionClickLayers })[0];
+    if (regionFeature) {
+      const region = focusRegions.find((item) => item.label === regionFeature.properties.label);
+      if (region) zoomToRegionCodes(region.codes);
+    }
+  };
+  state.map.on("click", state.mapClickHandler);
 }
 
 function renderLegend(metric) {
