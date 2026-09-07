@@ -3,16 +3,24 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>NUS Campus EMIS Dashboard</title>
+    <title>NUS Campus DT Dashboard</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="vendor/mapbox-gl/mapbox-gl.css" />
-    <link rel="stylesheet" href="src/styles.css?v=20260717-building-chart-upgrade" />
+    <link rel="stylesheet" href="src/styles.css?v=20260907-overview-clear" />
     <script src="vendor/mapbox-gl/mapbox-gl.js"></script>
   </head>
   <body>
     <main class="app-shell">
       <aside class="rail" aria-label="Primary navigation">
-        <div class="rail-product" aria-label="Campus EMIS">Campus<br />EMIS</div>
+        <div class="rail-product" aria-label="NUS Campus Digital Twin">
+          <span class="rail-product-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M3 10 12 4l9 6" />
+              <path d="M5 10v9M9 10v9M15 10v9M19 10v9M3 20h18" />
+            </svg>
+          </span>
+          <span>NUS<br />Campus DT</span>
+        </div>
         <nav class="rail-nav">
           <button type="button" class="active" data-tab="overview" aria-pressed="true">
             <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 18V6l9-3 9 3v12l-9 3-9-3Z"/><path d="M12 3v18"/><path d="m3 6 9 3 9-3"/></svg></span>
@@ -24,7 +32,7 @@
           </button>
           <button type="button" data-tab="market" aria-pressed="false">
             <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="m7 15 4-4 3 2 5-7"/><path d="M16 6h3v3"/></svg></span>
-            Market
+            Energy Price
           </button>
           <button type="button" data-tab="weather" aria-pressed="false">
             <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M17 17H7a4 4 0 1 1 1.1-7.85A5.5 5.5 0 0 1 18.5 11 3 3 0 0 1 17 17Z"/><path d="M12 2v3M4.9 4.9 7 7M19.1 4.9 17 7"/></svg></span>
@@ -32,8 +40,12 @@
           </button>
           <button type="button" data-tab="data" aria-pressed="false">
             <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"/><path d="m16 17 1.5 1.5L21 15"/></svg></span>
-            Data
+            Data Health
           </button>
+          <a class="rail-guide" href="./guide/" target="_blank" rel="noopener noreferrer">
+            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v17H7.5A3.5 3.5 0 0 0 4 22V5.5Z"/><path d="M4 18.5A3.5 3.5 0 0 1 7.5 15H20"/></svg></span>
+            User Guide
+          </a>
         </nav>
         <div class="rail-spacer"></div>
         <div class="rail-version"><span aria-hidden="true">i</span>Local build</div>
@@ -43,7 +55,7 @@
         <div id="map" class="map"></div>
 
         <div id="tokenPanel" class="token-panel" role="dialog" aria-labelledby="tokenTitle">
-          <h1 id="tokenTitle">NUS Campus EMIS</h1>
+          <h1 id="tokenTitle">NUS Campus DT</h1>
           <p>No Mapbox token is committed to this repository. Paste a temporary public token to load the map in this browser.</p>
           <form id="tokenForm" class="token-form">
             <label for="tokenInput">Temporary Mapbox public token</label>
@@ -66,24 +78,7 @@
           <span id="realtimeStatusText">Realtime API pending</span>
         </div>
 
-        <section class="workspace-view overview-workspace active" data-workspace="overview" aria-label="Campus monitoring overview">
-          <header class="workspace-topbar">
-            <div><h1>Campus Monitoring Overview</h1><p>Selected NUS buildings · map metric: data coverage</p></div>
-            <div class="topbar-actions"><span class="source-chip"><span class="status-dot live"></span>Collectors healthy</span><span class="source-chip">Updated <strong id="overviewUpdated">--</strong></span></div>
-          </header>
-          <div class="overview-map-modes segmented engineering-segmented" role="group" aria-label="Overview map metric">
-            <button type="button" data-metric="live" class="active" aria-pressed="true">Coverage</button>
-            <button type="button" data-metric="electricity" aria-pressed="false">Electricity</button>
-            <button type="button" data-metric="cooling" aria-pressed="false">Cooling</button>
-            <button type="button" data-metric="pv" aria-pressed="false">PV</button>
-            <button type="button" data-metric="eui" aria-pressed="false">EUI</button>
-          </div>
-          <aside class="performance-drawer" aria-label="Building performance coverage">
-            <header><div><h2>Building Performance</h2><p>Coverage and latest source status</p></div><span class="tag info">16 selected</span></header>
-            <div id="overviewBuildingPerformance" class="performance-list"></div>
-            <footer><div><span>SDE4 weather</span><strong>30.4°C · 71% RH</strong></div><div><span>USEP provisional</span><strong>142.6 S$/MWh</strong></div></footer>
-          </aside>
-        </section>
+        <section class="workspace-view overview-workspace active" data-workspace="overview" aria-label="Campus monitoring overview"></section>
 
         <section class="workspace-view analysis-workspace" data-workspace="buildings" aria-label="Building performance analysis">
           <header class="workspace-topbar">
@@ -115,9 +110,9 @@
           </div>
         </section>
 
-        <section class="workspace-view analysis-workspace" data-workspace="market" aria-label="Singapore wholesale electricity market">
+        <section class="workspace-view analysis-workspace" data-workspace="market" aria-label="Singapore energy price">
           <header class="workspace-topbar">
-            <div><h1>Singapore Wholesale Energy Price</h1><p>Uniform Singapore Energy Price · EMC / NEMS market context</p></div>
+            <div><h1>Energy Price</h1><p>Uniform Singapore Energy Price · EMC / NEMS market context</p></div>
             <div class="topbar-actions"><span class="source-chip"><span class="status-dot partial"></span>Provisional</span><span class="source-chip">Period 35 · 17 Jul 2026</span></div>
           </header>
           <div class="workspace-content market-analysis-content">
@@ -133,7 +128,7 @@
                 <div class="segmented market-view-toggle" role="group" aria-label="Market data view"><button class="active" type="button" data-market-view="chart" aria-pressed="true">Chart</button><button type="button" data-market-view="table" aria-pressed="false">Table</button></div>
               </header>
               <div class="market-view-panel" data-market-view-panel="chart">
-                <div class="market-series-header"><div class="chart-legend"><span style="--series:#cf7400">USEP</span><span style="--series:#64788c">Period average</span></div><span id="marketSeriesNote">Past and published periods</span></div>
+                <div class="market-series-header"><div class="chart-legend"><span style="--series:#ef7c00">USEP</span><span style="--series:#64788c">Period average</span></div><span id="marketSeriesNote">Past and published periods</span></div>
                 <div id="marketChartInteractive" class="market-chart-interactive">
                   <svg class="engineering-chart market-chart" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-label="USEP intraday price">
                     <g class="chart-gridlines"><line x1="66" x2="978" y1="30" y2="30"/><line x1="66" x2="978" y1="92" y2="92"/><line x1="66" x2="978" y1="154" y2="154"/><line x1="66" x2="978" y1="216" y2="216"/><line x1="66" x2="978" y1="258" y2="258"/></g>
@@ -333,49 +328,17 @@
           <div class="panel-brand">
             <img src="assets/bior-logo.png" alt="NUS Building Informatics & Operations Research Lab" />
           </div>
-          <div class="panel-title-block">
-            <p class="eyebrow">NUS Campus EMIS</p>
-            <h2>Energy Monitoring</h2>
-          </div>
         </header>
 
         <section id="tab-overview" class="tab-panel active" data-tab-panel="overview">
-          <div class="panel-intro"><h2>Campus Overview</h2><p>Spatial orientation, monitoring coverage, and latest source status.</p></div>
-          <section class="panel-section compact-controls">
-            <span class="field-label">Building group</span>
-            <button class="field-control" type="button">All selected buildings</button>
-          </section>
-          <section class="panel-section">
-            <div class="section-header">
-              <h3>Live Portfolio</h3>
-              <span id="overviewCoverage" class="section-kicker">Live coverage</span>
-            </div>
-            <div class="live-summary" aria-label="Campus summary">
-              <div>
-                <span class="summary-label">Electricity demand</span>
-                <strong id="summaryElectricity">-</strong>
-              </div>
-              <div>
-                <span class="summary-label">Cooling</span>
-                <strong id="summaryCooling">-</strong>
-              </div>
-              <div>
-                <span class="summary-label">Water</span>
-                <strong id="summaryWater">-</strong>
-              </div>
-              <div>
-                <span class="summary-label">PV generation</span>
-                <strong id="summaryPv">-</strong>
-              </div>
-            </div>
-          </section>
-
-          <section class="panel-section">
-            <div class="section-header">
-              <h3>Campus Regions</h3>
-              <span class="section-kicker">16 selected</span>
-            </div>
-            <div id="regionList" class="region-list"></div>
+          <div class="overview-branding">
+            <h1 class="overview-brand-title">
+              <span class="overview-title-highlight">NUS Campus Digital Twins:</span>
+              <span class="overview-title-main">A real-time energy management and information system (EMIS) for campus energy analysis.</span>
+            </h1>
+          </div>
+          <section class="panel-section overview-project-summary" aria-label="Project summary">
+            <h2>Project Summary</h2>
           </section>
           <div id="aiBriefList" class="hidden" aria-hidden="true"></div>
         </section>
@@ -434,9 +397,9 @@
         </section>
 
         <section id="tab-market" class="tab-panel" data-tab-panel="market">
-          <div class="panel-intro"><h2>Wholesale Market</h2><p>Singapore market prices and demand for campus energy context.</p></div>
+          <div class="panel-intro"><h2>Energy Price</h2><p>Singapore wholesale electricity prices and demand for campus energy context.</p></div>
           <section class="panel-section compact-controls"><span class="field-label">Data product</span><button class="field-control" type="button">Real-time Energy Prices and Demand</button></section>
-          <section class="panel-section"><span class="field-label">Market interval</span><div class="segmented local-segmented market-range-control" role="group" aria-label="Market reporting interval"><button class="active" type="button" data-market-interval="realtime" aria-pressed="true">Real-time</button><button type="button" data-market-interval="72-periods" aria-pressed="false">72 periods</button><button type="button" data-market-interval="7-days" aria-pressed="false">7 days</button></div></section>
+          <section class="panel-section"><span class="field-label">Price interval</span><div class="segmented local-segmented market-range-control" role="group" aria-label="Energy price reporting interval"><button class="active" type="button" data-market-interval="realtime" aria-pressed="true">Real-time</button><button type="button" data-market-interval="72-periods" aria-pressed="false">72 periods</button><button type="button" data-market-interval="7-days" aria-pressed="false">7 days</button></div></section>
           <section class="market-snapshot" aria-label="Current market snapshot"><div><span>USEP</span><strong>214.19</strong><small>S$/MWh</small></div><div><span>Demand</span><strong>7,617</strong><small>MW</small></div><div><span>Solar</span><strong>386</strong><small>MW</small></div><div><span>VCP</span><strong>252.68</strong><small>S$/MWh</small></div></section>
           <section class="panel-section market-session"><div class="section-header"><h3>Market session</h3><span class="tag partial">Provisional</span></div><dl><div><dt>Trading date</dt><dd>17 Jul 2026</dd></div><div><dt>Current period</dt><dd>35 / 48</dd></div><div><dt>Published at</dt><dd>13:31 SGT</dd></div><div><dt>Source</dt><dd>EMC / NEMS</dd></div></dl></section>
           <div class="panel-notice">Wholesale market context only. This is not the NUS contracted tariff or an electricity bill estimate.</div>
@@ -470,6 +433,6 @@
     </main>
 
     <script src="src/config.js?v=20260710-mapbox" defer></script>
-    <script src="src/app.js?v=20260805-weather-workbench" defer></script>
+    <script src="src/app.js?v=20260907-overview-simplified" defer></script>
   </body>
 </html>

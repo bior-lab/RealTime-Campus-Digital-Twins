@@ -5,14 +5,14 @@
   --line: #d8dee6;
   --panel: #ffffff;
   --panel-soft: #f6f8fa;
-  --rail: #142235;
-  --rail-soft: #1d3148;
-  --blue-soft: #e9f2fb;
+  --rail: #002b5c;
+  --rail-soft: #003d7c;
+  --blue-soft: #eaf2f8;
   --nus-blue: #003d7c;
   --nus-orange: #ef7c00;
   --teal: #287c6f;
   --red: #b43b34;
-  --amber: #e5aa49;
+  --amber: #ef7c00;
   --shadow: 0 14px 34px rgba(23, 32, 42, 0.14);
 }
 
@@ -68,6 +68,7 @@ button {
 }
 
 .rail-nav button,
+.rail-guide,
 .rail-settings {
   display: grid;
   place-items: center;
@@ -80,6 +81,18 @@ button {
   color: inherit;
   font-size: 10px;
   font-weight: 720;
+}
+
+.rail-guide {
+  text-decoration: none;
+}
+
+.rail-guide:hover,
+.rail-guide:focus-visible {
+  border-left-color: var(--nus-orange);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  outline: none;
 }
 
 .rail-icon {
@@ -1946,17 +1959,17 @@ h3 {
 
 .brick-network-node.place .brick-node-core {
   fill: var(--nus-blue);
-  stroke: #052f5d;
+  stroke: #002b5c;
 }
 
 .brick-network-node.system .brick-node-core {
-  fill: #e7f0fb;
-  stroke: #2f6da8;
+  fill: #eaf2f8;
+  stroke: var(--nus-blue);
 }
 
 .brick-network-node.equipment .brick-node-core {
-  fill: #fff1dc;
-  stroke: #c98124;
+  fill: #fff0dc;
+  stroke: var(--nus-orange);
 }
 
 .brick-network-node.point .brick-node-core {
@@ -2251,7 +2264,7 @@ h3 {
 }
 
 .legend-scale span:nth-child(3) {
-  background: #e5aa49;
+  background: var(--nus-orange);
 }
 
 .legend-scale span:nth-child(4) {
@@ -2584,10 +2597,10 @@ h3 {
   --workspace-bg: #eef2f5;
   --workspace-line: #d5dde5;
   --workspace-muted: #5b6b7c;
-  --workspace-blue: #075aa8;
-  --workspace-navy: #11243a;
+  --workspace-blue: #003d7c;
+  --workspace-navy: #002b5c;
   --workspace-teal: #148678;
-  --workspace-amber: #d98300;
+  --workspace-amber: #ef7c00;
 }
 
 .app-shell {
@@ -2610,16 +2623,34 @@ h3 {
 .rail-product {
   display: grid;
   place-items: center;
-  width: 54px;
-  height: 42px;
+  gap: 3px;
+  width: 58px;
+  height: 56px;
   margin: 0 auto;
   border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 6px;
   color: #fff;
-  font-size: 10px;
+  font-size: 8px;
   font-weight: 800;
-  line-height: 1.05;
+  line-height: 1.1;
   text-align: center;
+  box-shadow: inset 0 -3px var(--nus-orange);
+}
+
+.rail-product-icon {
+  display: grid;
+  place-items: center;
+  color: var(--nus-orange);
+}
+
+.rail-product-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
 }
 
 .rail-nav {
@@ -2627,7 +2658,8 @@ h3 {
   padding-top: 8px;
 }
 
-.rail-nav button {
+.rail-nav button,
+.rail-guide {
   width: 66px;
   min-height: 66px;
   border-radius: 6px;
@@ -2635,7 +2667,7 @@ h3 {
 }
 
 .rail-nav button.active {
-  background: #075aa8;
+  background: var(--nus-blue);
 }
 
 .rail-icon {
@@ -2925,7 +2957,7 @@ h3 {
 
 .tag.info {
   background: #e3effa;
-  color: #075aa8;
+  color: var(--nus-blue);
 }
 
 .map-stage {
@@ -3156,12 +3188,12 @@ h3 {
 
 .overview-workspace ~ .mapboxgl-control-container .mapboxgl-ctrl-top-right,
 .mapboxgl-ctrl-top-right {
-  top: 66px;
-  right: 306px;
+  top: 16px;
+  right: 16px;
 }
 
 .mapboxgl-ctrl-bottom-right {
-  right: 306px;
+  right: 16px;
 }
 
 .map-toolbar,
@@ -3170,12 +3202,68 @@ h3 {
 }
 
 .legend {
+  display: none;
   left: 16px;
   right: auto;
   bottom: 14px;
   z-index: 7;
   min-width: 200px;
   border-radius: 6px;
+}
+
+.control-panel:has(#tab-overview.active) .panel-header {
+  margin-bottom: 2px;
+  padding-bottom: 10px;
+  border-bottom: 0;
+}
+
+.control-panel:has(#tab-overview.active) .panel-brand img {
+  width: 100%;
+  max-width: 440px;
+  max-height: none;
+}
+
+.overview-branding {
+  display: grid;
+  gap: 24px;
+  padding: 8px 2px 2px;
+}
+
+.overview-brand-title {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.overview-title-highlight {
+  color: var(--nus-orange);
+  font-size: clamp(31px, 2.5vw, 43px);
+  font-weight: 800;
+  line-height: 1.03;
+}
+
+.overview-title-main {
+  color: var(--nus-blue);
+  font-size: clamp(23px, 1.85vw, 31px);
+  font-weight: 800;
+  line-height: 1.16;
+}
+
+.overview-project-summary {
+  min-height: 120px;
+  margin-top: 22px;
+  padding: 0 2px;
+  border: 0;
+  background: transparent;
+}
+
+.overview-project-summary h2 {
+  margin: 0;
+  color: var(--workspace-muted);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .map-stage:not([data-active-workspace="overview"]) .legend,
@@ -3298,17 +3386,17 @@ h3 {
   vector-effect: non-scaling-stroke;
 }
 
-.chart-line.blue { stroke: #2474cc; }
+.chart-line.blue { stroke: var(--nus-blue); }
 .chart-line.teal { stroke: #148678; }
-.chart-line.amber { stroke: #d98300; }
+.chart-line.amber { stroke: var(--nus-orange); }
 .chart-line.red { stroke: #c4473a; }
 
 .chart-area {
   opacity: 0.12;
 }
 
-.chart-area.blue { fill: #2474cc; }
-.chart-area.amber { fill: #d98300; }
+.chart-area.blue { fill: var(--nus-blue); }
+.chart-area.amber { fill: var(--nus-orange); }
 
 .chart-axis text {
   fill: #66778a;
@@ -3422,7 +3510,7 @@ h3 {
 
 .market-heatmap i[data-level="2"] { background: #efd6a9; }
 .market-heatmap i[data-level="3"] { background: #e9b85e; }
-.market-heatmap i[data-level="4"] { background: #d98300; }
+.market-heatmap i[data-level="4"] { background: var(--nus-orange); }
 
 .rolling-price-table th:nth-child(n + 2),
 .rolling-price-table td:nth-child(n + 2) {
@@ -3531,7 +3619,7 @@ h3 {
 }
 
 .weather-period-control button.active {
-  background: #1769aa;
+  background: var(--nus-blue);
   color: #fff;
 }
 
@@ -3556,7 +3644,7 @@ h3 {
 }
 
 .weather-kpi-strip .humidity { box-shadow: inset 3px 0 #1769aa; }
-.weather-kpi-strip .heat { box-shadow: inset 3px 0 #d98300; }
+.weather-kpi-strip .heat { box-shadow: inset 3px 0 var(--nus-orange); }
 .weather-kpi-strip .wind { box-shadow: inset 3px 0 #247c70; }
 
 .weather-kpi-strip span,
@@ -3998,7 +4086,7 @@ h3 {
 
   .mapboxgl-ctrl-top-right,
   .mapboxgl-ctrl-bottom-right {
-    right: 276px;
+    right: 16px;
   }
 
   .workspace-content {
@@ -4076,6 +4164,7 @@ h3 {
 }
 
 .rail-nav button,
+.rail-guide,
 .rail-settings,
 .rail-icon,
 .dashboard-card,
@@ -4093,14 +4182,15 @@ h3 {
   border-radius: 3px;
 }
 
-.rail-nav button {
+.rail-nav button,
+.rail-guide {
   width: 58px;
   border-left: 3px solid transparent;
 }
 
 .rail-nav button.active {
-  border-left-color: #5aa6dc;
-  background: #0b4f8a;
+  border-left-color: var(--nus-orange);
+  background: var(--nus-blue);
 }
 
 .control-panel {
@@ -4149,7 +4239,7 @@ h3 {
 }
 
 .building-list-item.selected {
-  border-left-color: #1769aa;
+  border-left-color: var(--nus-orange);
   background: #edf5fb;
 }
 
@@ -4170,8 +4260,8 @@ h3 {
 }
 
 .building-list-item.selected .building-select-indicator {
-  border-color: #1769aa;
-  background: #1769aa;
+  border-color: var(--nus-blue);
+  background: var(--nus-blue);
 }
 
 .building-list-item strong {
@@ -4183,7 +4273,7 @@ h3 {
 
 .building-list-item strong b {
   min-width: 42px;
-  color: #0b477f;
+  color: var(--nus-blue);
   font-size: 11px;
 }
 
@@ -4672,7 +4762,7 @@ h3 {
   align-content: center;
   min-height: 84px;
   padding: 11px 14px;
-  border-left: 3px solid #1769aa;
+  border-left: 3px solid var(--nus-blue);
 }
 
 .market-kpi-strip > div + div {
@@ -4680,9 +4770,9 @@ h3 {
   border-left: 1px solid #dbe2e8;
 }
 
-.market-kpi-strip > div:nth-child(2) { box-shadow: inset 3px 0 #00a4c7; }
-.market-kpi-strip > div:nth-child(3) { box-shadow: inset 3px 0 #97a82b; }
-.market-kpi-strip > div:nth-child(4) { box-shadow: inset 3px 0 #708fbd; }
+.market-kpi-strip > div:nth-child(2) { box-shadow: inset 3px 0 var(--nus-orange); }
+.market-kpi-strip > div:nth-child(3) { box-shadow: inset 3px 0 #1769aa; }
+.market-kpi-strip > div:nth-child(4) { box-shadow: inset 3px 0 #7aa6d1; }
 
 .market-kpi-strip span,
 .market-kpi-strip small {
@@ -4722,7 +4812,7 @@ h3 {
 }
 
 .market-view-toggle button.active {
-  background: #0b4f8a;
+  background: var(--nus-blue);
   color: #fff;
 }
 
@@ -4791,11 +4881,11 @@ h3 {
 }
 
 .market-row-current {
-  background: #bceaf5;
+  background: #d9e9f5;
 }
 
 .market-row-future {
-  background: #e8f6fa;
+  background: #edf4fa;
   color: #526779;
 }
 
@@ -4822,8 +4912,8 @@ h3 {
   background: #fff;
 }
 
-.market-state-key i.current { background: #bceaf5; }
-.market-state-key i.future { background: #e8f6fa; }
+.market-state-key i.current { background: #d9e9f5; }
+.market-state-key i.future { background: #edf4fa; }
 
 .market-performance-card .engineering-table th,
 .market-performance-card .engineering-table td {

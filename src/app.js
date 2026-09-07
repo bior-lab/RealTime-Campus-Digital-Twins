@@ -1790,10 +1790,10 @@ function updateSummary() {
   const water = sumLiveMetric((live) => live.waterM3);
   const pv = sumLiveMetric((live) => live.pvKw);
   if (els.overviewCoverage) els.overviewCoverage.textContent = liveCoverageText();
-  els.summaryElectricity.textContent = electricity === null ? "No data" : formatMetric(electricity, "kWh/h", 1);
-  els.summaryCooling.textContent = cooling === null ? "-" : formatMetric(cooling, "kWh/h", 1);
-  els.summaryWater.textContent = water === null ? "Pending" : formatMetric(water, "m3", 1);
-  els.summaryPv.textContent = pv === null ? "-" : formatLivePvMetric(pv);
+  if (els.summaryElectricity) els.summaryElectricity.textContent = electricity === null ? "No data" : formatMetric(electricity, "kWh/h", 1);
+  if (els.summaryCooling) els.summaryCooling.textContent = cooling === null ? "-" : formatMetric(cooling, "kWh/h", 1);
+  if (els.summaryWater) els.summaryWater.textContent = water === null ? "Pending" : formatMetric(water, "m3", 1);
+  if (els.summaryPv) els.summaryPv.textContent = pv === null ? "-" : formatLivePvMetric(pv);
   const latestUpdate = liveBuildingCodes()
     .map((code) => state.realtimeByBuilding[code]?.updateTime)
     .filter(Boolean)
