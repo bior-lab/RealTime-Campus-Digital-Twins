@@ -2627,14 +2627,13 @@ h3 {
   width: 58px;
   height: 56px;
   margin: 0 auto;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  border: 0;
   border-radius: 6px;
   color: #fff;
   font-size: 8px;
   font-weight: 800;
   line-height: 1.1;
   text-align: center;
-  box-shadow: inset 0 -3px var(--nus-orange);
 }
 
 .rail-product-icon {
@@ -2679,25 +2678,6 @@ h3 {
 
 .rail-nav button.active .rail-icon {
   background: transparent;
-}
-
-.rail-version {
-  display: grid;
-  justify-items: center;
-  gap: 5px;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 8px;
-}
-
-.rail-version span {
-  display: grid;
-  place-items: center;
-  width: 16px;
-  height: 16px;
-  border: 1px solid currentColor;
-  border-radius: 50%;
-  font-size: 9px;
-  font-weight: 800;
 }
 
 .control-panel {
@@ -3237,16 +3217,16 @@ h3 {
 
 .overview-title-highlight {
   color: var(--nus-orange);
-  font-size: clamp(31px, 2.5vw, 43px);
-  font-weight: 800;
-  line-height: 1.03;
+  font-size: clamp(24px, 2.8vw, 40px);
+  font-weight: 700;
+  line-height: 1.05;
 }
 
 .overview-title-main {
   color: var(--nus-blue);
-  font-size: clamp(23px, 1.85vw, 31px);
-  font-weight: 800;
-  line-height: 1.16;
+  font-size: clamp(20px, 2.1vw, 30px);
+  font-weight: 600;
+  line-height: 1.12;
 }
 
 .overview-project-summary {
@@ -5001,4 +4981,69 @@ h3 {
   .app-shell {
     grid-template-columns: 70px 390px minmax(720px, 1fr);
   }
+}
+
+/* Keep related platforms at the bottom of the navigation rail. */
+.rail {
+  grid-template-rows: 64px minmax(0, 1fr) auto;
+}
+
+.rail-related {
+  display: grid;
+  gap: 6px;
+  padding: 8px 0 12px;
+}
+
+/* Match Urban DT navigation typography and its responsive sizes. */
+.rail-product,
+.rail-related .rail-guide {
+  font-size: 12px;
+}
+
+.rail-nav button,
+.rail-guide {
+  font-weight: 700;
+  text-align: center;
+}
+
+.rail-nav button,
+.rail-nav .rail-guide {
+  font-size: 11px;
+  line-height: 1.15;
+}
+
+@media (max-width: 1200px) {
+  .rail-product,
+  .rail-related .rail-guide {
+    font-size: 11px;
+  }
+
+  .rail-nav button,
+  .rail-nav .rail-guide {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 860px) {
+  .rail-nav button,
+  .rail-nav .rail-guide {
+    font-size: 11px;
+  }
+}
+
+.building-select {
+  width: 100%;
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid rgba(0, 61, 124, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.building-select:focus-visible {
+  outline: 2px solid var(--nus-blue);
+  outline-offset: 2px;
 }

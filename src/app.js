@@ -705,7 +705,7 @@ const state = {
   mapTokenIssue: "",
   mapClickHandler: null,
   refreshTimer: null,
-  selectedComparisonBuildings: new Set(["SDE4", "E6", "E8"]),
+  selectedComparisonBuildings: new Set(["SDE4"]),
   activeBuildingPeriod: initialBuildingPeriod,
   activeBuildingMetric: initialBuildingMetric,
   activeMarketView: "chart",
@@ -738,9 +738,7 @@ const els = {
   toggleLabels: document.getElementById("toggleLabels"),
   togglePv: document.getElementById("togglePv"),
   toggleEuiLayer: document.getElementById("toggleEuiLayer"),
-  buildingSearch: document.getElementById("buildingSearch"),
-  buildingList: document.getElementById("buildingList"),
-  buildingSelectionCount: document.getElementById("buildingSelectionCount"),
+  buildingSelect: document.getElementById("buildingSelect"),
   buildingPeriodButtons: document.querySelectorAll("[data-building-period]"),
   buildingMetricButtons: document.querySelectorAll("[data-building-metric]"),
   buildingWorkspaceSubtitle: document.getElementById("buildingWorkspaceSubtitle"),
@@ -811,23 +809,6 @@ const els = {
   externalContextPanel: document.getElementById("externalContextPanel"),
   externalContextClose: document.getElementById("externalContextClose"),
   externalVizPanel: document.getElementById("externalVizPanel"),
-  buildingZone: document.getElementById("buildingZone"),
-  buildingName: document.getElementById("buildingName"),
-  buildingStatus: document.getElementById("buildingStatus"),
-  buildingBlocks: document.getElementById("buildingBlocks"),
-  buildingElectricity: document.getElementById("buildingElectricity"),
-  buildingCooling: document.getElementById("buildingCooling"),
-  buildingWater: document.getElementById("buildingWater"),
-  buildingPv: document.getElementById("buildingPv"),
-  buildingEui: document.getElementById("buildingEui"),
-  buildingUpdated: document.getElementById("buildingUpdated"),
-  buildingInsight: document.getElementById("buildingInsight"),
-  realtimeTrends: document.getElementById("realtimeTrends"),
-  trendView: document.getElementById("trendView"),
-  trendSummary: document.getElementById("trendSummary"),
-  trendNote: document.getElementById("trendNote"),
-  pointCount: document.getElementById("pointCount"),
-  pointList: document.getElementById("pointList"),
   trendModal: document.getElementById("trendModal"),
   trendClose: document.getElementById("trendClose"),
   trendModalEyebrow: document.getElementById("trendModalEyebrow"),
@@ -2881,14 +2862,13 @@ function renderBuildingAnalytics() {
     button.classList.toggle("active", active);
     button.setAttribute("aria-pressed", String(active));
   });
-  els.buildingSelectionCount.textContent = `${codes.length} / 4`;
   els.buildingAnalysisSelectionCount.textContent = String(codes.length);
   els.buildingAnalysisPeriod.textContent = periodLabel;
   if (els.buildingAnalysisAggregation) els.buildingAnalysisAggregation.textContent = period === "yearly" ? "monthly aggregation" : "complete-day aggregation";
   els.buildingAnalysisMetric.textContent = metric.label;
   els.buildingAnalysisUnit.textContent = period === "yearly" ? "monthly energy totals" : "daily energy totals";
   els.buildingAnalysisCoverage.textContent = `${series.length} / ${codes.length || 0}`;
-  els.buildingWorkspaceSubtitle.textContent = `${periodLabel} energy comparison · selected meter groups`;
+  els.buildingWorkspaceSubtitle.textContent = `${periodLabel} energy analysis · ${[...state.selectedComparisonBuildings][0]}`;
   els.buildingChartTitle.textContent = `${period === "yearly" ? "Monthly" : "Daily"} ${metric.label.toLowerCase()} profile`;
   els.buildingRankingSubtitle.textContent = `${period === "yearly" ? "Available YTD" : periodLabel} ${metric.label.toLowerCase()} contribution`;
 
@@ -3040,50 +3020,21 @@ function setMarketView(view) {
 }
 
 function renderBuildingList() {
-  const selectionOrder = selectedBuildingCodes();
-  const features = visibleFeatures().slice().sort((a, b) => {
-    const aCode = String(a.properties.short_name || "").toUpperCase();
-    const bCode = String(b.properties.short_name || "").toUpperCase();
-    const aSelected = state.selectedComparisonBuildings.has(aCode) ? 0 : 1;
-    const bSelected = state.selectedComparisonBuildings.has(bCode) ? 0 : 1;
-    if (aSelected !== bSelected) return aSelected - bSelected;
-    if (!aSelected) return selectionOrder.indexOf(aCode) - selectionOrder.indexOf(bCode);
-    return aCode.localeCompare(bCode);
-  });
-  els.buildingList.innerHTML = "";
-  features.forEach((feature) => {
-    const props = feature.properties;
+  const selectedCode = [...state.selectedComparisonBuildings][0];
+  const features = visibleFeatures().slice().sort((a, b) =>
+    String(a.properties.short_name).localeCompare(String(b.properties.short_name)));
+  els.buildingSelect.replaceChildren();
+  const seen = new Set();
+  features.forEach(({ properties: props }) => {
     const code = String(props.short_name || "").toUpperCase();
-    const model = buildingPerformanceModel[code];
-    const selected = state.selectedComparisonBuildings.has(code);
-    const item = document.createElement("button");
-    item.type = "button";
-    item.className = `building-list-item${selected ? " selected" : ""}${model ? "" : " unavailable"}`;
-    item.setAttribute("aria-pressed", String(selected));
-    item.innerHTML = `
-      <span class="building-select-indicator" aria-hidden="true">${selected ? "✓" : ""}</span>
-      <div class="building-list-text">
-        <strong><b>${props.short_name}</b>${String(props.name).toUpperCase() === code ? (model ? "Mapped meter group" : "Campus building") : props.name}</strong>
-        <small>${model ? `${model.coverage} · latest ${model.updated}` : "Registry only · meter mapping pending"}</small>
-      </div>
-      <em>${model ? "Mapped" : "Pending"}</em>
-    `;
-    item.addEventListener("click", () => {
-      activateTab("buildings");
-      selectBuilding(feature);
-      if (model) {
-        if (selected && state.selectedComparisonBuildings.size > 1) state.selectedComparisonBuildings.delete(code);
-        else if (!selected && state.selectedComparisonBuildings.size < 4) state.selectedComparisonBuildings.add(code);
-      }
-      renderBuildingList();
-      renderBuildingAnalytics();
-      if (model && state.selectedComparisonBuildings.has(code)) {
-        loadBuildingPerformanceHistory([code]).catch((error) => console.error(error));
-      }
-    });
-    els.buildingList.appendChild(item);
+    if (!code || seen.has(code)) return;
+    seen.add(code);
+    const option = document.createElement("option");
+    option.value = code;
+    option.textContent = String(props.name).toUpperCase() === code ? code : `${code} — ${props.name}`;
+    els.buildingSelect.appendChild(option);
   });
-  if (els.buildingSelectionCount) els.buildingSelectionCount.textContent = `${state.selectedComparisonBuildings.size} / 4`;
+  els.buildingSelect.value = selectedCode;
 }
 
 function realtimePlaceLabel(buildingCode) {
@@ -3939,71 +3890,6 @@ function closeBrickModal() {
   els.mapBrickView?.setAttribute("aria-pressed", "false");
 }
 
-function renderRealtimeTrends(feature) {
-  const props = feature.properties;
-  const buildingCode = String(props.short_name || "").toUpperCase();
-  const live = state.realtimeByBuilding[buildingCode];
-  if (!els.realtimeTrends || !live) {
-    els.realtimeTrends?.classList.add("hidden");
-    return;
-  }
-  els.realtimeTrends.classList.remove("hidden");
-  const liveCards = liveMeterSummaryCards(live)
-    .map((card) => `
-      <div class="trend-summary-card">
-        <span>${escapeHtml(card.label)}</span>
-        <strong>${card.value}</strong>
-        <small>${escapeHtml(card.note)}</small>
-      </div>
-    `);
-  const historyCards = historyDefinitionsForPlace(buildingCode)
-    .map((definition) => {
-      const value = liveMetricValue(live, definition);
-      return `
-        <div class="trend-summary-card">
-          <span>${escapeHtml(definition.label)}</span>
-          <strong>${formatHistoryValue(value, definition)}</strong>
-          <small>${definition.range === "-24h" ? "24 h history available" : "7 d history available"}</small>
-        </div>
-      `;
-    });
-  els.trendSummary.innerHTML = [...liveCards, ...historyCards].join("");
-  els.trendNote.textContent = "Energy trends use standardized hourly points. PV combines the available M1 and M2 generation streams.";
-}
-
-function renderRealtimePoints(feature) {
-  const props = feature.properties;
-  const buildingCode = String(props.short_name || "").toUpperCase();
-  const live = state.realtimeByBuilding[buildingCode];
-  els.pointList.innerHTML = "";
-  if (!live) {
-    els.pointCount.textContent = "0 points";
-    els.pointList.innerHTML = '<p class="empty-note">No realtime endpoint is mapped for this building.</p>';
-    renderRealtimeTrends(feature);
-    return;
-  }
-  els.pointCount.textContent = `${live.points.length} points`;
-  live.points.forEach((point) => {
-    const historyDefinition = historyPointByName(point.point, buildingCode);
-    const pointValue = historyDefinition ? formatHistoryValue(point.value, historyDefinition) : formatNumber(point.value, 2);
-    const item = document.createElement("article");
-    item.className = "point-item";
-    item.innerHTML = `
-      <div>
-        <strong>${escapeHtml(point.point)}</strong>
-        <span>${pointValue} - ${formatTimestamp(point.time)}</span>
-      </div>
-      ${historyDefinition ? `<button class="point-view" type="button" data-history-key="${historyDefinition.key}">View</button>` : ""}
-    `;
-    item.querySelector("[data-history-key]")?.addEventListener("click", (event) => {
-      event.stopPropagation();
-      openTrendModal(event.currentTarget.dataset.historyKey);
-    });
-    els.pointList.appendChild(item);
-  });
-  renderRealtimeTrends(feature);
-}
-
 function selectBuilding(feature, options = {}) {
   const props = feature.properties;
   const buildingCode = String(props.short_name || "").toUpperCase();
@@ -4011,34 +3897,13 @@ function selectBuilding(feature, options = {}) {
   if (options.activate !== false) activateTab("buildings");
   state.selectedId = props.id;
   if (live) state.activeRealtimeBuilding = buildingCode;
-  els.buildingZone.textContent = `${props.zone} / ${props.type}`;
-  els.buildingName.textContent = props.name;
-  els.buildingStatus.textContent = statusText(props.anomaly_score, Boolean(live));
-  els.buildingStatus.className = `status-pill ${live ? "live" : statusClass(props.anomaly_score)}`;
-  if (props.grouped_marker && props.child_summary) {
-    els.buildingBlocks.classList.remove("hidden");
-    els.buildingBlocks.innerHTML = String(props.child_summary)
-      .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean)
-      .map((item) => `<span>${item}</span>`)
-      .join("");
-  } else {
-    els.buildingBlocks.classList.add("hidden");
-    els.buildingBlocks.innerHTML = "";
+  const changed = !state.selectedComparisonBuildings.has(buildingCode);
+  state.selectedComparisonBuildings = new Set([buildingCode]);
+  renderBuildingList();
+  renderBuildingAnalytics();
+  if (changed && buildingPerformanceModel[buildingCode]) {
+    loadBuildingPerformanceHistory([buildingCode]).catch((error) => console.error(error));
   }
-  els.buildingElectricity.textContent = live ? formatMetric(live.electricityHourlyKwh, "kWh/h", 1) : formatMetric(props.load_kw, "kW", 0);
-  els.buildingCooling.textContent = live ? formatMetric(live.coolingHourlyKwh, "kWh/h", 1) : formatMetric(props.cooling_kw, "kW", 0);
-  els.buildingWater.textContent = live ? formatMetric(live.waterM3, "m3", 1) : formatMetric(props.water_m3_today, "m3", 1);
-  els.buildingPv.textContent = live ? formatLivePvMetric(live.pvKw) : formatMetric(props.solar_kw, "kW", 0);
-  els.buildingEui.textContent = formatMetric(props.eui ?? props.mapbox_eui_2023, "kWh/m2-yr", 0);
-  els.buildingUpdated.textContent = live ? formatTimestamp(live.updateTime) : "-";
-  els.buildingInsight.textContent = live
-    ? `${buildingCode} live endpoint is mapped. Indoor mean: ${formatMetric(live.indoorTemperatureC, "degC", 1)}, CO2: ${formatMetric(live.indoorCo2Ppm, "ppm", 0)}, airflow: ${formatMetric(live.airflow, "L/s", 0)}.`
-    : props.grouped_marker
-      ? `${props.child_count} mapped footprints are grouped under this marker. Blocks: ${props.child_summary}.`
-      : `${props.ai_summary} ${props.suggested_action}`;
-  renderRealtimePoints(feature);
 
 }
 
@@ -5175,10 +5040,10 @@ function bindControls() {
     setLayerVisibility(["eui-context-fill", "eui-context-outline"], event.target.checked);
     updateMetric(state.metric);
   });
-  els.buildingSearch.addEventListener("input", (event) => {
-    state.searchTerm = event.target.value.trim();
-    applySearchFilter();
-    renderBuildingList();
+  els.buildingSelect.addEventListener("change", (event) => {
+    const feature = visibleFeatures().find((item) =>
+      String(item.properties.short_name || "").toUpperCase() === event.target.value);
+    if (feature) selectBuilding(feature);
   });
   els.campusView.addEventListener("click", () => {
     closeTrendModal();
@@ -5202,7 +5067,6 @@ function bindControls() {
     state.activeBrickNodeId = "sde4";
     renderBrickGraph();
   });
-  els.trendView?.addEventListener("click", () => openTrendModal(state.activeHistoryKey || "electricity"));
   els.trendClose?.addEventListener("click", closeTrendModal);
   els.brickClose?.addEventListener("click", closeBrickModal);
   els.trendModal?.addEventListener("click", (event) => {
