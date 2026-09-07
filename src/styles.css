@@ -5047,3 +5047,7 @@ h3 {
   outline: 2px solid var(--nus-blue);
   outline-offset: 2px;
 }
+
+.building-analysis-content .building-performance-grid {
+  grid-template-columns: minmax(0, 1fr);
+}

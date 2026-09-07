@@ -10,7 +10,7 @@
     
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="vendor/mapbox-gl/mapbox-gl.css" />
-    <link rel="stylesheet" href="src/styles.css?v=20260907-building-select" />
+    <link rel="stylesheet" href="src/styles.css?v=20260907-building-chart-only" />
     <script src="vendor/mapbox-gl/mapbox-gl.js"></script>
   </head>
   <body>
@@ -95,30 +95,15 @@
         <section class="workspace-view analysis-workspace" data-workspace="buildings" aria-label="Building performance analysis">
           <header class="workspace-topbar">
             <div><h1>Building Energy Analysis</h1><p id="buildingWorkspaceSubtitle">Weekly comparison · selected metered buildings</p></div>
-            <div class="topbar-actions"><button id="openRealtimeWorkspace" class="toolbar-button" type="button">Realtime detail</button><span class="source-chip">Public API · hourly</span></div>
           </header>
           <div class="workspace-content building-analysis-content">
-            <div class="summary-strip">
-              <div><span>Selected buildings</span><strong id="buildingAnalysisSelectionCount">1</strong><small>single building</small></div>
-              <div><span>Period</span><strong id="buildingAnalysisPeriod">Weekly</strong><small id="buildingAnalysisAggregation">complete days</small></div>
-              <div><span>Variables</span><strong id="buildingAnalysisMetric">Electricity</strong><small id="buildingAnalysisUnit">kWh consumption</small></div>
-              <div><span>Data available</span><strong id="buildingAnalysisCoverage">--</strong><small>selected meter groups</small></div>
-            </div>
             <div class="building-performance-grid">
               <article class="dashboard-card chart-card building-primary-chart">
                 <header class="building-chart-header"><div><h2 id="buildingChartTitle">Electricity consumption</h2><p id="buildingChartSubtitle">Daily totals · weekly view · kWh</p></div><div id="buildingChartLegend" class="chart-legend building-chart-legend"></div></header>
                 <div id="buildingChartKpis" class="building-chart-kpis" aria-label="Selected portfolio energy summary"></div>
                 <div id="buildingPerformanceChart" class="generated-chart" aria-label="Selected building performance comparison"></div>
               </article>
-              <article class="dashboard-card portfolio-ranking-card">
-                <header><div><h2>Selected portfolio</h2><p id="buildingRankingSubtitle">Weekly electricity total</p></div><span class="tag info">Ranked</span></header>
-                <div id="buildingPortfolioTotals" class="portfolio-ranking"></div>
-              </article>
             </div>
-            <article class="dashboard-card comparison-card">
-              <header><div><h2>Building comparison</h2><p id="buildingComparisonSubtitle">Weekly and month-to-date totals · mapped hourly streams</p></div></header>
-              <div class="table-scroll"><table class="engineering-table building-comparison-table"><thead><tr id="buildingComparisonHead"><th>Building</th><th>Weekly electricity</th><th>MTD electricity</th><th>Weekly cooling</th><th>MTD cooling</th><th>Weekly PV</th><th>Coverage</th><th>Latest record</th></tr></thead><tbody id="buildingComparisonBody"></tbody></table></div>
-            </article>
           </div>
         </section>
 
@@ -405,6 +390,6 @@
     </main>
 
     <script src="src/config.js?v=20260710-mapbox" defer></script>
-    <script src="src/app.js?v=20260907-building-select" defer></script>
+    <script src="src/app.js?v=20260907-building-chart-only" defer></script>
   </body>
 </html>

@@ -742,22 +742,11 @@ const els = {
   buildingPeriodButtons: document.querySelectorAll("[data-building-period]"),
   buildingMetricButtons: document.querySelectorAll("[data-building-metric]"),
   buildingWorkspaceSubtitle: document.getElementById("buildingWorkspaceSubtitle"),
-  buildingAnalysisSelectionCount: document.getElementById("buildingAnalysisSelectionCount"),
-  buildingAnalysisPeriod: document.getElementById("buildingAnalysisPeriod"),
-  buildingAnalysisAggregation: document.getElementById("buildingAnalysisAggregation"),
-  buildingAnalysisMetric: document.getElementById("buildingAnalysisMetric"),
-  buildingAnalysisUnit: document.getElementById("buildingAnalysisUnit"),
-  buildingAnalysisCoverage: document.getElementById("buildingAnalysisCoverage"),
   buildingChartTitle: document.getElementById("buildingChartTitle"),
   buildingChartSubtitle: document.getElementById("buildingChartSubtitle"),
   buildingChartLegend: document.getElementById("buildingChartLegend"),
   buildingChartKpis: document.getElementById("buildingChartKpis"),
   buildingPerformanceChart: document.getElementById("buildingPerformanceChart"),
-  buildingRankingSubtitle: document.getElementById("buildingRankingSubtitle"),
-  buildingPortfolioTotals: document.getElementById("buildingPortfolioTotals"),
-  buildingComparisonSubtitle: document.getElementById("buildingComparisonSubtitle"),
-  buildingComparisonHead: document.getElementById("buildingComparisonHead"),
-  buildingComparisonBody: document.getElementById("buildingComparisonBody"),
   summaryElectricity: document.getElementById("summaryElectricity"),
   summaryCooling: document.getElementById("summaryCooling"),
   summaryWater: document.getElementById("summaryWater"),
@@ -765,7 +754,6 @@ const els = {
   overviewCoverage: document.getElementById("overviewCoverage"),
   overviewUpdated: document.getElementById("overviewUpdated"),
   overviewBuildingPerformance: document.getElementById("overviewBuildingPerformance"),
-  openRealtimeWorkspace: document.getElementById("openRealtimeWorkspace"),
   marketHeatmap: document.getElementById("marketHeatmap"),
   marketViewButtons: document.querySelectorAll("[data-market-view]"),
   marketViewPanels: document.querySelectorAll("[data-market-view-panel]"),
@@ -2862,15 +2850,8 @@ function renderBuildingAnalytics() {
     button.classList.toggle("active", active);
     button.setAttribute("aria-pressed", String(active));
   });
-  els.buildingAnalysisSelectionCount.textContent = String(codes.length);
-  els.buildingAnalysisPeriod.textContent = periodLabel;
-  if (els.buildingAnalysisAggregation) els.buildingAnalysisAggregation.textContent = period === "yearly" ? "monthly aggregation" : "complete-day aggregation";
-  els.buildingAnalysisMetric.textContent = metric.label;
-  els.buildingAnalysisUnit.textContent = period === "yearly" ? "monthly energy totals" : "daily energy totals";
-  els.buildingAnalysisCoverage.textContent = `${series.length} / ${codes.length || 0}`;
   els.buildingWorkspaceSubtitle.textContent = `${periodLabel} energy analysis · ${[...state.selectedComparisonBuildings][0]}`;
   els.buildingChartTitle.textContent = `${period === "yearly" ? "Monthly" : "Daily"} ${metric.label.toLowerCase()} profile`;
-  els.buildingRankingSubtitle.textContent = `${period === "yearly" ? "Available YTD" : periodLabel} ${metric.label.toLowerCase()} contribution`;
 
   const totalFinite = (values) => values.filter((value) => Number.isFinite(value)).reduce((total, value) => total + value, 0);
   const totals = series.map((item) => ({ ...item, total: totalFinite(item.values) }));
@@ -2979,34 +2960,6 @@ function renderBuildingAnalytics() {
     bindBuildingChartInteraction({ width, plot, labels, series, xFor, yFor, period });
   }
 
-  const ranked = totals.sort((a, b) => b.total - a.total);
-  const rankingMax = Math.max(...ranked.map((item) => item.total), 1);
-  const rankingRows = ranked.map(({ code, model, total }, index) => {
-    const share = periodTotal ? (total / periodTotal) * 100 : 0;
-    return `<div class="portfolio-rank-row"><span>${String(index + 1).padStart(2, "0")}</span><div class="portfolio-rank-label"><strong>${code}</strong><small>${share.toFixed(0)}% of selected</small></div><div class="portfolio-bar"><i style="width:${(total / rankingMax) * 100}%;--series:${model.color}"></i></div><em>${formatEnergyCompact(total)}</em></div>`;
-  });
-  const unavailableRows = unavailable.map((code) => `<div class="portfolio-rank-row unavailable"><span>--</span><div class="portfolio-rank-label"><strong>${code}</strong><small>Meter unavailable</small></div><div class="portfolio-bar"></div><em>No data</em></div>`);
-  els.buildingPortfolioTotals.innerHTML = [...rankingRows, ...unavailableRows].join("") || '<p class="empty-note">No mapped values for this metric.</p>';
-
-  if (period === "yearly") {
-    els.buildingComparisonSubtitle.textContent = "Available year-to-date totals · monthly aggregation from historical API";
-    els.buildingComparisonHead.innerHTML = "<th>Building</th><th>YTD electricity</th><th>YTD cooling</th><th>YTD PV</th><th>API coverage from</th><th>Coverage</th><th>Latest record</th>";
-  } else {
-    els.buildingComparisonSubtitle.textContent = "Weekly and month-to-date totals · mapped hourly streams";
-    els.buildingComparisonHead.innerHTML = "<th>Building</th><th>Weekly electricity</th><th>MTD electricity</th><th>Weekly cooling</th><th>MTD cooling</th><th>Weekly PV</th><th>Coverage</th><th>Latest record</th>";
-  }
-  els.buildingComparisonBody.innerHTML = codes.map((code) => {
-    const model = buildingPerformanceModel[code];
-    const coverageClass = model.coverage === "Partial" ? "partial" : "good";
-    if (period === "yearly") {
-      const starts = [model.electricity?.sourceStart, model.cooling?.sourceStart, model.pv?.sourceStart]
-        .filter(Boolean)
-        .sort((a, b) => new Date(a) - new Date(b));
-      const coverageStart = starts.length ? formatTimestamp(starts[0]).split(",")[0] : "Not available";
-      return `<tr><td><strong>${code}</strong></td><td>${model.electricity ? formatEnergyTotal(totalFinite(model.electricity.yearly || [])) : "Not mapped"}</td><td>${model.cooling ? formatEnergyTotal(totalFinite(model.cooling.yearly || [])) : "Not mapped"}</td><td>${model.pv ? formatEnergyTotal(totalFinite(model.pv.yearly || [])) : "Not mapped"}</td><td>${coverageStart}</td><td><span class="tag ${coverageClass}">${model.coverage}</span></td><td>${model.updated}</td></tr>`;
-    }
-    return `<tr><td><strong>${code}</strong></td><td>${formatEnergyTotal(sum(model.electricity?.weekly || []))}</td><td>${formatEnergyTotal(sum(model.electricity?.monthly || []))}</td><td>${formatEnergyTotal(sum(model.cooling?.weekly || []))}</td><td>${formatEnergyTotal(sum(model.cooling?.monthly || []))}</td><td>${formatEnergyTotal(sum(model.pv?.weekly || []))}</td><td><span class="tag ${coverageClass}">${model.coverage}</span></td><td>${model.updated}</td></tr>`;
-  }).join("");
 }
 
 function setMarketView(view) {
@@ -4963,7 +4916,6 @@ function bindControls() {
     selectBuilding(feature);
     zoomToFeature(feature, 17);
   });
-  els.openRealtimeWorkspace?.addEventListener("click", () => openTrendModal(state.activeHistoryKey || "electricity"));
   els.buildingPeriodButtons.forEach((button) => {
     button.addEventListener("click", () => {
       state.activeBuildingPeriod = button.dataset.buildingPeriod;
