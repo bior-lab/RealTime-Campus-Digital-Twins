@@ -1,4 +1,7 @@
 window.NUS_EMIS_CONFIG = {
+  nemsRealtimeEndpoint: "/api/nems/realtime",
+  nemsTableEndpoint: "/api/nems/table",
+  nemsRefreshMs: 300000,
   mapboxAccessToken: "",
   mapboxAccessTokenParts: [
     "p",

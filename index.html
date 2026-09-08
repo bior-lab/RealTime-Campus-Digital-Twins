@@ -10,7 +10,7 @@
     
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="vendor/mapbox-gl/mapbox-gl.css" />
-    <link rel="stylesheet" href="src/styles.css?v=20260907-building-chart-only" />
+    <link rel="stylesheet" href="src/styles.css?v=20260908-overview-refined" />
     <script src="vendor/mapbox-gl/mapbox-gl.js"></script>
   </head>
   <body>
@@ -109,17 +109,32 @@
 
         <section class="workspace-view analysis-workspace" data-workspace="market" aria-label="Singapore energy price">
           <header class="workspace-topbar">
-            <div><h1>Energy Price</h1><p>Uniform Singapore Energy Price · EMC / NEMS market context</p></div>
-            <div class="topbar-actions"><span class="source-chip"><span class="status-dot partial"></span>Provisional</span><span class="source-chip">Period 35 · 17 Jul 2026</span></div>
+            <div><h1>Energy Price</h1><p>Singapore wholesale electricity prices, demand and solar forecasts · EMC / NEMS</p></div>
+            <div class="topbar-actions"><span id="nemsSourceStatus" class="source-chip"><span class="status-dot loading"></span>Connecting to EMC / NEMS</span></div>
           </header>
           <div class="workspace-content market-analysis-content">
-            <div class="market-kpi-strip" aria-label="Latest Singapore market values">
+            <article class="dashboard-card nems-realtime-card" aria-labelledby="nemsMarketTitle">
+              <header class="nems-market-toolbar">
+                <div><h2 id="nemsMarketTitle">Real-time Energy Prices and Demand</h2><p id="nemsMarketSubtitle">Provisional half-hourly market information</p></div>
+                <div class="nems-toolbar-actions">
+                  <div id="nemsViewToggle" class="segmented nems-view-toggle" role="group" aria-label="NEMS data view">
+                    <button class="active" type="button" data-nems-view="chart" aria-pressed="true">Chart</button>
+                    <button type="button" data-nems-view="table" aria-pressed="false">Table</button>
+                  </div>
+                  <button id="nemsRefresh" class="nems-refresh" type="button" aria-label="Refresh NEMS market data">Refresh</button>
+                </div>
+              </header>
+              <div id="nemsMarketBody" class="nems-market-body" aria-live="polite">
+                <div class="nems-loading-state"><span class="status-dot loading"></span>Loading the latest EMC / NEMS market period…</div>
+              </div>
+            </article>
+            <div class="market-kpi-strip legacy-market-ui" aria-label="Latest Singapore market values">
               <div><span>USEP</span><strong>214.19</strong><small>S$/MWh · provisional</small></div>
               <div><span>System demand</span><strong>7,617</strong><small>MW</small></div>
               <div><span>Solar output</span><strong>386</strong><small>MW</small></div>
               <div><span>VCP</span><strong>252.68</strong><small>S$/MWh</small></div>
             </div>
-            <article class="dashboard-card market-data-card">
+            <article class="dashboard-card market-data-card legacy-market-ui">
               <header class="market-card-toolbar">
                 <div><h2 id="marketChartTitle">Real-time Energy Prices and Demand</h2><p id="marketChartSubtitle">Half-hour trading periods · 17 Jul 2026</p></div>
                 <div class="segmented market-view-toggle" role="group" aria-label="Market data view"><button class="active" type="button" data-market-view="chart" aria-pressed="true">Chart</button><button type="button" data-market-view="table" aria-pressed="false">Table</button></div>
@@ -154,84 +169,69 @@
                 <div class="market-state-key"><span><i class="past"></i>Past</span><span><i class="current"></i>Current</span><span><i class="future"></i>Future</span></div>
               </div>
             </article>
-            <article class="dashboard-card rolling-card market-performance-card"><header><div><h2>Rolling Price Performance</h2><p>Change against previous equivalent period · S$/MWh</p></div></header><table class="engineering-table rolling-price-table"><thead><tr><th>Period</th><th>Average price</th><th>Trend</th><th>Change</th><th>Peak</th></tr></thead><tbody><tr><td><strong>Today</strong></td><td><div class="average-meter"><span style="--value:61%"></span><strong>121.4</strong></div></td><td><svg class="sparkline" viewBox="0 0 96 24" preserveAspectRatio="none"><polyline points="2,19 13,18 24,20 35,16 46,13 57,15 68,10 79,7 94,9"/><circle cx="94" cy="9" r="2"/></svg></td><td><span class="change-up">↑ 8.4%</span></td><td><strong>238.7</strong></td></tr><tr><td><strong>7 Days</strong></td><td><div class="average-meter"><span style="--value:67%"></span><strong>132.8</strong></div></td><td><svg class="sparkline" viewBox="0 0 96 24" preserveAspectRatio="none"><polyline points="2,8 13,11 24,9 35,13 46,12 57,16 68,14 79,17 94,15"/><circle cx="94" cy="15" r="2"/></svg></td><td><span class="change-down">↓ 3.1%</span></td><td><strong>414.2</strong></td></tr><tr><td><strong>30 Days</strong></td><td><div class="average-meter"><span style="--value:74%"></span><strong>146.5</strong></div></td><td><svg class="sparkline" viewBox="0 0 96 24" preserveAspectRatio="none"><polyline points="2,18 13,14 24,16 35,10 46,12 57,8 68,11 79,6 94,7"/><circle cx="94" cy="7" r="2"/></svg></td><td><span class="change-up">↑ 6.7%</span></td><td><strong>626.0</strong></td></tr></tbody></table></article>
+            <article class="dashboard-card rolling-card market-performance-card legacy-market-ui"><header><div><h2>Rolling Price Performance</h2><p>Change against previous equivalent period · S$/MWh</p></div></header><table class="engineering-table rolling-price-table"><thead><tr><th>Period</th><th>Average price</th><th>Trend</th><th>Change</th><th>Peak</th></tr></thead><tbody><tr><td><strong>Today</strong></td><td><div class="average-meter"><span style="--value:61%"></span><strong>121.4</strong></div></td><td><svg class="sparkline" viewBox="0 0 96 24" preserveAspectRatio="none"><polyline points="2,19 13,18 24,20 35,16 46,13 57,15 68,10 79,7 94,9"/><circle cx="94" cy="9" r="2"/></svg></td><td><span class="change-up">↑ 8.4%</span></td><td><strong>238.7</strong></td></tr><tr><td><strong>7 Days</strong></td><td><div class="average-meter"><span style="--value:67%"></span><strong>132.8</strong></div></td><td><svg class="sparkline" viewBox="0 0 96 24" preserveAspectRatio="none"><polyline points="2,8 13,11 24,9 35,13 46,12 57,16 68,14 79,17 94,15"/><circle cx="94" cy="15" r="2"/></svg></td><td><span class="change-down">↓ 3.1%</span></td><td><strong>414.2</strong></td></tr><tr><td><strong>30 Days</strong></td><td><div class="average-meter"><span style="--value:74%"></span><strong>146.5</strong></div></td><td><svg class="sparkline" viewBox="0 0 96 24" preserveAspectRatio="none"><polyline points="2,18 13,14 24,16 35,10 46,12 57,8 68,11 79,6 94,7"/><circle cx="94" cy="7" r="2"/></svg></td><td><span class="change-up">↑ 6.7%</span></td><td><strong>626.0</strong></td></tr></tbody></table></article>
           </div>
         </section>
 
         <section class="workspace-view analysis-workspace" data-workspace="weather" aria-label="Campus weather context">
           <header class="workspace-topbar">
-            <div><h1>Campus Weather Context</h1><p>NUS Kent Ridge · thermal conditions and short-term forecast</p></div>
+            <div><h1>Campus Weather Context</h1><p>NUS Kent Ridge · current conditions and recent observations</p></div>
             <div class="topbar-actions"><span id="weatherSourceStatus" class="source-chip"><span class="status-dot loading"></span>Loading weather source</span><span id="weatherUpdated" class="source-chip">Awaiting update</span></div>
           </header>
           <div class="workspace-content weather-analysis-content">
             <div class="weather-toolbar">
-              <div class="weather-station-identity"><span>Reference location</span><strong>NUS Kent Ridge / SDE4</strong><small>1.2966° N, 103.7764° E</small></div>
-              <div class="weather-period-control" role="group" aria-label="Weather reporting period">
-                <button type="button" data-weather-period="24h">24 hours</button>
-                <button class="active" type="button" data-weather-period="7d">7 days</button>
-                <button type="button" data-weather-period="30d">30 days</button>
-              </div>
+              <div class="weather-station-identity"><span>Reference location</span><strong>NUS Kent Ridge</strong><small>1.2966° N, 103.7764° E</small></div>
             </div>
 
+            <section class="weather-current-summary kent-weather-current" aria-labelledby="weatherCurrentTitle">
+            <h2 id="weatherCurrentTitle">Current conditions <span>Latest available · independent of chart period</span></h2>
             <div class="weather-kpi-strip">
               <div class="temperature"><span>Air temperature</span><strong id="weatherTemperature">--</strong><small id="weatherTemperatureMeta">Loading current value</small></div>
               <div class="humidity"><span>Relative humidity</span><strong id="weatherHumidity">--</strong><small id="weatherHumidityMeta">Loading current value</small></div>
               <div class="heat"><span>Estimated WBGT</span><strong id="weatherHeatStress">--</strong><small id="weatherHeatStressMeta">Shade approximation</small></div>
               <div class="wind"><span>Wind direction</span><strong id="weatherWind">--</strong><small id="weatherWindMeta">10 m observation</small></div>
             </div>
+            </section>
 
             <article class="dashboard-card weather-primary">
               <header>
-                <div><h2>Thermal conditions</h2><p id="weatherChartSubtitle">Temperature and relative humidity · loading</p></div>
+                <div><h2 id="weatherChartTitle">Thermal conditions · Weekly</h2><p id="weatherChartSubtitle">Temperature and relative humidity · loading</p></div>
                 <div class="chart-legend weather-chart-legend"><span style="--series:#b33c30">Temperature · °C</span><span style="--series:#1769aa">Humidity · %RH</span></div>
               </header>
               <div id="weatherThermalChart" class="weather-chart-frame" aria-live="polite"><div class="weather-loading">Loading observations…</div></div>
             </article>
 
-            <div class="weather-lower-grid">
-              <article class="dashboard-card weather-heat-card">
-                <header><div><h2>Heat-stress context</h2><p id="weatherHeatSubtitle">Estimated WBGT · shade approximation</p></div><span id="weatherHeatStatus" class="tag">Loading</span></header>
-                <div id="weatherHeatChart" class="weather-heat-chart"><div class="weather-loading">Loading heat-stress series…</div></div>
-                <footer class="weather-threshold-key"><span><i class="low"></i>&lt; 27 Low</span><span><i class="moderate"></i>27–30 Elevated</span><span><i class="high"></i>&gt; 30 High</span></footer>
-              </article>
+            <article class="dashboard-card weather-series-card kent-weather-series">
+              <header>
+                <div><h2 id="weatherHeatTitle">Estimated WBGT · Weekly</h2><p id="weatherHeatSubtitle">Shade estimate · loading</p></div>
+                <div class="chart-legend weather-chart-legend"><span style="--series:#ef7c00">WBGT · °C</span></div>
+              </header>
+              <div id="weatherHeatChart" class="weather-chart-frame" aria-live="polite"><div class="weather-loading">Loading observations…</div></div>
+            </article>
 
-              <article class="dashboard-card weather-forecast-card">
-                <header><div><h2>Next 24 hours</h2><p>Six-hour forecast blocks · NUS coordinates</p></div><span class="tag info">Forecast</span></header>
-                <div id="weatherForecast" class="weather-forecast-list"><div class="weather-loading">Loading forecast…</div></div>
-              </article>
-            </div>
+            <article class="dashboard-card weather-series-card kent-weather-series">
+              <header>
+                <div><h2 id="weatherWindTitle">Wind direction · Weekly</h2><p id="weatherWindSubtitle">10 m direction · loading</p></div>
+                <div class="chart-legend weather-chart-legend"><span style="--series:#247c70">Direction · °</span></div>
+              </header>
+              <div id="weatherWindChart" class="weather-chart-frame" aria-live="polite"><div class="weather-loading">Loading observations…</div></div>
+            </article>
+
           </div>
         </section>
 
         <section class="workspace-view analysis-workspace" data-workspace="data" aria-label="Data coverage and source health">
-          <header class="workspace-topbar"><div><h1>Data Coverage and Source Health</h1><p>Engineering view · mapping confidence, freshness, and availability</p></div><div class="topbar-actions"><span class="source-chip">Public API · live</span></div></header>
+          <header class="workspace-topbar"><div><h1>Data Coverage and Source Health</h1><p>Engineering view · mapping confidence, freshness, and availability</p></div><div class="topbar-actions"><span class="source-chip" id="dataHealthSourceChip">Public API · checking</span></div></header>
           <div class="workspace-content data-analysis-content">
-            <div class="summary-strip"><div><span>Buildings mapped</span><strong>14 / 16</strong><small>selected building set</small></div><div><span>Current energy points</span><strong>43</strong><small>standardized latest records</small></div><div><span>Fast points</span><strong>13</strong><small>SDE4 configured streams</small></div><div><span>Missing buildings</span><strong>2</strong><small>Ventus and S1A</small></div></div>
+            <div class="summary-strip"><div><span>Buildings reporting</span><strong id="dataHealthReportingCount">-- / 16</strong><small>latest public API response</small></div><div><span>Latest API records</span><strong id="dataHealthRecordCount">--</strong><small>canonical and retained aliases</small></div><div><span>Partial buildings</span><strong id="dataHealthPartialCount">--</strong><small>incomplete metric coverage</small></div><div><span>Missing buildings</span><strong id="dataHealthMissingCount">--</strong><small>no current building records</small></div></div>
             <article class="dashboard-card coverage-card">
-              <header><div><h2>Building × metric coverage</h2><p>Latest standardized points exposed by the public API</p></div><div class="coverage-key"><span class="tag good">Mapped</span><span class="tag partial">Partial</span><span class="tag">Missing</span></div></header>
+              <header><div><h2>Building × metric coverage</h2><p id="dataHealthResultCount">Checking the latest public API response</p></div><div class="coverage-key"><span class="tag good">Mapped</span><span class="tag partial">Partial</span><span class="tag">Missing</span></div></header>
               <div class="table-scroll"><table class="engineering-table coverage-table">
                 <thead><tr><th>Building</th><th>Electricity</th><th>Cooling</th><th>PV</th><th>Latest source</th><th>Cadence</th><th>Status</th></tr></thead>
-                <tbody>
-                  <tr><td><strong>SDE4</strong></td><td><span class="matrix">–</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag partial">Partial</span></td></tr>
-                  <tr><td><strong>SDE3</strong></td><td><span class="matrix">–</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag partial">Partial</span></td></tr>
-                  <tr><td><strong>SDE2</strong></td><td><span class="matrix">–</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag partial">Partial</span></td></tr>
-                  <tr><td><strong>SDE1</strong></td><td><span class="matrix">–</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag partial">Partial</span></td></tr>
-                  <tr><td><strong>E3A</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
-                  <tr><td><strong>T-LAB</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
-                  <tr><td><strong>E8</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
-                  <tr><td><strong>E6</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
-                  <tr><td><strong>COM3</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
-                  <tr><td><strong>S9</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
-                  <tr><td><strong>CELS</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
-                  <tr><td><strong>MD1</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
-                  <tr><td><strong>MD2</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
-                  <tr><td><strong>MD6</strong></td><td><span class="matrix complete">✓</span></td><td><span class="matrix complete">✓</span></td><td><span class="matrix">–</span></td><td>PI standardized</td><td>Hourly</td><td><span class="tag good">Mapped</span></td></tr>
-                  <tr><td><strong>Ventus</strong></td><td><span class="matrix">–</span></td><td><span class="matrix">–</span></td><td><span class="matrix">–</span></td><td>—</td><td>—</td><td><span class="tag">Missing</span></td></tr>
-                  <tr><td><strong>S1A</strong></td><td><span class="matrix">–</span></td><td><span class="matrix">–</span></td><td><span class="matrix">–</span></td><td>—</td><td>—</td><td><span class="tag">Missing</span></td></tr>
-                </tbody>
+                <tbody id="dataHealthTableBody"><tr><td colspan="7">Checking current coverage…</td></tr></tbody>
               </table></div>
             </article>
-            <article class="dashboard-card source-health-card"><header><div><h2>Source health</h2><p>Collector and public-context services</p></div></header><table class="engineering-table"><thead><tr><th>Source</th><th>Role</th><th>Expected cadence</th><th>Latest record</th><th>Status</th></tr></thead><tbody><tr><td><strong>PI hourly collector</strong></td><td>Building electricity, cooling, PV</td><td>Hourly</td><td>Current API cycle</td><td><span class="tag good">Healthy</span></td></tr><tr><td><strong>SDE4 weather station</strong></td><td>Campus weather context</td><td>Collector cycle</td><td>Collector managed</td><td><span class="tag good">Healthy</span></td></tr><tr><td><strong>EMC / NEMS</strong></td><td>Wholesale market context</td><td>30 minutes</td><td>Period 35</td><td><span class="tag partial">Provisional</span></td></tr></tbody></table></article>
+            <article class="dashboard-card source-health-card"><header><div><h2>Source health</h2><p>Collector and public-context services</p></div></header><table class="engineering-table"><thead><tr><th>Source</th><th>Role</th><th>Expected cadence</th><th>Latest record</th><th>Status</th></tr></thead><tbody id="dataHealthSourceBody"><tr><td colspan="5">Checking source freshness…</td></tr></tbody></table></article>
           </div>
         </section>
 
@@ -336,6 +336,9 @@
           </div>
           <section class="panel-section overview-project-summary" aria-label="Project summary">
             <h2>Project Summary</h2>
+            <p>NUS Campus Digital Twins integrates campus building information with electricity consumption, cooling demand and solar generation data to support energy monitoring and analysis across selected NUS buildings.</p>
+            <p>The platform brings together interactive maps, historical energy profiles, local weather conditions and Singapore wholesale electricity market information, helping users explore campus energy performance and understand its broader context.</p>
+            <p>For more information, please refer to the <a href="./guide/" target="_blank" rel="noopener noreferrer">User Guide</a>.</p>
           </section>
           <div id="aiBriefList" class="hidden" aria-hidden="true"></div>
         </section>
@@ -348,34 +351,41 @@
             <span class="field-label">Variables</span>
             <div class="segmented local-segmented building-metric-control" role="group" aria-label="Building variables"><button class="active" type="button" data-building-metric="electricity" aria-pressed="true">Electricity</button><button type="button" data-building-metric="cooling" aria-pressed="false">Cooling</button><button type="button" data-building-metric="pv" aria-pressed="false">PV</button></div>
             <span class="field-label">Period</span>
-            <div class="segmented local-segmented building-period-control" role="group" aria-label="Building reporting period"><button class="active" type="button" data-building-period="weekly" aria-pressed="true">Weekly</button><button type="button" data-building-period="monthly" aria-pressed="false">Monthly</button><button type="button" data-building-period="yearly" aria-pressed="false">Yearly</button></div>
+            <div class="segmented local-segmented building-period-control" role="group" aria-label="Building reporting period"><button type="button" data-building-period="monthly" aria-pressed="false">Monthly</button><button class="active" type="button" data-building-period="yearly" aria-pressed="true">Yearly</button></div>
           </section>
 
         </section>
 
         <section id="tab-market" class="tab-panel" data-tab-panel="market">
           <div class="panel-intro"><h2>Energy Price</h2><p>Singapore wholesale electricity prices and demand for campus energy context.</p></div>
-          <section class="panel-section compact-controls"><span class="field-label">Data product</span><button class="field-control" type="button">Real-time Energy Prices and Demand</button></section>
-          <section class="panel-section"><span class="field-label">Price interval</span><div class="segmented local-segmented market-range-control" role="group" aria-label="Energy price reporting interval"><button class="active" type="button" data-market-interval="realtime" aria-pressed="true">Real-time</button><button type="button" data-market-interval="72-periods" aria-pressed="false">72 periods</button><button type="button" data-market-interval="7-days" aria-pressed="false">7 days</button></div></section>
-          <section class="market-snapshot" aria-label="Current market snapshot"><div><span>USEP</span><strong>214.19</strong><small>S$/MWh</small></div><div><span>Demand</span><strong>7,617</strong><small>MW</small></div><div><span>Solar</span><strong>386</strong><small>MW</small></div><div><span>VCP</span><strong>252.68</strong><small>S$/MWh</small></div></section>
-          <section class="panel-section market-session"><div class="section-header"><h3>Market session</h3><span class="tag partial">Provisional</span></div><dl><div><dt>Trading date</dt><dd>17 Jul 2026</dd></div><div><dt>Current period</dt><dd>35 / 48</dd></div><div><dt>Published at</dt><dd>13:31 SGT</dd></div><div><dt>Source</dt><dd>EMC / NEMS</dd></div></dl></section>
+          <section class="panel-section compact-controls">
+            <label class="field-label" for="nemsProductSelect">Data product</label>
+            <select id="nemsProductSelect" class="building-select nems-product-select" aria-label="NEMS market data product">
+              <option value="10">Real-time Energy Prices and Demand</option>
+              <option value="12">72-period Energy Prices and Demand</option>
+              <option value="14">7-day Energy Prices and Demand (Period-based)</option>
+              <option value="18">7-day Demand (Daily Average-Min-Max)</option>
+              <option value="17">7-day Energy Prices (Daily Average-Min-Max)</option>
+              <option value="19">7-day Solar Forecast (Average-Min-Max)</option>
+            </select>
+          </section>
+          <section class="panel-section market-source-details"><span class="field-label">Update cadence</span><div id="nemsUpdateCadence" class="field-control market-readonly-field">Every half-hour</div><span class="field-label">Source</span><a class="field-control market-source-link" href="https://www.nems.emcsg.com/en/" target="_blank" rel="noreferrer">EMC / NEMS ↗</a></section>
           <div class="panel-notice">Wholesale market context only. This is not the NUS contracted tariff or an electricity bill estimate.</div>
         </section>
 
         <section id="tab-weather" class="tab-panel" data-tab-panel="weather">
-          <div class="panel-intro"><h2>Campus Weather</h2><p>NUS-coordinate thermal observations and short-term forecast context.</p></div>
-          <section class="panel-section compact-controls"><span class="field-label">Reference location</span><button class="field-control" type="button">NUS Kent Ridge / SDE4</button></section>
-          <section class="panel-section"><div class="section-header"><h3>Latest observations</h3><span class="section-kicker">10:30 SGT</span></div><div class="live-summary weather-panel-summary"><div><span class="summary-label">Temperature</span><strong>30.4°C</strong><small>air temperature</small></div><div><span class="summary-label">Humidity</span><strong>71%</strong><small>relative humidity</small></div><div><span class="summary-label">WBGT</span><strong>28.7°C</strong><small>heat stress context</small></div><div><span class="summary-label">Wind</span><strong>SW</strong><small>218 degrees</small></div></div></section>
-          <section class="panel-section"><span class="field-label">Period</span><div class="segmented local-segmented"><button class="active" type="button">Weekly</button><button type="button">Monthly</button><button type="button">Yearly</button></div></section>
-          <div class="source-status-row"><span class="status-dot live"></span><div><strong>Collector status</strong><small>5 streams received in latest cycle</small></div><span class="tag good">Healthy</span></div>
+          <div class="panel-intro"><h2>Campus Weather</h2><p>NUS-coordinate current conditions and recent observations.</p></div>
+          <section class="panel-section compact-controls"><label class="field-label" for="weatherLocation">Reference location</label><select id="weatherLocation" class="field-control"><option value="sde4" selected>SDE4 Weather Station</option><option value="kent-ridge">NUS Kent Ridge</option></select></section>
+          <section class="panel-section"><span class="field-label">Period</span><div class="segmented weather-period-control" role="group" aria-label="Weather reporting period"><button class="active" type="button" data-weather-period="7d" aria-pressed="true">Weekly</button><button type="button" data-weather-period="30d" aria-pressed="false">Monthly</button><button type="button" data-weather-period="yearly" aria-pressed="false">Yearly</button></div></section>
+          <div id="weatherLocationNote" class="weather-location-note">DEMIS · weather data.</div>
           <div id="externalVizPanel" class="hidden" aria-hidden="true"></div>
         </section>
 
         <section id="tab-data" class="tab-panel" data-tab-panel="data">
           <div class="panel-intro"><h2>Data Status</h2><p>Point coverage, source freshness, and mapping confidence for engineering review.</p></div>
-          <section class="panel-section"><div class="live-summary data-panel-summary"><div><span class="summary-label">Buildings mapped</span><strong>14</strong><small>of 16 selected</small></div><div><span class="summary-label">Active streams</span><strong>43</strong><small>current standardized points</small></div><div><span class="summary-label">Legacy aliases</span><strong>46</strong><small>retained for migration</small></div><div><span class="summary-label">Missing</span><strong>2</strong><small>building mappings</small></div></div></section>
-          <section class="panel-section"><span class="field-label">Filter</span><div class="segmented local-segmented"><button class="active" type="button">All</button><button type="button">Partial</button><button type="button">Missing</button></div></section>
-          <section class="panel-section source-stack"><h3>System sources</h3><div class="source-status-row"><span class="status-dot live"></span><div><strong>PI hourly collector</strong><small>23 configured points</small></div><span class="tag good">Healthy</span></div><div class="source-status-row"><span class="status-dot live"></span><div><strong>SG context collector</strong><small>90–91 points per cycle</small></div><span class="tag good">Healthy</span></div><div class="source-status-row"><span class="status-dot partial"></span><div><strong>EMC price collector</strong><small>Provisional values</small></div><span class="tag partial">Review</span></div></section>
+          <section class="panel-section"><div class="live-summary data-panel-summary"><div><span class="summary-label">Reporting</span><strong id="dataPanelReportingCount">--</strong><small>of 16 buildings</small></div><div><span class="summary-label">API records</span><strong id="dataPanelRecordCount">--</strong><small>latest response</small></div><div><span class="summary-label">Partial</span><strong id="dataPanelPartialCount">--</strong><small>building coverage</small></div><div><span class="summary-label">Missing</span><strong id="dataPanelMissingCount">--</strong><small>no current records</small></div></div></section>
+          <section class="panel-section"><span class="field-label">Filter</span><div class="segmented local-segmented" id="dataHealthFilter" role="group" aria-label="Filter building coverage"><button class="active" type="button" data-data-health-filter="all" aria-pressed="true">All</button><button type="button" data-data-health-filter="partial" aria-pressed="false">Partial</button><button type="button" data-data-health-filter="missing" aria-pressed="false">Missing</button></div></section>
+          <section class="panel-section source-stack" id="dataHealthPanelSources"><h3>System sources</h3><div class="source-status-row"><span class="status-dot partial"></span><div><strong>Public building API</strong><small>Checking latest records</small></div><span class="tag partial">Checking</span></div></section>
         </section>
 
         <div class="compatibility-hooks hidden" aria-hidden="true">
@@ -383,13 +393,15 @@
           <button type="button" data-metric="type" aria-pressed="false"></button>
           <input type="checkbox" id="toggleBuildings" checked />
           <input type="checkbox" id="toggleLabels" checked />
-          <input type="checkbox" id="togglePv" checked />
           <input type="checkbox" id="toggleEuiLayer" />
         </div>
       </aside>
     </main>
 
-    <script src="src/config.js?v=20260710-mapbox" defer></script>
-    <script src="src/app.js?v=20260907-building-chart-only" defer></script>
+    <script src="src/config.js?v=20260907-nems-live" defer></script>
+    <script src="src/building-history.js?v=20260907-aggregate-2" defer></script>
+    <script src="src/data-health.js?v=20260908-live-health" defer></script>
+    <script src="src/station-weather.js?v=20260908-demis" defer></script>
+    <script src="src/app.js?v=20260908-default-station" defer></script>
   </body>
 </html>

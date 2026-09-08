@@ -79,6 +79,65 @@ const realtimeConfig = {
   refreshMs: 60_000,
 };
 
+const nemsMarketConfig = {
+  endpoint: mapboxSiteConfig.nemsRealtimeEndpoint || "/api/nems/realtime",
+  tableEndpoint: mapboxSiteConfig.nemsTableEndpoint || "/api/nems/table",
+  refreshMs: Number(mapboxSiteConfig.nemsRefreshMs) || 300_000,
+};
+
+const nemsMarketProducts = {
+  "10": {
+    title: "Real-time Energy Prices and Demand",
+    subtitle: "Provisional half-hourly market information",
+    kind: "market",
+    table: true,
+    cadence: "Every half-hour",
+  },
+  "12": {
+    title: "72-period Energy Prices and Demand",
+    subtitle: "Latest 72 half-hour trading periods",
+    kind: "market",
+    table: true,
+    cadence: "Every half-hour",
+  },
+  "14": {
+    title: "7-day Energy Prices and Demand (Period-based)",
+    subtitle: "Seven days of half-hour trading periods",
+    kind: "market",
+    table: false,
+    cadence: "Daily after market day",
+    metricLabels: ["7-day Average USEP", "7-day Average Demand", "7-day Average Solar", "VCP"],
+  },
+  "17": {
+    title: "7-day Energy Prices (Daily Average-Min-Max)",
+    subtitle: "Daily average, minimum and maximum USEP",
+    kind: "range",
+    table: false,
+    axisTitle: "Price ($/MWh)",
+    accent: "price",
+    cadence: "Daily",
+  },
+  "18": {
+    title: "7-day Demand (Daily Average-Min-Max)",
+    subtitle: "Daily average, minimum and maximum demand",
+    kind: "range",
+    table: false,
+    axisTitle: "Demand (MW)",
+    accent: "demand",
+    cadence: "Daily",
+  },
+  "19": {
+    title: "7-day Solar Forecast (Average-Min-Max)",
+    subtitle: "Daily average, minimum and maximum solar forecast",
+    kind: "range",
+    table: false,
+    axisTitle: "Solar (MW)",
+    accent: "solar",
+    cadence: "Daily",
+    metricLabels: ["7-day Average Solar"],
+  },
+};
+
 const historyConfig = {
   meterBaseUrl: "https://buildingdt.org/realtime/range",
   beehubBaseUrl: "https://buildingdt.org/realtime/beehub/range",
@@ -208,8 +267,14 @@ const buildingHistoryPointMap = Object.fromEntries(
     const apiCode = apiBuildingCode(building);
     const capabilities = buildingMetricCapabilities[building] || [];
     const points = {};
-    if (capabilities.includes("electricity")) points.electricity = `${apiCode} hourly_electrical_consumption`;
-    if (capabilities.includes("cooling")) points.cooling = `${apiCode} hourly_cooling_consumption`;
+    if (capabilities.includes("electricity")) points.electricity = `${apiCode} Total Hourly Electrical Consumption`;
+    if (capabilities.includes("cooling")) {
+      // SDE3's current canonical stream is misclassified under E3 upstream.
+      // Keep its own historical series; never silently attribute another building's stream.
+      points.cooling = building === "SDE3" ? "SDE3 hourly_cooling_consumption"
+        : /^SDE/.test(building) ? `${apiCode} Total Cooling Hourly Consumption`
+          : `${apiCode} Total Hourly Cooling Consumption`;
+    }
     if (capabilities.includes("pv")) points.pv = pvHistoryPoints[building] || [];
     return [building, points];
   }),
@@ -276,6 +341,7 @@ const aiHealthConfig = {
 
 const weatherDashboardConfig = {
   url: "https://api.open-meteo.com/v1/forecast",
+  archiveUrl: "https://archive-api.open-meteo.com/v1/archive",
   latitude: 1.2966,
   longitude: 103.7764,
   timezone: "Asia/Singapore",
@@ -606,7 +672,7 @@ const metricConfig = {
 };
 
 const colorModeConfig = {
-  type: { label: "Building type" },
+  type: { label: "Campus districts" },
   eui: { label: "EUI 2023" },
   height: { label: "Building height" },
   live: { label: "Data coverage" },
@@ -643,25 +709,25 @@ const focusRegions = [
     id: "design-engineering",
     label: "Design and Engineering",
     codes: ["SDE4", "Ventus", "SDE3", "E3A", "T-LAB", "E8", "E6", "SDE1", "SDE2"],
-    color: "#1f5fbf",
+    color: "#416fa4",
   },
   {
     id: "computing",
     label: "Computing",
     codes: ["COM3"],
-    color: "#287c6f",
+    color: "#448a7e",
   },
   {
     id: "science",
     label: "Science",
     codes: ["S1A", "S9"],
-    color: "#7c3aed",
+    color: "#8270aa",
   },
   {
     id: "medicine",
     label: "Medicine",
     codes: ["CELS", "MD1", "MD2", "MD6"],
-    color: "#db2777",
+    color: "#b77591",
   },
 ];
 
@@ -670,7 +736,7 @@ const initialWorkspace = ["overview", "buildings", "market", "weather", "data"].
   ? requestedWorkspace
   : "overview";
 const requestedBuildingPeriod = new URLSearchParams(window.location.search).get("period");
-const initialBuildingPeriod = ["weekly", "monthly", "yearly"].includes(requestedBuildingPeriod) ? requestedBuildingPeriod : "weekly";
+const initialBuildingPeriod = ["monthly", "yearly"].includes(requestedBuildingPeriod) ? requestedBuildingPeriod : "yearly";
 const requestedBuildingMetric = new URLSearchParams(window.location.search).get("metric");
 const initialBuildingMetric = ["electricity", "cooling", "pv"].includes(requestedBuildingMetric) ? requestedBuildingMetric : "electricity";
 
@@ -683,7 +749,7 @@ const state = {
   regionAreaData: null,
   sourceFeatureById: new Map(),
   displayFeatureBySourceId: new Map(),
-  metric: "live",
+  metric: "type",
   selectedId: null,
   activeTab: initialWorkspace,
   activeExternalDataset: "electricity-consumption",
@@ -710,10 +776,22 @@ const state = {
   activeBuildingMetric: initialBuildingMetric,
   activeMarketView: "chart",
   activeMarketInterval: "realtime",
+  activeNemsProduct: "10",
+  activeNemsView: "chart",
+  nemsMarketData: null,
+  nemsProductCache: new Map(),
+  nemsTableCache: new Map(),
+  nemsRefreshTimer: null,
+  nemsLoading: false,
   activeWeatherPeriod: "7d",
+  activeDataHealthFilter: "all",
   weatherData: null,
   weatherLoadPromise: null,
-  buildingHistoryLoaded: new Set(),
+  weatherYearData: null,
+  weatherYearPromise: null,
+  weatherYearError: "",
+  buildingHistoryLoaded: new Map(),
+  buildingHistoryPending: new Map(),
 };
 
 window.__nusCampusEmis = state;
@@ -736,7 +814,6 @@ const els = {
   metricButtons: document.querySelectorAll("[data-metric]"),
   toggleBuildings: document.getElementById("toggleBuildings"),
   toggleLabels: document.getElementById("toggleLabels"),
-  togglePv: document.getElementById("togglePv"),
   toggleEuiLayer: document.getElementById("toggleEuiLayer"),
   buildingSelect: document.getElementById("buildingSelect"),
   buildingPeriodButtons: document.querySelectorAll("[data-building-period]"),
@@ -762,6 +839,15 @@ const els = {
   marketChartSubtitle: document.getElementById("marketChartSubtitle"),
   marketSeriesNote: document.getElementById("marketSeriesNote"),
   marketChartInteractive: document.getElementById("marketChartInteractive"),
+  nemsSourceStatus: document.getElementById("nemsSourceStatus"),
+  nemsMarketBody: document.getElementById("nemsMarketBody"),
+  nemsRefresh: document.getElementById("nemsRefresh"),
+  nemsProductSelect: document.getElementById("nemsProductSelect"),
+  nemsUpdateCadence: document.getElementById("nemsUpdateCadence"),
+  nemsMarketTitle: document.getElementById("nemsMarketTitle"),
+  nemsMarketSubtitle: document.getElementById("nemsMarketSubtitle"),
+  nemsViewToggle: document.getElementById("nemsViewToggle"),
+  nemsViewButtons: document.querySelectorAll("[data-nems-view]"),
   weatherSourceStatus: document.getElementById("weatherSourceStatus"),
   weatherUpdated: document.getElementById("weatherUpdated"),
   weatherPeriodButtons: document.querySelectorAll("[data-weather-period]"),
@@ -774,10 +860,28 @@ const els = {
   weatherWind: document.getElementById("weatherWind"),
   weatherWindMeta: document.getElementById("weatherWindMeta"),
   weatherChartSubtitle: document.getElementById("weatherChartSubtitle"),
+  weatherChartTitle: document.getElementById("weatherChartTitle"),
   weatherThermalChart: document.getElementById("weatherThermalChart"),
   weatherHeatSubtitle: document.getElementById("weatherHeatSubtitle"),
-  weatherHeatStatus: document.getElementById("weatherHeatStatus"),
+  weatherHeatTitle: document.getElementById("weatherHeatTitle"),
   weatherHeatChart: document.getElementById("weatherHeatChart"),
+  weatherWindTitle: document.getElementById("weatherWindTitle"),
+  weatherWindSubtitle: document.getElementById("weatherWindSubtitle"),
+  weatherWindChart: document.getElementById("weatherWindChart"),
+  dataHealthSourceChip: document.getElementById("dataHealthSourceChip"),
+  dataHealthReportingCount: document.getElementById("dataHealthReportingCount"),
+  dataHealthRecordCount: document.getElementById("dataHealthRecordCount"),
+  dataHealthPartialCount: document.getElementById("dataHealthPartialCount"),
+  dataHealthMissingCount: document.getElementById("dataHealthMissingCount"),
+  dataHealthResultCount: document.getElementById("dataHealthResultCount"),
+  dataHealthTableBody: document.getElementById("dataHealthTableBody"),
+  dataHealthSourceBody: document.getElementById("dataHealthSourceBody"),
+  dataPanelReportingCount: document.getElementById("dataPanelReportingCount"),
+  dataPanelRecordCount: document.getElementById("dataPanelRecordCount"),
+  dataPanelPartialCount: document.getElementById("dataPanelPartialCount"),
+  dataPanelMissingCount: document.getElementById("dataPanelMissingCount"),
+  dataHealthFilterButtons: document.querySelectorAll("[data-data-health-filter]"),
+  dataHealthPanelSources: document.getElementById("dataHealthPanelSources"),
   weatherForecast: document.getElementById("weatherForecast"),
   regionList: document.getElementById("regionList"),
   aiBriefList: document.getElementById("aiBriefList"),
@@ -958,23 +1062,56 @@ function colorExpression(metric) {
 }
 
 function buildingModelColorExpression() {
-  return [
-    "match",
-    ["get", "building_type"],
-    ["ihl", "non_ihl", "institutional", "education", "school", "university"],
-    "#4b6edb",
-    ["public_service", "hospital", "clinic", "healthcare"],
-    "#b43b34",
-    ["retail", "commercial", "mixed_development", "business_park", "office"],
-    "#df7a2f",
-    ["private_apartment", "residential", "hdb", "condominium", "landed_property"],
-    "#3b8f65",
-    ["sports", "recreation", "community_cultural"],
-    "#2f9ab7",
-    ["industrial", "utility", "warehouse"],
-    "#7357b8",
-    "#7aa6b8",
-  ];
+  const expression = ["match", ["get", "source_id"]];
+  focusRegions.forEach((region) => {
+    const ids = focusBuildings.filter((building) => region.codes.includes(building.code)).map((building) => building.sourceId);
+    expression.push(ids, region.color);
+  });
+  expression.push("#cbd4da");
+  return expression;
+}
+
+function updateMapBuildingHighlight() {
+  if (!state.map?.getLayer("buildings-extrusion")) return;
+  const selected = state.mapSelectedSourceId || "";
+  const hovered = state.mapHoveredSourceId || "";
+  const base = buildingModelColorExpression();
+  if (state.metric === "type") {
+    const color = ["case", ["==", ["get", "source_id"], selected], "#ef7c00",
+      ["==", ["get", "source_id"], hovered], "#72aacf", base];
+    state.map.setPaintProperty("buildings-fill", "fill-color", color);
+    state.map.setPaintProperty("buildings-extrusion", "fill-extrusion-color", color);
+  }
+}
+
+function showMapBuildingCard(feature, pinned = false, lngLat = null) {
+  const props = feature.properties;
+  const focus = focusBuildingBySourceId.get(props.source_id);
+  if (!focus) return;
+  const region = focusRegions.find((item) => item.codes.includes(focus.code));
+  const live = state.realtimeByBuilding[focus.code];
+  const streams = [["Electricity", live?.electricityHourlyKwh], ["Cooling", live?.coolingHourlyKwh], ["PV", live?.pvKw]]
+    .filter(([, value]) => value !== null && value !== undefined && Number.isFinite(Number(value)))
+    .map(([label]) => label);
+  state.mapBuildingPopup?.remove();
+  const card = document.createElement("div");
+  card.className = "campus-building-card";
+  card.innerHTML = `<span class="campus-building-region" style="--region-color:${region.color}">${escapeHtml(region.label)}</span>
+    <strong>${escapeHtml(focus.code)}</strong>
+    ${focus.name !== focus.code ? `<span>${escapeHtml(focus.name)}</span>` : ""}
+    <p>${streams.length ? `Available data · ${streams.join(" · ")}` : "No reported data"}</p>
+    ${pinned ? '<button type="button">View building analysis →</button>' : '<small>Click building to explore</small>'}`;
+  if (pinned) card.querySelector("button").addEventListener("click", () => {
+    state.mapBuildingPopup?.remove();
+    selectBuilding(feature);
+  });
+  const popup = new mapboxgl.Popup({ closeButton: pinned, closeOnClick: false, offset: 18, maxWidth: "270px", className: pinned ? "campus-building-popup" : "campus-building-popup is-hover" })
+    .setLngLat(lngLat || feature.geometry.coordinates).setDOMContent(card).addTo(state.map);
+  state.mapBuildingPopup = popup;
+  if (pinned) popup.on("close", () => {
+    state.mapSelectedSourceId = null;
+    updateMapBuildingHighlight();
+  });
 }
 
 function euiColorExpression() {
@@ -1314,6 +1451,7 @@ function buildDisplayFeatures(features) {
       id: `display-${slug(displayCode) || props.id}`,
       name: displayName,
       short_name: displayCode,
+      region_color: focusRegions.find((region) => region.codes.includes(displayCode))?.color || "#64748b",
       source_id: props.source_id,
       source_ids: sourceIds.join(","),
       child_count: features.length,
@@ -1633,6 +1771,7 @@ async function loadRealtime() {
   refreshDerivedData();
   updateMapData();
   updateSummary();
+  renderDataHealth();
   if (!els.trendModal?.classList.contains("hidden")) renderTrendLiveMeters();
   if (!els.brickModal?.classList.contains("hidden")) renderBrickGraph();
   renderBuildingList();
@@ -1778,7 +1917,69 @@ function updateSummary() {
   renderRegionList();
 }
 
+function renderDataHealth() {
+  if (!window.NUSDataHealth || !els.dataHealthTableBody) return;
+  const model = window.NUSDataHealth.buildModel({
+    buildings: focusBuildings,
+    realtimeByBuilding: state.realtimeByBuilding,
+    coverageHints: buildingModelDefinitions,
+    metricCapabilities: buildingMetricCapabilities,
+  });
+  const { summary } = model;
+  const filteredRows = window.NUSDataHealth.filterRows(model.rows, state.activeDataHealthFilter);
+  const latestLabel = summary.latest ? formatTimestamp(summary.latest) : "No current record";
+  const freshness = window.NUSDataHealth.freshness(summary.latest);
+  const setText = (element, value) => { if (element) element.textContent = value; };
+  setText(els.dataHealthReportingCount, `${summary.reporting} / ${summary.total}`);
+  setText(els.dataHealthRecordCount, formatNumber(summary.records, 0));
+  setText(els.dataHealthPartialCount, formatNumber(summary.partial, 0));
+  setText(els.dataHealthMissingCount, formatNumber(summary.missing, 0));
+  setText(els.dataPanelReportingCount, formatNumber(summary.reporting, 0));
+  setText(els.dataPanelRecordCount, formatNumber(summary.records, 0));
+  setText(els.dataPanelPartialCount, formatNumber(summary.partial, 0));
+  setText(els.dataPanelMissingCount, formatNumber(summary.missing, 0));
+  setText(els.dataHealthSourceChip, `Public API · ${freshness.label.toLowerCase()} · ${latestLabel}`);
+  setText(els.dataHealthResultCount, `${filteredRows.length} of ${summary.total} buildings · latest API ${latestLabel}`);
+  els.dataHealthFilterButtons.forEach((button) => {
+    const active = button.dataset.dataHealthFilter === state.activeDataHealthFilter;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  const matrix = (available) => `<span class="matrix${available ? " complete" : ""}" aria-label="${available ? "Available" : "Unavailable"}">${available ? "✓" : "–"}</span>`;
+  els.dataHealthTableBody.innerHTML = filteredRows.length ? filteredRows.map((row) => {
+    const tone = row.status === "mapped" ? "good" : row.status === "partial" ? "partial" : "";
+    const status = row.status[0].toUpperCase() + row.status.slice(1);
+    return `<tr data-coverage-status="${row.status}"><td><strong>${escapeHtml(row.code)}</strong></td><td>${matrix(row.metrics.electricity)}</td><td>${matrix(row.metrics.cooling)}</td><td>${matrix(row.metrics.pv)}</td><td>${row.latest ? "PI public API" : "—"}</td><td>${row.latest ? "Hourly" : "—"}</td><td><span class="tag ${tone}">${status}</span></td></tr>`;
+  }).join("") : '<tr><td colspan="7"><strong>No matching buildings</strong></td></tr>';
+
+  const sdeWeatherPoints = (state.realtimeByBuilding.SDE4?.points || []).filter((point) => /Weather Station/i.test(point.point || ""));
+  const sdeWeatherLatest = sdeWeatherPoints.map((point) => point.time).filter(Boolean).sort().at(-1) || null;
+  const sources = [
+    { name: "PI public building API", role: "Electricity, cooling and PV", cadence: "Hourly", latest: summary.latest, status: freshness },
+    { name: "SDE4 weather station", role: "On-site weather observations", cadence: "Hourly", latest: sdeWeatherLatest, status: window.NUSDataHealth.freshness(sdeWeatherLatest) },
+    { name: "Open-Meteo", role: "Kent Ridge weather context", cadence: "On demand", latest: state.weatherData?.current?.time || null, status: state.weatherData ? { key: "good", label: "Available" } : { key: "partial", label: "Not checked" } },
+    { name: "EMC / NEMS", role: "Wholesale market context", cadence: "30 minutes", latestLabel: state.nemsMarketData?.lastupdate || "Open Energy Price to check", status: state.nemsMarketData ? { key: "partial", label: "Provisional" } : { key: "partial", label: "Not checked" } },
+  ];
+  const sourceRows = sources.map((source) => {
+    const tone = source.status.key === "good" ? "good" : source.status.key === "partial" ? "partial" : "";
+    const record = source.latestLabel || (source.latest ? formatTimestamp(source.latest) : "No checked record");
+    return `<tr><td><strong>${escapeHtml(source.name)}</strong></td><td>${escapeHtml(source.role)}</td><td>${escapeHtml(source.cadence)}</td><td>${escapeHtml(record)}</td><td><span class="tag ${tone}">${escapeHtml(source.status.label)}</span></td></tr>`;
+  }).join("");
+  els.dataHealthSourceBody.innerHTML = sourceRows;
+  if (els.dataHealthPanelSources) {
+    els.dataHealthPanelSources.innerHTML = `<h3>System sources</h3>${sources.map((source) => {
+      const live = source.status.key === "good" ? "live" : "partial";
+      const tone = source.status.key === "good" ? "good" : "partial";
+      const record = source.latestLabel || (source.latest ? formatTimestamp(source.latest) : "No checked record");
+      return `<div class="source-status-row"><span class="status-dot ${live}"></span><div><strong>${escapeHtml(source.name)}</strong><small>${escapeHtml(record)}</small></div><span class="tag ${tone}">${escapeHtml(source.status.label)}</span></div>`;
+    }).join("")}`;
+  }
+}
+
 function activateTab(tabName) {
+  state.mapBuildingPopup?.remove();
+  state.mapHoveredSourceId = null;
+  updateMapBuildingHighlight();
   closeTrendModal();
   closeBrickModal();
   setExternalPanelOpen(false);
@@ -1809,6 +2010,7 @@ function activateTab(tabName) {
     els.tokenPanel.classList.add("hidden");
   }
   if (tabName === "weather") loadWeatherDashboard();
+  if (tabName === "data") renderDataHealth();
 }
 
 function zoomToRegionCodes(codes) {
@@ -2603,7 +2805,7 @@ function renderExternalDataPanel(datasetId = state.activeExternalDataset, option
 }
 
 function selectedBuildingCodes() {
-  return [...state.selectedComparisonBuildings].filter((code) => buildingPerformanceModel[code]);
+  return [...state.selectedComparisonBuildings];
 }
 
 function formatEnergyTotal(value) {
@@ -2659,104 +2861,45 @@ function formatBuildingChartLabel(value, period, includeWeekday = false) {
 }
 
 function aggregateHistoryBySingaporeDay(rows) {
-  const daily = new Map();
-  rows.forEach((row) => {
-    const timestamp = new Date(row.t || row.time || row.timestamp);
-    const value = Number(row.v ?? row.value);
-    if (Number.isNaN(timestamp.getTime()) || !Number.isFinite(value)) return;
-    const singaporeDate = new Date(timestamp.getTime() + 8 * 60 * 60 * 1000);
-    const key = singaporeDate.toISOString().slice(0, 10);
-    daily.set(key, (daily.get(key) || 0) + value);
-  });
-  const keys = [...daily.keys()].sort();
-  if (!keys.length) return null;
-
-  const singaporeToday = new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  const today = new Date(`${singaporeToday}T00:00:00Z`);
-  const yesterday = new Date(today.getTime() - 86_400_000);
-  const weeklyLabels = Array.from({ length: 7 }, (_, index) => {
-    const date = new Date(yesterday.getTime() - (6 - index) * 86_400_000);
-    return date.toISOString().slice(0, 10);
-  });
-  const monthStart = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1));
-  const monthlyLabels = Array.from({ length: yesterday.getUTCDate() }, (_, index) => {
-    const date = new Date(monthStart.getTime() + index * 86_400_000);
-    return date.toISOString().slice(0, 10);
-  }).filter((key) => key < singaporeToday);
-  const year = today.getUTCFullYear();
-  const yearlyLabels = Array.from({ length: today.getUTCMonth() + 1 }, (_, index) => `${year}-${String(index + 1).padStart(2, "0")}`);
-  const yearly = yearlyLabels.map((month) => {
-    const values = [...daily.entries()]
-      .filter(([key]) => key < singaporeToday && key.startsWith(`${month}-`))
-      .map(([, value]) => value);
-    return values.length ? sum(values) : null;
-  });
-  const valueFor = (key) => daily.has(key) ? daily.get(key) : null;
-  return {
-    weekly: weeklyLabels.map(valueFor),
-    weeklyLabels,
-    monthly: monthlyLabels.map(valueFor),
-    monthlyLabels,
-    yearly,
-    yearlyLabels,
-    latest: rows.at(-1)?.t || rows.at(-1)?.time || rows.at(-1)?.timestamp,
-    sourceStart: rows[0]?.t || rows[0]?.time || rows[0]?.timestamp,
-  };
+  return window.NUSBuildingHistory.aggregate(rows);
 }
 
 async function loadBuildingPerformanceHistory(buildingCodes = selectedBuildingCodes()) {
-  const requestedBuildings = [...new Set(buildingCodes)].filter((building) => buildingHistoryPointMap[building]);
-  const requests = requestedBuildings.flatMap((building) =>
-    Object.entries(buildingHistoryPointMap[building]).flatMap(([metric, pointDefinition]) => {
-      const historyKey = `${building}:${metric}`;
-      if (state.buildingHistoryLoaded.has(historyKey)) return [];
-      const points = Array.isArray(pointDefinition) ? pointDefinition : [pointDefinition];
-      if (!points.length) return [];
-      return [(async () => {
-        const apiCode = apiBuildingCode(building);
-        const responses = await Promise.allSettled(points.map(async (point) => {
-          const params = new URLSearchParams({ building: apiCode, point, start: "-365d", stop: "now()", limit: "20000" });
-          const response = await fetch(`${historyConfig.meterBaseUrl}?${params.toString()}`, { cache: "no-store" });
-          if (!response.ok) throw new Error(`${building} ${point}: HTTP ${response.status}`);
-          const payload = await response.json();
-          return Array.isArray(payload?.points) ? payload.points : [];
-        }));
-        const rowSets = responses.filter((result) => result.status === "fulfilled").map((result) => result.value);
-        if (!rowSets.length) throw new Error(`${building} ${metric}: history unavailable`);
-        const mergedByTimestamp = new Map();
-        rowSets.flat().forEach((row) => {
-          const timestamp = row.t || row.time || row.timestamp;
-          const value = Number(row.v ?? row.value);
-          if (!timestamp || !Number.isFinite(value)) return;
-          const existing = mergedByTimestamp.get(timestamp) || { t: timestamp, v: 0 };
-          existing.v += value;
-          mergedByTimestamp.set(timestamp, existing);
-        });
-        const mergedRows = [...mergedByTimestamp.values()].sort((a, b) => new Date(a.t) - new Date(b.t));
-        const aggregated = aggregateHistoryBySingaporeDay(mergedRows);
-        if (!aggregated) throw new Error(`${building} ${metric}: no history`);
-        return { building, metric, aggregated, historyKey };
-      })()];
-    }),
-  );
-  const results = await Promise.allSettled(requests);
-  results.forEach((result) => {
-    if (result.status !== "fulfilled") return;
-    const { building, metric, aggregated, historyKey } = result.value;
-    buildingPerformanceModel[building][metric] = {
-      weekly: aggregated.weekly,
-      weeklyLabels: aggregated.weeklyLabels,
-      monthly: aggregated.monthly,
-      monthlyLabels: aggregated.monthlyLabels,
-      yearly: aggregated.yearly,
-      yearlyLabels: aggregated.yearlyLabels,
-      sourceStart: aggregated.sourceStart,
-    };
-    state.buildingHistoryLoaded.add(historyKey);
-    if (aggregated.latest) buildingPerformanceModel[building].updated = formatTimestamp(aggregated.latest);
-  });
-  renderBuildingList();
-  renderBuildingAnalytics();
+  const metric = state.activeBuildingMetric;
+  await Promise.all([...new Set(buildingCodes)].map(async (building) => {
+    const definition = buildingHistoryPointMap[building]?.[metric];
+    if (!definition) return;
+    const historyKey = `${building}:${metric}`;
+    if (Date.now() - (state.buildingHistoryLoaded.get(historyKey) || 0) < 15 * 60_000) return;
+    if (state.buildingHistoryPending.has(historyKey)) return state.buildingHistoryPending.get(historyKey);
+    const points = Array.isArray(definition) ? definition : [definition];
+    if (!points.length) return;
+    const request = (async () => {
+      const rowSets = await Promise.all(points.map(async (point) => {
+        const params = new URLSearchParams({ building: apiBuildingCode(building), point, start: "-365d", stop: "now()", limit: "20000" });
+        const response = await fetch(`${historyConfig.meterBaseUrl}?${params}`, { cache: "no-store", signal: AbortSignal.timeout(30_000) });
+        if (!response.ok) throw new Error(`History HTTP ${response.status}`);
+        const payload = await response.json();
+        if (!Array.isArray(payload?.points)) throw new Error("Invalid history response");
+        return payload.points;
+      }));
+      const rows = window.NUSBuildingHistory.combineComponents(rowSets);
+      const aggregated = aggregateHistoryBySingaporeDay(rows);
+      buildingPerformanceModel[building][metric] = aggregated;
+      state.buildingHistoryLoaded.set(historyKey, Date.now());
+      if (aggregated?.latest) buildingPerformanceModel[building].updated = formatTimestamp(aggregated.latest);
+    })().catch(() => {
+      // Do not retain a stale chart after a failed refresh or substitute fabricated values.
+      buildingPerformanceModel[building][metric] = null;
+      state.buildingHistoryLoaded.delete(historyKey);
+    }).finally(() => {
+      state.buildingHistoryPending.delete(historyKey);
+      renderBuildingAnalytics();
+    });
+    state.buildingHistoryPending.set(historyKey, request);
+    renderBuildingAnalytics();
+    return request;
+  }));
 }
 
 function bindBuildingChartInteraction({ width, plot, labels, series, xFor, yFor, period }) {
@@ -2821,14 +2964,18 @@ function renderBuildingAnalytics() {
   const metric = buildingMetricMeta[state.activeBuildingMetric];
   const period = state.activeBuildingPeriod;
   const codes = selectedBuildingCodes();
-  const periodLabel = period === "yearly" ? "Yearly" : period === "monthly" ? "Monthly" : "Weekly";
-  const spanLabel = period === "yearly" ? "Year to date" : period === "monthly" ? "Month to date" : "Last 7 complete days";
+  const periodLabel = period === "yearly" ? "Yearly" : "Monthly";
+  const activeData = buildingPerformanceModel[codes[0]]?.[state.activeBuildingMetric];
+  const chosenMonth = activeData?.monthlyMonth;
+  const monthLabel = chosenMonth ? formatBuildingChartLabel(chosenMonth, "yearly", true) : "No reporting month";
+  const spanLabel = period === "yearly" ? "Year to date" : monthLabel;
   const labelKey = `${period}Labels`;
   const selectedSeries = codes
     .map((code) => {
       const model = buildingPerformanceModel[code];
       const metricData = model?.[state.activeBuildingMetric];
-      return { code, model, values: metricData?.[period], labels: metricData?.[labelKey], sourceStart: metricData?.sourceStart };
+      const month = metricData?.monthProfiles?.[chosenMonth];
+      return { code, model, values: period === "monthly" ? month?.values : metricData?.[period], labels: period === "monthly" ? month?.labels : metricData?.[labelKey], sourceStart: metricData?.sourceStart, latest: metricData?.latest };
     })
     .filter((item) => Array.isArray(item.values));
   const series = selectedSeries.filter((item) => item.values.some((value) => Number.isFinite(value)));
@@ -2868,7 +3015,9 @@ function renderBuildingAnalytics() {
   const chartRawMax = chartValues.length ? Math.max(...chartValues) : 0;
   const chartDivisor = metric.unit === "kWh" && chartRawMax >= 1000 ? 1000 : 1;
   const chartUnit = chartDivisor === 1000 ? "MWh" : metric.unit;
-  const coverageNote = period === "yearly" && sourceStart ? ` · API coverage from ${formatTimestamp(sourceStart).split(",")[0]}` : "";
+  const sourceEnd = selectedSeries.map(item => item.latest).filter(Boolean).sort().at(-1);
+  const coverageNote = period === "yearly" && sourceStart ? ` · reported ${formatTimestamp(sourceStart).split(",")[0]}–${formatTimestamp(sourceEnd).split(",")[0]}`
+    : period === "monthly" && activeData?.monthProfiles?.[chosenMonth] ? ` · ${activeData.monthProfiles[chosenMonth].reportedDays}/${labels.length} days reported${activeData.monthProfiles[chosenMonth].partialDays ? " · partial daily totals" : ""}` : "";
 
   els.buildingChartSubtitle.textContent = `${spanLabel} · ${period === "yearly" ? "monthly" : "daily"} totals · ${chartUnit}${coverageNote} · hover to inspect`;
   els.buildingChartLegend.innerHTML = [
@@ -2876,17 +3025,20 @@ function renderBuildingAnalytics() {
     ...unavailable.map((code) => `<span class="unavailable" style="--series:#9aa7b3"><b>${code}</b><small>No reported data</small></span>`),
   ].join("");
   els.buildingChartKpis.innerHTML = `
-    <div><span>Portfolio energy</span><strong>${series.length ? formatEnergyCompact(periodTotal) : "--"}</strong><small>${periodLabel.toLowerCase()} selected total</small></div>
+    <div><span>Reported energy</span><strong>${series.length ? formatEnergyCompact(periodTotal) : "--"}</strong><small>${periodLabel.toLowerCase()} selected total</small></div>
     <div><span>${period === "yearly" ? "Monthly" : "Daily"} average</span><strong>${Number.isFinite(averageValue) ? formatEnergyCompact(averageValue) : "--"}</strong><small>available reporting periods</small></div>
     <div><span>Peak ${period === "yearly" ? "month" : "day"}</span><strong>${Number.isFinite(peakValue) ? formatEnergyCompact(peakValue) : "--"}</strong><small>${peakIndex >= 0 ? formatBuildingChartLabel(labels[peakIndex], period, true) : "No reported data"}</small></div>
     <div><span>Series available</span><strong>${series.length} / ${codes.length}</strong><small>${unavailable.length ? `${unavailable.join(", ")} unavailable` : "all selected streams"}</small></div>
   `;
 
-  if (!series.length) {
+  els.buildingChartKpis.hidden = !series.length;
+  if (!series.length && codes.some(code => state.buildingHistoryPending.has(`${code}:${state.activeBuildingMetric}`))) {
+    els.buildingPerformanceChart.innerHTML = '<div class="building-chart-empty" role="status"><strong>Loading reported data…</strong></div>';
+  } else if (!series.length) {
     els.buildingPerformanceChart.innerHTML = '<div class="building-chart-empty"><strong>No reported data</strong><p>The selected buildings do not expose usable values for this metric and period.</p></div>';
   } else {
-    const width = 1120;
-    const height = 390;
+    const width = Math.max(560, Math.round(els.buildingPerformanceChart.clientWidth) - 28);
+    const height = 350;
     const plot = { left: 82, right: 26, top: 24, bottom: 62 };
     const plotWidth = width - plot.left - plot.right;
     const plotHeight = height - plot.top - plot.bottom;
@@ -2923,7 +3075,7 @@ function renderBuildingAnalytics() {
       });
       if (active.length) segments.push(active);
       const paths = segments.map((points) => `<polyline points="${points.join(" ")}"></polyline>`).join("");
-      const circles = pointCount <= 10 ? values.map((value, index) => Number.isFinite(value) ? `<circle cx="${xFor(index).toFixed(1)}" cy="${yFor(value).toFixed(1)}" r="3"></circle>` : "").join("") : "";
+      const circles = values.map((value, index) => Number.isFinite(value) ? `<circle cx="${xFor(index).toFixed(1)}" cy="${yFor(value).toFixed(1)}" r="2.5"></circle>` : "").join("");
       return `<g class="generated-series" style="--series:${model.color}">${paths}${circles}</g>`;
     }).join("");
     const bars = period !== "yearly" ? "" : series.map(({ code, model, values }, seriesIndex) => {
@@ -2943,7 +3095,7 @@ function renderBuildingAnalytics() {
       return `<rect class="building-chart-hit" data-building-chart-index="${index}" x="${start}" y="${plot.top}" width="${end - start}" height="${plotHeight}" tabindex="0" aria-label="Inspect ${formatBuildingChartLabel(labels[index], period, true)}"></rect>`;
     }).join("");
     els.buildingPerformanceChart.innerHTML = `
-      <div class="building-chart-frame">
+      <div class="building-chart-frame" style="aspect-ratio:${width}/${height}">
         <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${periodLabel} ${metric.label} comparison">
           <text class="generated-unit" x="${plot.left}" y="13">${chartUnit} per ${period === "yearly" ? "month" : "day"}</text>
           <g class="generated-grid">${grid}</g>
@@ -3899,12 +4051,10 @@ function applySearchFilter() {
     : null;
 
   const priorityFilter = ["==", ["get", "label_priority"], true];
-  const pvFilter = [">", ["to-number", ["get", "pv_metric"], 0], 0];
   const layerBaseFilters = {
     "priority-marker-halo": priorityFilter,
     "priority-marker-dot": priorityFilter,
     "priority-marker-label": priorityFilter,
-    "pv-markers": pvFilter,
   };
   const combineFilter = (baseFilter) => {
     if (baseFilter && searchFilter) return ["all", baseFilter, searchFilter];
@@ -3919,7 +4069,6 @@ function applySearchFilter() {
     "building-marker-dot",
     "building-marker-label",
     "building-name-label",
-    "pv-markers",
   ].forEach((layer) => {
     if (!state.map.getLayer(layer)) return;
     state.map.setFilter(layer, combineFilter(layerBaseFilters[layer]));
@@ -4043,8 +4192,8 @@ function addMapLayers() {
     "source-layer": mapboxEuiLayer.sourceLayer,
     filter: campusSourceFilter(),
     paint: {
-      "line-color": "#253744",
-      "line-opacity": 0.42,
+      "line-color": "#899ba7",
+      "line-opacity": 0.3,
       "line-width": 0.7,
     },
   });
@@ -4147,20 +4296,6 @@ function addMapLayers() {
     },
   });
   state.map.addLayer({
-    id: "pv-markers",
-    type: "circle",
-    source: "building-points",
-    minzoom: 15.5,
-    filter: [">", ["to-number", ["get", "pv_metric"], 0], 0],
-    paint: {
-      "circle-color": "#ef7c00",
-      "circle-radius": ["interpolate", ["linear"], ["to-number", ["get", "pv_metric"], 0], 0, 4, 80, 16],
-      "circle-opacity": 0.72,
-      "circle-stroke-color": "#ffffff",
-      "circle-stroke-width": 1.5,
-    },
-  });
-  state.map.addLayer({
     id: "priority-marker-halo",
     type: "circle",
     source: "building-points",
@@ -4242,7 +4377,7 @@ function addMapLayers() {
     minzoom: 15.8,
     layout: {
       "text-field": ["get", "map_label"],
-      "text-size": ["interpolate", ["linear"], ["zoom"], 15.8, 8, 17, 10],
+      "text-size": ["interpolate", ["linear"], ["zoom"], 15.8, 11, 17, 13],
       "text-anchor": "center",
       "text-allow-overlap": false,
       "text-optional": true,
@@ -4251,8 +4386,8 @@ function addMapLayers() {
     paint: {
       "text-color": "#143c54",
       "text-halo-color": "#ffffff",
-      "text-halo-width": 1.8,
-      "text-opacity": ["step", ["zoom"], 0, 15.8, 1],
+      "text-halo-width": 2,
+      "text-opacity": ["interpolate", ["linear"], ["zoom"], 15.8, 0, 16.15, 1],
     },
   });
   state.map.addLayer({
@@ -4277,6 +4412,44 @@ function addMapLayers() {
       "text-opacity": ["step", ["zoom"], 0, 17.35, 1],
     },
   });
+
+  // Cross-fade the overview regions into individual building labels.
+  ["region-area-fill", "region-area-outline"].forEach((id) => state.map.setLayerZoomRange(id, 0, 16.25));
+  state.map.setPaintProperty("region-area-fill", "fill-opacity", ["interpolate", ["linear"], ["zoom"], 14, 0.07, 15.5, 0.09, 16.2, 0]);
+  state.map.setPaintProperty("region-area-outline", "line-opacity", ["interpolate", ["linear"], ["zoom"], 14, 0.25, 15.5, 0.4, 16.2, 0]);
+  const zoneFade = ["interpolate", ["linear"], ["zoom"], 15.55, 1, 15.95, 0];
+  ["zone-marker-outer", "zone-marker-middle", "zone-marker-halo", "zone-marker-dot", "zone-count-label", "zone-label"].forEach((id) => {
+    state.map.setLayerZoomRange(id, 0, 16);
+    const isText = id === "zone-count-label" || id === "zone-label";
+    state.map.setPaintProperty(id, isText ? "text-opacity" : "circle-opacity", zoneFade);
+  });
+  state.map.setPaintProperty("zone-marker-outer", "circle-opacity", 0);
+  state.map.setPaintProperty("zone-marker-middle", "circle-opacity", ["interpolate", ["linear"], ["zoom"], 15.55, 0.1, 15.95, 0]);
+  state.map.setPaintProperty("zone-marker-halo", "circle-stroke-opacity", zoneFade);
+  // Individual labels enter with the close-up layer, after district counts fade.
+  state.map.setPaintProperty("priority-marker-label", "text-opacity", 0);
+
+  state.map.on("mousemove", (event) => {
+    if (state.activeTab !== "overview" || state.mapSelectedSourceId || state.map.getZoom() < 15.8) return;
+    const hit = state.map.queryRenderedFeatures(event.point, { layers: ["building-marker-label", "buildings-extrusion", "buildings-fill"] })
+      .find((item) => focusBuildingBySourceId.has(item.properties.source_id));
+    const sourceId = hit?.properties.source_id || null;
+    if (sourceId === state.mapHoveredSourceId) return;
+    state.mapHoveredSourceId = sourceId;
+    state.map.getCanvas().style.cursor = sourceId ? "pointer" : "";
+    updateMapBuildingHighlight();
+    const feature = sourceId && displayFeatureBySourceId(sourceId);
+    if (feature) showMapBuildingCard(feature, false, event.lngLat);
+    else state.mapBuildingPopup?.remove();
+  });
+  const clearHover = () => {
+    if (state.mapSelectedSourceId) return;
+    state.mapHoveredSourceId = null;
+    state.mapBuildingPopup?.remove();
+    updateMapBuildingHighlight();
+  };
+  state.map.getCanvas().addEventListener("mouseleave", clearHover);
+  state.map.on("movestart", clearHover);
 
   state.map.on("mouseenter", "buildings-fill", () => {
     state.map.getCanvas().style.cursor = "pointer";
@@ -4360,16 +4533,25 @@ function addMapLayers() {
     if (markerFeature) {
       const sourceFeature =
         state.data.features.find((item) => item.properties.id === markerFeature.properties.id) || markerFeature;
-      selectBuilding(sourceFeature);
+      const display = displayFeatureBySourceId(sourceFeature.properties.source_id) || sourceFeature;
+      showMapBuildingCard(display, true, event.lngLat);
+      state.mapSelectedSourceId = display.properties.source_id;
+      state.mapHoveredSourceId = null;
+      updateMapBuildingHighlight();
       return;
     }
 
-    const mapboxFeature = state.map.queryRenderedFeatures(event.point, { layers: ["buildings-fill"] })[0];
+    const mapboxFeature = state.map.queryRenderedFeatures(event.point, { layers: ["buildings-extrusion", "buildings-fill"] })[0];
     if (mapboxFeature) {
-      const catalogFeature = catalogFeatureBySourceId(mapboxFeature.properties.source_id);
       const displayFeature = displayFeatureBySourceId(mapboxFeature.properties.source_id);
-      const mergedFeature = mergeCatalogAndMapbox(displayFeature || catalogFeature, mapboxFeature.properties);
-      if (mergedFeature) selectBuilding(mergedFeature);
+      if (displayFeature) {
+        showMapBuildingCard(displayFeature, true, event.lngLat);
+        state.mapSelectedSourceId = displayFeature.properties.source_id;
+        state.mapHoveredSourceId = null;
+        updateMapBuildingHighlight();
+      } else {
+        state.mapBuildingPopup?.remove();
+      }
       return;
     }
 
@@ -4377,6 +4559,8 @@ function addMapLayers() {
     if (regionFeature) {
       const region = focusRegions.find((item) => item.label === regionFeature.properties.label);
       if (region) zoomToRegionCodes(region.codes);
+    } else {
+      state.mapBuildingPopup?.remove();
     }
   };
   state.map.on("click", state.mapClickHandler);
@@ -4384,19 +4568,12 @@ function addMapLayers() {
 
 function renderLegend(metric) {
   els.legendTitle.textContent = colorModeConfig[metric].label;
-  const typeItems = [
-    ["#4b6edb", "Institute / academic"],
-    ["#b43b34", "Healthcare"],
-    ["#df7a2f", "Commercial / office"],
-    ["#3b8f65", "Residential"],
-    ["#2f9ab7", "Sports / civic"],
-    ["#7357b8", "Industrial / utility"],
-  ];
   if (metric === "type") {
     els.legendScale.classList.add("hidden");
     els.legendLabels.classList.add("hidden");
     els.legendItems.classList.remove("hidden");
-    els.legendItems.innerHTML = typeItems
+    els.legendTitle.textContent = "Campus districts";
+    els.legendItems.innerHTML = [...focusRegions.map((region) => [region.color, region.label]), ["#cbd4da", "Other campus buildings"], ["#ef7c00", "Selected building"]]
       .map(([color, label]) => `<span><i style="background:${color}"></i>${label}</span>`)
       .join("");
     return;
@@ -4440,6 +4617,7 @@ function updateMetric(metric) {
   state.map.setPaintProperty("buildings-fill", "fill-color", buildingColor);
   state.map.setPaintProperty("buildings-extrusion", "fill-extrusion-color", buildingColor);
   state.map.setPaintProperty("buildings-extrusion", "fill-extrusion-height", ["max", ["to-number", ["get", "height_m"], 6], 4]);
+  updateMapBuildingHighlight();
 }
 
 function fitCampus() {
@@ -4467,6 +4645,424 @@ function fitCampus() {
       });
     }
   });
+}
+
+function nemsSeries(record, label) {
+  const series = record?.datasets?.find((item) => item.label === label);
+  return Array.isArray(series?.data)
+    ? series.data.map((value) => Number(value)).map((value) => (Number.isFinite(value) ? value : 0))
+    : [];
+}
+
+function nemsPolyline(values, xFor, yFor, start = 0, end = values.length - 1) {
+  return values
+    .slice(start, end + 1)
+    .map((value, offset) => `${xFor(start + offset).toFixed(1)},${yFor(value).toFixed(1)}`)
+    .join(" ");
+}
+
+function nemsAreaPath(values, xFor, yFor, baseline) {
+  if (!values.length) return "";
+  const points = values.map((value, index) => `L${xFor(index).toFixed(1)},${yFor(value).toFixed(1)}`).join(" ");
+  return `M${xFor(0).toFixed(1)},${baseline.toFixed(1)} ${points} L${xFor(values.length - 1).toFixed(1)},${baseline.toFixed(1)} Z`;
+}
+
+function nemsBandPath(lower, upper, xFor, lowerY, upperY) {
+  if (!lower.length || lower.length !== upper.length) return "";
+  const top = upper.map((value, index) => `${index ? "L" : "M"}${xFor(index).toFixed(1)},${upperY(value).toFixed(1)}`).join(" ");
+  const bottom = lower.slice().reverse().map((value, reverseIndex) => {
+    const index = lower.length - 1 - reverseIndex;
+    return `L${xFor(index).toFixed(1)},${lowerY(value).toFixed(1)}`;
+  }).join(" ");
+  return `${top} ${bottom} Z`;
+}
+
+function nemsMetricColor(metric, index) {
+  const colorsByClass = {
+    "color-usep": "#187c70",
+    "color-demand": "#386fa4",
+    "color-solar": "#c66f00",
+    "color-bvp": "#7c5cc4",
+  };
+  return colorsByClass[metric?.textcolor] || ["#187c70", "#386fa4", "#c66f00", "#7c5cc4"][index % 4];
+}
+
+function renderNemsMetrics(record, product) {
+  const currentMetrics = Array.isArray(record.current) ? record.current : [];
+  const html = currentMetrics.map((metric, index) => {
+    const label = product.metricLabels?.[index] || metric.label || `Metric ${index + 1}`;
+    const color = nemsMetricColor(metric, index);
+    const symbol = metric.symbol || "";
+    const value = metric.value ?? "--";
+    const denom = String(metric.denom || "");
+    const help = label === "VCP"
+      ? "This reflects the vesting contract price for the current tariff quarter."
+      : `This reflects ${label.toLowerCase()} for the selected NEMS data product.`;
+    return `<div class="nems-current-metric" style="--metric-color:${color}"><div class="nems-metric-label" title="${escapeHtml(help)}"><i aria-hidden="true"></i>${escapeHtml(label)}</div><div class="nems-metric-value">${escapeHtml(symbol)}${escapeHtml(value)}</div><small class="nems-metric-unit">${escapeHtml(denom)}</small></div>`;
+  }).join("");
+  return `<div class="nems-current-grid metrics-${Math.min(Math.max(currentMetrics.length, 1), 4)}" aria-label="Current Singapore market values">${html}</div>`;
+}
+
+function renderNemsMarket(record, product) {
+  if (!els.nemsMarketBody) return;
+  const labels = Array.isArray(record.labels) ? record.labels : [];
+  const usep = nemsSeries(record, "USEP");
+  const demand = nemsSeries(record, "Demand");
+  const solarTotal = nemsSeries(record, "Solar");
+  const vcp = nemsSeries(record, "VCP");
+  const pointCount = Math.min(labels.length, usep.length, demand.length, solarTotal.length, vcp.length);
+  if (!pointCount) throw new Error("The NEMS response did not include chart data.");
+
+  const series = {
+    usep: usep.slice(0, pointCount),
+    demand: demand.slice(0, pointCount),
+    solarTotal: solarTotal.slice(0, pointCount),
+    vcp: vcp.slice(0, pointCount),
+  };
+  const solar = series.solarTotal.map((value, index) => Math.max(0, value - series.demand[index]));
+  const hasForecast = Boolean(record.forecast);
+  const currentPeriod = hasForecast
+    ? Math.min(Math.max(Number.parseInt(String(record.forecast).split(",")[0], 10) || 1, 1), pointCount)
+    : pointCount;
+  const currentIndex = currentPeriod - 1;
+  const width = Math.max(640, Math.round(els.nemsMarketBody.clientWidth) - 28);
+  const height = 350;
+  const plot = { left: 76, right: 78, top: 24, bottom: 52 };
+  const plotWidth = width - plot.left - plot.right;
+  const baseline = height - plot.bottom;
+  const priceMax = Math.max(1000, Math.ceil(Math.max(...series.usep, ...series.vcp) * 1.12 / 500) * 500);
+  const demandFloor = Math.max(0, Math.floor(Math.min(...series.demand) * 0.96 / 500) * 500);
+  const demandCeil = Math.max(demandFloor + 1000, Math.ceil(Math.max(...series.solarTotal) * 1.04 / 500) * 500);
+  const xFor = (index) => plot.left + (index / Math.max(pointCount - 1, 1)) * plotWidth;
+  const priceY = (value) => plot.top + (1 - value / priceMax) * (baseline - plot.top);
+  const demandY = (value) => plot.top + (1 - (value - demandFloor) / (demandCeil - demandFloor)) * (baseline - plot.top);
+  const currentX = xFor(currentIndex);
+
+  const priceTicks = Array.from({ length: 5 }, (_, index) => priceMax * (1 - index / 4));
+  const demandTicks = Array.from({ length: 5 }, (_, index) => demandCeil - (demandCeil - demandFloor) * index / 4);
+  const grid = priceTicks.map((value, index) => {
+    const y = plot.top + index / 4 * (baseline - plot.top);
+    return `<line x1="${plot.left}" x2="${width - plot.right}" y1="${y}" y2="${y}"></line><text class="nems-axis-label" x="${plot.left - 14}" y="${y + 4}" text-anchor="end">${formatNumber(value, 0)}</text><text class="nems-axis-label" x="${width - plot.right + 14}" y="${y + 4}">${formatNumber(demandTicks[index], 0)}</text>`;
+  }).join("");
+  const xTickIndexes = pointCount > 100
+    ? Array.from({ length: 7 }, (_, index) => index * 48).filter((index) => index < pointCount)
+    : pointCount > 48
+      ? [0, 12, 24, 36, 48, 60, pointCount - 1]
+      : [0, 6, 12, 18, 24, 30, 36, 42, pointCount - 1];
+  const xTicks = xTickIndexes.map((index) => {
+    const label = String(labels[index] || "");
+    const tickLabel = pointCount > 100
+      ? label.slice(0, 6)
+      : pointCount > 48
+        ? `${label.slice(0, 6)}, ${label.match(/\d{2}:\d{2}/)?.[0] || ""}`
+        : label.match(/\d{2}:\d{2}/)?.[0] || label;
+    return `<text class="nems-axis-label" x="${xFor(index)}" y="${height - 20}" text-anchor="middle">${escapeHtml(tickLabel)}</text>`;
+  }).join("");
+  const currentEnd = Math.min(currentIndex + 1, pointCount - 1);
+  const hits = labels.map((label, index) => {
+    const start = index === 0 ? plot.left : (xFor(index - 1) + xFor(index)) / 2;
+    const end = index === pointCount - 1 ? width - plot.right : (xFor(index) + xFor(index + 1)) / 2;
+    return `<rect class="nems-chart-hit" data-nems-index="${index}" x="${start}" y="${plot.top}" width="${end - start}" height="${baseline - plot.top}" tabindex="0" aria-label="Inspect ${escapeHtml(label)}"></rect>`;
+  }).join("");
+
+  els.nemsMarketBody.innerHTML = `
+    ${renderNemsMetrics(record, product)}
+    <div class="nems-chart-frame" id="nemsChartFrame">
+      <svg class="nems-market-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(product.title)}">
+        <defs>
+          <linearGradient id="nemsUsepFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#187c70" stop-opacity=".13"/><stop offset="1" stop-color="#ffffff" stop-opacity=".12"/></linearGradient>
+          <linearGradient id="nemsDemandFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#386fa4" stop-opacity=".10"/><stop offset="1" stop-color="#ffffff" stop-opacity=".12"/></linearGradient>
+          <linearGradient id="nemsSolarFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c66f00" stop-opacity=".12"/><stop offset="1" stop-color="#ffffff" stop-opacity=".22"/></linearGradient>
+        </defs>
+        <g class="nems-grid">${grid}</g>
+        <text class="nems-axis-title" x="18" y="${(plot.top + baseline) / 2}" transform="rotate(-90 18 ${(plot.top + baseline) / 2})" text-anchor="middle">Price ($/MWh)</text>
+        <text class="nems-axis-title" x="${width - 17}" y="${(plot.top + baseline) / 2}" transform="rotate(90 ${width - 17} ${(plot.top + baseline) / 2})" text-anchor="middle">Demand (MW)</text>
+        <path class="nems-area nems-usep-area" d="${nemsAreaPath(series.usep, xFor, priceY, baseline)}"></path>
+        <path class="nems-area nems-demand-area" d="${nemsAreaPath(series.demand, xFor, demandY, baseline)}"></path>
+        <path class="nems-area nems-solar-area" d="${nemsBandPath(series.demand, series.solarTotal, xFor, demandY, demandY)}"></path>
+        <polyline class="nems-line nems-usep-line" points="${nemsPolyline(series.usep, xFor, priceY, 0, currentEnd)}"></polyline>
+        ${hasForecast ? `<polyline class="nems-line nems-usep-line future" points="${nemsPolyline(series.usep, xFor, priceY, currentIndex, pointCount - 1)}"></polyline>` : ""}
+        <polyline class="nems-line nems-demand-line" points="${nemsPolyline(series.demand, xFor, demandY, 0, currentEnd)}"></polyline>
+        ${hasForecast ? `<polyline class="nems-line nems-demand-line future" points="${nemsPolyline(series.demand, xFor, demandY, currentIndex, pointCount - 1)}"></polyline>` : ""}
+        <polyline class="nems-line nems-solar-line" points="${nemsPolyline(series.solarTotal, xFor, demandY, 0, currentEnd)}"></polyline>
+        ${hasForecast ? `<polyline class="nems-line nems-solar-line future" points="${nemsPolyline(series.solarTotal, xFor, demandY, currentIndex, pointCount - 1)}"></polyline>` : ""}
+        <polyline class="nems-line nems-vcp-line" points="${nemsPolyline(series.vcp, xFor, priceY)}"></polyline>
+        ${hasForecast ? `<line class="nems-current-line" x1="${currentX}" x2="${currentX}" y1="${plot.top}" y2="${baseline}"></line>` : ""}
+        <g>${xTicks}</g>
+        <line class="nems-hover-line" y1="${plot.top}" y2="${baseline}" hidden></line>
+        <g>${hits}</g>
+      </svg>
+      <div class="nems-chart-tooltip" role="status" hidden></div>
+    </div>
+    ${hasForecast ? '<div class="nems-state-legend" aria-label="Market data state"><span><i class="past"></i>Past</span><span><i class="current"></i>Current</span><span><i class="future"></i>Future</span></div>' : ""}
+    <div class="nems-chart-footer">${record.currentdate ? `<strong>Current period: ${escapeHtml(record.currentdate)}</strong>` : ""}<strong>Updated: ${escapeHtml(record.lastupdate || "--")}</strong></div>
+    <p class="nems-provisional-note">Real-time prices displayed are provisional.</p>
+  `;
+  bindNemsMarketInteraction({ labels: labels.slice(0, pointCount), series, solar, currentIndex, xFor, width, plot });
+}
+
+function renderNemsRange(record, product) {
+  if (!els.nemsMarketBody) return;
+  const labels = Array.isArray(record.labels) ? record.labels : [];
+  const minimum = nemsSeries(record, "Min");
+  const maximum = nemsSeries(record, "Max");
+  const averageValues = nemsSeries(record, "Average");
+  const pointCount = Math.min(labels.length, minimum.length, maximum.length, averageValues.length);
+  if (!pointCount) throw new Error("The NEMS response did not include daily range data.");
+  const series = {
+    minimum: minimum.slice(0, pointCount),
+    maximum: maximum.slice(0, pointCount),
+    average: averageValues.slice(0, pointCount),
+  };
+  const width = Math.max(640, Math.round(els.nemsMarketBody.clientWidth) - 28);
+  const height = 350;
+  const plot = { left: 76, right: 30, top: 24, bottom: 52 };
+  const plotWidth = width - plot.left - plot.right;
+  const baseline = height - plot.bottom;
+  const rawMax = Math.max(...series.maximum, ...series.average, 1) * 1.1;
+  const magnitude = 10 ** Math.floor(Math.log10(rawMax));
+  const step = magnitude >= 1000 ? magnitude / 2 : magnitude / 10;
+  const yMax = Math.ceil(rawMax / step) * step;
+  const xFor = (index) => plot.left + (index / Math.max(pointCount - 1, 1)) * plotWidth;
+  const yFor = (value) => plot.top + (1 - value / yMax) * (baseline - plot.top);
+  const averageColor = "#187c70";
+  const bandColor = "#187c70";
+  const grid = Array.from({ length: 6 }, (_, index) => {
+    const y = plot.top + index / 5 * (baseline - plot.top);
+    const value = yMax * (1 - index / 5);
+    return `<line x1="${plot.left}" x2="${width - plot.right}" y1="${y}" y2="${y}"></line><text class="nems-axis-label" x="${plot.left - 14}" y="${y + 4}" text-anchor="end">${formatNumber(value, 0)}</text>`;
+  }).join("");
+  const xTicks = labels.slice(0, pointCount).map((label, index) => `<text class="nems-axis-label" x="${xFor(index)}" y="${height - 20}" text-anchor="middle">${escapeHtml(label)}</text>`).join("");
+  const averagePoints = nemsPolyline(series.average, xFor, yFor);
+  const circles = series.average.map((value, index) => `<circle class="nems-range-point" cx="${xFor(index)}" cy="${yFor(value)}" r="3"></circle>`).join("");
+  const hits = labels.slice(0, pointCount).map((label, index) => {
+    const start = index === 0 ? plot.left : (xFor(index - 1) + xFor(index)) / 2;
+    const end = index === pointCount - 1 ? width - plot.right : (xFor(index) + xFor(index + 1)) / 2;
+    return `<rect class="nems-chart-hit" data-nems-range-index="${index}" x="${start}" y="${plot.top}" width="${end - start}" height="${baseline - plot.top}" tabindex="0" aria-label="Inspect ${escapeHtml(label)}"></rect>`;
+  }).join("");
+  els.nemsMarketBody.innerHTML = `
+    ${renderNemsMetrics(record, product)}
+    <div class="nems-chart-frame" id="nemsChartFrame">
+      <svg class="nems-market-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(product.title)}">
+        <g class="nems-grid">${grid}</g>
+        <text class="nems-axis-title" x="18" y="${(plot.top + baseline) / 2}" transform="rotate(-90 18 ${(plot.top + baseline) / 2})" text-anchor="middle">${escapeHtml(product.axisTitle)}</text>
+        <path class="nems-range-band" style="--range-band:${bandColor}" d="${nemsBandPath(series.minimum, series.maximum, xFor, yFor, yFor)}"></path>
+        <polyline class="nems-range-average" style="--range-average:${averageColor}" points="${averagePoints}"></polyline>
+        <g style="--range-average:${averageColor}">${circles}</g>
+        <g>${xTicks}</g>
+        <line class="nems-hover-line" y1="${plot.top}" y2="${baseline}" hidden></line>
+        <g>${hits}</g>
+      </svg>
+      <div class="nems-chart-tooltip" role="status" hidden></div>
+    </div>
+    <div class="nems-range-legend"><span><i class="average" style="--range-average:${averageColor}"></i>Average</span><span><i class="range" style="--range-band:${bandColor}"></i>Min/Max</span></div>
+    <div class="nems-chart-footer"><strong>Updated: ${escapeHtml(record.lastupdate || "--")}</strong></div>
+    <p class="nems-provisional-note">EMC / NEMS market information · values may be revised.</p>
+  `;
+  bindNemsRangeInteraction({ labels: labels.slice(0, pointCount), series, xFor, width });
+}
+
+function bindNemsRangeInteraction({ labels, series, xFor, width }) {
+  const frame = document.getElementById("nemsChartFrame");
+  const hoverLine = frame?.querySelector(".nems-hover-line");
+  const tooltip = frame?.querySelector(".nems-chart-tooltip");
+  const hits = frame?.querySelectorAll("[data-nems-range-index]") || [];
+  if (!frame || !hoverLine || !tooltip) return;
+  const show = (index) => {
+    const safeIndex = Math.min(Math.max(index, 0), labels.length - 1);
+    const x = xFor(safeIndex);
+    hoverLine.setAttribute("x1", x);
+    hoverLine.setAttribute("x2", x);
+    hoverLine.hidden = false;
+    tooltip.hidden = false;
+    tooltip.style.left = `${Math.min(Math.max(x / width * 100, 12), 86)}%`;
+    tooltip.style.top = "37%";
+    tooltip.innerHTML = `<strong>${escapeHtml(labels[safeIndex])}</strong><span>Minimum: ${formatNumber(series.minimum[safeIndex], 2)}</span><span>Maximum: ${formatNumber(series.maximum[safeIndex], 2)}</span><span>Average: ${formatNumber(series.average[safeIndex], 2)}</span>`;
+  };
+  hits.forEach((hit) => {
+    const index = Number(hit.dataset.nemsRangeIndex);
+    hit.addEventListener("pointerenter", () => show(index));
+    hit.addEventListener("focus", () => show(index));
+  });
+  const hide = () => { tooltip.hidden = true; hoverLine.hidden = true; };
+  frame.addEventListener("pointerleave", hide);
+  frame.addEventListener("focusout", hide);
+}
+
+function renderNemsTable(record, chartRecord) {
+  if (!els.nemsMarketBody) return;
+  const headers = Array.isArray(record.labels) ? record.labels : [];
+  const rows = Array.isArray(record.datasets) ? record.datasets : [];
+  const headerHtml = headers.map((header) => `<th>${escapeHtml(String(header).replace(/<br\s*\/?\s*>/gi, " "))}</th>`).join("");
+  const bodyHtml = rows.map((row) => `<tr class="nems-table-${escapeHtml(row.tag || "past")}">${(row.columns || []).map((value) => `<td>${escapeHtml(value)}</td>`).join("")}</tr>`).join("");
+  els.nemsMarketBody.innerHTML = `
+    ${renderNemsMetrics(chartRecord, nemsMarketProducts[state.activeNemsProduct])}
+    <div class="nems-table-scroll" tabindex="0">
+      <table class="nems-market-table"><thead><tr>${headerHtml}</tr></thead><tbody>${bodyHtml}</tbody></table>
+    </div>
+    <div class="nems-table-state-key"><span><i class="past"></i>Past</span><span><i class="current"></i>Current</span><span><i class="future"></i>Future</span></div>
+    <div class="nems-chart-footer"><strong>Updated: ${escapeHtml(chartRecord.lastupdate || "--")}</strong></div>
+    <p class="nems-provisional-note">Real-time prices displayed are provisional.</p>
+  `;
+  const scroller = els.nemsMarketBody.querySelector(".nems-table-scroll");
+  const currentRow = els.nemsMarketBody.querySelector(".nems-table-current");
+  if (scroller && currentRow) {
+    scroller.scrollTop = Math.max(0, currentRow.offsetTop - scroller.clientHeight / 2);
+  }
+}
+
+function bindNemsMarketInteraction({ labels, series, solar, currentIndex, xFor, width, plot }) {
+  const frame = document.getElementById("nemsChartFrame");
+  const hoverLine = frame?.querySelector(".nems-hover-line");
+  const tooltip = frame?.querySelector(".nems-chart-tooltip");
+  const hits = frame?.querySelectorAll("[data-nems-index]") || [];
+  if (!frame || !hoverLine || !tooltip) return;
+  const show = (index) => {
+    const safeIndex = Math.min(Math.max(index, 0), labels.length - 1);
+    const xPercent = xFor(safeIndex) / width * 100;
+    hoverLine.setAttribute("x1", xFor(safeIndex));
+    hoverLine.setAttribute("x2", xFor(safeIndex));
+    hoverLine.hidden = false;
+    tooltip.hidden = false;
+    tooltip.style.left = `${Math.min(Math.max(xPercent, 12), 82)}%`;
+    tooltip.style.top = safeIndex > currentIndex ? "46%" : "34%";
+    tooltip.innerHTML = `<strong>${escapeHtml(labels[safeIndex])}</strong><span><i style="--tip:#187c70"></i>USEP: ${formatNumber(series.usep[safeIndex], 2)}</span><span><i style="--tip:#386fa4"></i>Demand: ${formatNumber(series.demand[safeIndex], 0)}</span><span><i style="--tip:#c66f00"></i>Solar: ${formatNumber(solar[safeIndex], 0)}</span><span><i style="--tip:#7c5cc4"></i>VCP: ${formatNumber(series.vcp[safeIndex], 2)}</span>`;
+  };
+  hits.forEach((hit) => {
+    const index = Number(hit.dataset.nemsIndex);
+    hit.addEventListener("pointerenter", () => show(index));
+    hit.addEventListener("focus", () => show(index));
+  });
+  const hide = () => { tooltip.hidden = true; hoverLine.hidden = true; };
+  frame.addEventListener("pointerleave", hide);
+  frame.addEventListener("focusout", hide);
+}
+
+function updateNemsSourceStatus(status, text) {
+  if (!els.nemsSourceStatus) return;
+  els.nemsSourceStatus.innerHTML = `<span class="status-dot ${status}"></span>${escapeHtml(text)}`;
+}
+
+function setNemsView(view) {
+  const product = nemsMarketProducts[state.activeNemsProduct] || nemsMarketProducts["10"];
+  state.activeNemsView = product.table && view === "table" ? "table" : "chart";
+  els.nemsViewButtons.forEach((button) => {
+    const active = button.dataset.nemsView === state.activeNemsView;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  if (els.nemsViewToggle) els.nemsViewToggle.hidden = !product.table;
+}
+
+function renderActiveNemsChart(record) {
+  const product = nemsMarketProducts[state.activeNemsProduct] || nemsMarketProducts["10"];
+  if (product.kind === "range") renderNemsRange(record, product);
+  else renderNemsMarket(record, product);
+}
+
+async function loadNemsTable() {
+  const productValue = state.activeNemsProduct;
+  const product = nemsMarketProducts[productValue] || nemsMarketProducts["10"];
+  if (!product.table) {
+    setNemsView("chart");
+    renderActiveNemsChart(state.nemsProductCache.get(productValue));
+    return;
+  }
+  const chartRecord = state.nemsProductCache.get(productValue);
+  const cached = state.nemsTableCache.get(productValue);
+  if (cached) {
+    renderNemsTable(cached, chartRecord);
+    return;
+  }
+  els.nemsMarketBody.innerHTML = '<div class="nems-loading-state"><span class="status-dot loading"></span>Loading the NEMS market table…</div>';
+  const separator = nemsMarketConfig.tableEndpoint.includes("?") ? "&" : "?";
+  const response = await fetch(`${nemsMarketConfig.tableEndpoint}${separator}value=${productValue}&t=${Date.now()}`, { cache: "no-store" });
+  if (!response.ok) throw new Error(`NEMS table endpoint returned HTTP ${response.status}.`);
+  const payload = await response.json();
+  const tableRecord = payload?.data?.data?.[0];
+  if (!payload?.success || !tableRecord) throw new Error(payload?.data?.message || "The NEMS table response was empty.");
+  state.nemsTableCache.set(productValue, tableRecord);
+  if (state.activeNemsProduct !== productValue || state.activeNemsView !== "table") return;
+  renderNemsTable(tableRecord, chartRecord);
+}
+
+async function loadNemsMarket({ force = false } = {}) {
+  if (!els.nemsMarketBody || state.nemsLoading) return;
+  const productValue = state.activeNemsProduct;
+  const product = nemsMarketProducts[productValue] || nemsMarketProducts["10"];
+  state.nemsLoading = true;
+  els.nemsRefresh?.setAttribute("disabled", "");
+  if (els.nemsMarketTitle) els.nemsMarketTitle.textContent = product.title;
+  if (els.nemsMarketSubtitle) els.nemsMarketSubtitle.textContent = product.subtitle;
+  if (els.nemsUpdateCadence) els.nemsUpdateCadence.textContent = product.cadence || "According to NEMS publication schedule";
+  setNemsView(state.activeNemsView);
+  updateNemsSourceStatus("loading", "Connecting to EMC / NEMS");
+  try {
+    let upstreamStale = false;
+    let record = !force ? state.nemsProductCache.get(productValue) : null;
+    if (!record) {
+      const separator = nemsMarketConfig.endpoint.includes("?") ? "&" : "?";
+      const response = await fetch(`${nemsMarketConfig.endpoint}${separator}value=${productValue}&t=${Date.now()}`, { cache: "no-store" });
+      if (!response.ok) throw new Error(`NEMS endpoint returned HTTP ${response.status}.`);
+      upstreamStale = response.headers.get("X-NEMS-Data-Stale") === "true";
+      const payload = await response.json();
+      record = payload?.data?.data?.[0];
+      if (!payload?.success || !record) throw new Error(payload?.data?.message || "The NEMS response was empty.");
+      state.nemsProductCache.set(productValue, record);
+      if (force) state.nemsTableCache.delete(productValue);
+    }
+    if (state.activeNemsProduct !== productValue) return;
+    state.nemsMarketData = record;
+    if (state.activeNemsView === "table" && product.table) await loadNemsTable();
+    else renderActiveNemsChart(record);
+    if (state.activeNemsProduct !== productValue) return;
+    updateNemsSourceStatus(
+      upstreamStale ? "partial" : "live",
+      upstreamStale ? `NEMS interruption · cached ${record.lastupdate || "data"}` : `NEMS · updated ${record.lastupdate || "now"}`,
+    );
+  } catch (error) {
+    console.error("NEMS market data unavailable", error);
+    if (state.activeNemsProduct !== productValue) return;
+    updateNemsSourceStatus("partial", "NEMS feed unavailable");
+    const fallback = state.nemsProductCache.get(productValue);
+    if (fallback) renderActiveNemsChart(fallback);
+    else {
+      els.nemsMarketBody.innerHTML = `<div class="nems-error-state"><strong>Market data is unavailable.</strong><span>${escapeHtml(error.message || "Could not reach the EMC / NEMS feed.")}</span><button type="button" data-nems-retry>Try again</button></div>`;
+      els.nemsMarketBody.querySelector("[data-nems-retry]")?.addEventListener("click", () => loadNemsMarket({ force: true }));
+    }
+  } finally {
+    state.nemsLoading = false;
+    els.nemsRefresh?.removeAttribute("disabled");
+    if (state.activeNemsProduct !== productValue) loadNemsMarket();
+  }
+}
+
+async function selectNemsProduct(value) {
+  if (!nemsMarketProducts[value]) return;
+  state.activeNemsProduct = value;
+  state.activeNemsView = "chart";
+  if (els.nemsProductSelect) els.nemsProductSelect.value = value;
+  els.nemsMarketBody.innerHTML = '<div class="nems-loading-state"><span class="status-dot loading"></span>Loading the selected NEMS data product…</div>';
+  await loadNemsMarket();
+}
+
+function scheduleNemsMarketRefresh() {
+  if (!els.nemsMarketBody) return;
+  window.clearTimeout(state.nemsRefreshTimer);
+  const now = new Date();
+  const next = new Date(now);
+  if (now.getMinutes() < 2) next.setMinutes(2, 15, 0);
+  else if (now.getMinutes() < 32) next.setMinutes(32, 15, 0);
+  else {
+    next.setHours(now.getHours() + 1);
+    next.setMinutes(2, 15, 0);
+  }
+  const minimumDelay = Math.max(nemsMarketConfig.refreshMs, 300_000);
+  const delay = Math.max(minimumDelay, next.getTime() - now.getTime());
+  state.nemsRefreshTimer = window.setTimeout(async () => {
+    await loadNemsMarket({ force: true });
+    scheduleNemsMarketRefresh();
+  }, delay);
 }
 
 function renderMarketHeatmap() {
@@ -4593,13 +5189,16 @@ function weatherPeriodLabel(period) {
 
 function weatherAxisLabel(date, period, detailed = false) {
   if (!(date instanceof Date)) return "--";
+  if (period === "yearly") {
+    return new Intl.DateTimeFormat("en-SG", { month: "short", ...(detailed ? { year: "numeric" } : {}), timeZone: "Asia/Singapore" }).format(date);
+  }
   if (period === "24h") {
     return new Intl.DateTimeFormat("en-SG", { hour: "2-digit", minute: detailed ? "2-digit" : undefined, hour12: false, timeZone: "Asia/Singapore" }).format(date);
   }
   return new Intl.DateTimeFormat("en-SG", {
     day: "2-digit",
     month: "short",
-    ...(detailed ? { hour: "2-digit", minute: "2-digit", hour12: false } : {}),
+    ...(detailed && period !== "30d" ? { hour: "2-digit", minute: "2-digit", hour12: false } : {}),
     timeZone: "Asia/Singapore",
   }).format(date);
 }
@@ -4617,9 +5216,20 @@ function aggregateDailyWeather(rows) {
     tempC: average(group.map((row) => row.tempC)),
     humidityPct: average(group.map((row) => row.humidityPct)),
     wetBulbC: average(group.map((row) => row.wetBulbC)),
-    windDirection: average(group.map((row) => row.windDirection)),
+    windDirection: circularDirectionMean(group.map((row) => row.windDirection)),
     weatherCode: group[Math.floor(group.length / 2)].weatherCode,
   }));
+}
+
+function circularDirectionMean(values) {
+  const valid = values.filter(Number.isFinite);
+  if (!valid.length) return null;
+  const vectors = valid.reduce((sum, value) => {
+    const radians = (((value % 360) + 360) % 360) * Math.PI / 180;
+    return { x: sum.x + Math.cos(radians), y: sum.y + Math.sin(radians) };
+  }, { x: 0, y: 0 });
+  if (Math.hypot(vectors.x, vectors.y) < 1e-9) return null;
+  return ((Math.atan2(vectors.y, vectors.x) * 180 / Math.PI) + 360) % 360;
 }
 
 function weatherRowsForPeriod(data, period = state.activeWeatherPeriod) {
@@ -4629,6 +5239,109 @@ function weatherRowsForPeriod(data, period = state.activeWeatherPeriod) {
   if (period === "30d") return aggregateDailyWeather(filtered).slice(-30);
   if (period === "7d") return filtered.filter((_, index) => index % 3 === 0 || index === filtered.length - 1);
   return filtered;
+}
+
+async function loadWeatherYear() {
+  if (state.weatherYearPromise) return state.weatherYearPromise;
+  state.weatherYearError = "";
+  state.weatherYearPromise = (async () => {
+    const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Singapore", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+    const year = today.slice(0, 4);
+    // ERA5 archives have a five-day delay; exclude incomplete days.
+    const end = new Date(`${today}T00:00:00Z`);
+    end.setUTCDate(end.getUTCDate() - 6);
+    const endDate = end.toISOString().slice(0, 10);
+    if (endDate < `${year}-01-01`) throw new Error("This year's historical data is not published yet.");
+    const params = new URLSearchParams({
+      latitude: String(weatherDashboardConfig.latitude), longitude: String(weatherDashboardConfig.longitude),
+      timezone: weatherDashboardConfig.timezone, start_date: `${year}-01-01`, end_date: endDate,
+      daily: "temperature_2m_mean,relative_humidity_2m_mean,wet_bulb_temperature_2m_mean,wind_direction_10m_dominant", models: "era5",
+    });
+    const response = await fetch(`${weatherDashboardConfig.archiveUrl}?${params}`, { signal: AbortSignal.timeout(30000) });
+    if (!response.ok) throw new Error(`Historical weather returned HTTP ${response.status}.`);
+    const payload = await response.json();
+    const groups = new Map();
+    let lastDate = "";
+    (payload.daily?.time || []).forEach((date, index) => {
+      const tempC = payload.daily.temperature_2m_mean?.[index];
+      const humidityPct = payload.daily.relative_humidity_2m_mean?.[index];
+      const wetBulbC = payload.daily.wet_bulb_temperature_2m_mean?.[index];
+      const windDirection = payload.daily.wind_direction_10m_dominant?.[index];
+      if (!Number.isFinite(tempC) || !Number.isFinite(humidityPct)) return;
+      const key = date.slice(0, 7);
+      const group = groups.get(key) || [];
+      group.push({ tempC, humidityPct, wetBulbC, windDirection });
+      groups.set(key, group);
+      lastDate = date;
+    });
+    const rows = [...groups.entries()].map(([month, days]) => ({
+      time: singaporeWeatherDate(`${month}-01T12:00`),
+      tempC: average(days.map((day) => day.tempC)),
+      humidityPct: average(days.map((day) => day.humidityPct)),
+      wetBulbC: average(days.map((day) => day.wetBulbC).filter(Number.isFinite)),
+      windDirection: circularDirectionMean(days.map((day) => day.windDirection)),
+      sampleDays: days.length,
+      partial: days.length < new Date(Number(month.slice(0, 4)), Number(month.slice(5, 7)), 0).getDate(),
+    }));
+    if (!rows.length) throw new Error("No historical observations are available for this year.");
+    state.weatherYearData = { year, lastDate, rows };
+  })().catch((error) => {
+    state.weatherYearError = error.message || "Historical data is temporarily unavailable.";
+  }).finally(() => {
+    state.weatherYearPromise = null;
+    if (state.activeWeatherPeriod === "yearly") renderWeatherPeriodChart();
+  });
+  return state.weatherYearPromise;
+}
+
+function renderWeatherPeriodChart() {
+  if (window.NUSStationWeather.isActive()) return window.NUSStationWeather.render(state.activeWeatherPeriod);
+  const period = state.activeWeatherPeriod;
+  const name = period === "yearly" ? "Yearly" : period === "30d" ? "Monthly" : "Weekly";
+  els.weatherChartTitle.textContent = `Thermal conditions · ${name}`;
+  els.weatherHeatTitle.textContent = `Estimated WBGT · ${name}`;
+  els.weatherWindTitle.textContent = `Wind direction · ${name}`;
+  if (period === "yearly") {
+    const archive = state.weatherYearData;
+    const subtitle = archive
+      ? `Jan–${weatherAxisLabel(archive.rows.at(-1).time, period)} ${archive.year} · ${archive.rows.length} monthly averages · year to date`
+      : "Year to date · one point per month · loading historical data";
+    els.weatherChartSubtitle.textContent = subtitle;
+    els.weatherHeatSubtitle.textContent = subtitle;
+    els.weatherWindSubtitle.textContent = subtitle;
+    if (archive) {
+      renderWeatherThermalChart(archive.rows, period);
+      renderWeatherHeatChart(archive.rows, period);
+      renderWeatherWindChart(archive.rows, period);
+    }
+    else if (state.weatherYearError) {
+      const empty = `<div class="weather-empty"><strong>Historical weather unavailable</strong><span>${escapeHtml(state.weatherYearError)}</span></div>`;
+      els.weatherThermalChart.innerHTML = `${empty}<button type="button" class="nems-refresh weather-year-retry" data-weather-year-retry>Try again</button>`;
+      els.weatherHeatChart.innerHTML = empty;
+      els.weatherWindChart.innerHTML = empty;
+      els.weatherThermalChart.querySelector("[data-weather-year-retry]").addEventListener("click", () => {
+        loadWeatherYear();
+        renderWeatherPeriodChart();
+      });
+    } else {
+      [els.weatherThermalChart, els.weatherHeatChart, els.weatherWindChart].forEach((chart) => {
+        chart.innerHTML = '<div class="weather-loading">Loading this year’s historical weather…</div>';
+      });
+    }
+    return;
+  }
+  if (!state.weatherData) return;
+  const rows = weatherRowsForPeriod(state.weatherData);
+  const aggregation = period === "30d" ? `${rows.length} daily averages` : "one point every 3 hours";
+  const dateFormat = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Singapore" });
+  const dates = rows.length ? dateFormat.formatRange(rows[0].time, rows.at(-1).time) : "No data";
+  const subtitle = `${dates} · ${aggregation} · ${weatherPeriodLabel(period).toLowerCase()}`;
+  els.weatherChartSubtitle.textContent = subtitle;
+  els.weatherHeatSubtitle.textContent = subtitle;
+  els.weatherWindSubtitle.textContent = subtitle;
+  renderWeatherThermalChart(rows, period);
+  renderWeatherHeatChart(rows, period);
+  renderWeatherWindChart(rows, period);
 }
 
 function weatherDeltaText(current, previous, unit, digits = 1) {
@@ -4646,6 +5359,7 @@ function weatherHeatLevel(value) {
 }
 
 async function loadWeatherDashboard({ force = false } = {}) {
+  if (window.NUSStationWeather.isActive()) return window.NUSStationWeather.load(state.activeWeatherPeriod, force);
   if (state.weatherData && !force) {
     renderWeatherDashboard();
     return state.weatherData;
@@ -4696,9 +5410,10 @@ async function loadWeatherDashboard({ force = false } = {}) {
     return state.weatherData;
   })().catch((error) => {
     console.error(error);
+    if (window.NUSStationWeather.isActive()) return null;
     if (els.weatherSourceStatus) els.weatherSourceStatus.innerHTML = '<span class="status-dot error"></span>Weather source unavailable';
     if (els.weatherUpdated) els.weatherUpdated.textContent = "Retry on next visit";
-    [els.weatherThermalChart, els.weatherHeatChart, els.weatherForecast].forEach((element) => {
+    [els.weatherThermalChart, els.weatherHeatChart, els.weatherWindChart, els.weatherForecast].forEach((element) => {
       if (element) element.innerHTML = '<div class="weather-empty"><strong>Weather data unavailable</strong><span>The public source did not return a valid response.</span></div>';
     });
     return null;
@@ -4710,8 +5425,8 @@ async function loadWeatherDashboard({ force = false } = {}) {
 
 function renderWeatherThermalChart(rows, period) {
   if (!els.weatherThermalChart || !rows.length) return;
-  const width = 1100;
-  const height = 330;
+  const width = Math.max(460, els.weatherThermalChart.clientWidth - 20);
+  const height = Math.max(310, Math.min(430, width * 0.55));
   const plot = { left: 58, right: 62, top: 28, bottom: 45 };
   const plotWidth = width - plot.left - plot.right;
   const plotHeight = height - plot.top - plot.bottom;
@@ -4733,12 +5448,14 @@ function renderWeatherThermalChart(rows, period) {
     const humidity = humidityMax - ratio * (humidityMax - humidityMin);
     return `<line x1="${plot.left}" x2="${width - plot.right}" y1="${y}" y2="${y}"></line><text x="${plot.left - 12}" y="${y + 4}" text-anchor="end">${formatNumber(temp, 0)}°</text><text x="${width - plot.right + 12}" y="${y + 4}">${formatNumber(humidity, 0)}%</text>`;
   }).join("");
-  const tickIndexes = [...new Set(Array.from({ length: 6 }, (_, index) => Math.round(index * (rows.length - 1) / 5)) )];
+  const tickIndexes = period === "yearly"
+    ? rows.map((_, index) => index)
+    : [...new Set(Array.from({ length: 6 }, (_, index) => Math.round(index * (rows.length - 1) / 5)) )];
   const ticks = tickIndexes.map((index) => `<text x="${xFor(index)}" y="${height - 14}" text-anchor="middle">${weatherAxisLabel(rows[index].time, period)}</text>`).join("");
   const hits = rows.map((_, index) => {
     const start = index === 0 ? plot.left : (xFor(index - 1) + xFor(index)) / 2;
     const end = index === rows.length - 1 ? width - plot.right : (xFor(index) + xFor(index + 1)) / 2;
-    return `<rect class="weather-chart-hit" data-weather-index="${index}" x="${start}" y="${plot.top}" width="${Math.max(1, end - start)}" height="${plotHeight}" tabindex="0"></rect>`;
+    return `<rect class="weather-chart-hit" data-weather-index="${index}" x="${start}" y="${plot.top}" width="${Math.max(1, end - start)}" height="${plotHeight}" tabindex="0" aria-label="Inspect ${escapeHtml(weatherAxisLabel(rows[index].time, period, true))}"></rect>`;
   }).join("");
   els.weatherThermalChart.innerHTML = `
     <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Temperature and humidity time series">
@@ -4746,11 +5463,13 @@ function renderWeatherThermalChart(rows, period) {
       <g class="weather-chart-grid">${grid}</g><g class="weather-chart-axis">${ticks}</g>
       <polyline class="weather-series temperature" points="${tempPoints}"></polyline>
       <polyline class="weather-series humidity" points="${humidityPoints}"></polyline>
+      ${rows.map((row, index) => `<circle class="weather-mean-dot temperature" cx="${xFor(index)}" cy="${yTemp(row.tempC)}" r="3"></circle><circle class="weather-mean-dot humidity" cx="${xFor(index)}" cy="${yHumidity(row.humidityPct)}" r="3"></circle>`).join("")}
       <line class="weather-hover-line" y1="${plot.top}" y2="${height - plot.bottom}" hidden></line>
       <circle class="weather-hover-dot temperature" r="5" hidden></circle><circle class="weather-hover-dot humidity" r="5" hidden></circle>
       <g>${hits}</g>
     </svg>
     <div class="weather-chart-tooltip" role="status" hidden></div>
+    <p class="weather-chart-note">${period === "yearly" ? `Source: Open-Meteo / ERA5 historical estimates · through ${escapeHtml(state.weatherYearData.lastDate)}${rows.at(-1)?.partial ? " · latest month is partial" : ""}` : "Source: Open-Meteo · Singapore time (SGT)"}</p>
   `;
   bindWeatherThermalInteraction({ rows, period, width, xFor, yTemp, yHumidity });
 }
@@ -4768,8 +5487,8 @@ function bindWeatherThermalInteraction({ rows, period, width, xFor, yTemp, yHumi
     line.setAttribute("x1", x); line.setAttribute("x2", x); line.hidden = false;
     tempDot.setAttribute("cx", x); tempDot.setAttribute("cy", yTemp(row.tempC)); tempDot.hidden = false;
     humidityDot.setAttribute("cx", x); humidityDot.setAttribute("cy", yHumidity(row.humidityPct)); humidityDot.hidden = false;
-    const wbgt = estimatedWbgt(row.tempC, row.wetBulbC);
-    tooltip.innerHTML = `<header>${weatherAxisLabel(row.time, period, true)}</header><div><span><i class="temperature"></i>Temperature</span><strong>${formatNumber(row.tempC, 1)} °C</strong></div><div><span><i class="humidity"></i>Humidity</span><strong>${formatNumber(row.humidityPct, 0)} %RH</strong></div><small>Est. WBGT ${formatNumber(wbgt, 1)} °C</small>`;
+    const detail = period === "yearly" ? `Monthly average · ${row.sampleDays} ${row.sampleDays === 1 ? "day" : "days"}${row.partial ? " · partial month" : ""}` : period === "30d" ? "Daily average" : "3-hour sample";
+    tooltip.innerHTML = `<header>${weatherAxisLabel(row.time, period, true)}</header><div><span><i class="temperature"></i>Temperature</span><strong>${formatNumber(row.tempC, 1)} °C</strong></div><div><span><i class="humidity"></i>Humidity</span><strong>${formatNumber(row.humidityPct, 0)} %RH</strong></div><small>${detail}</small>`;
     tooltip.hidden = false;
     const pixelX = (x / width) * frame.clientWidth;
     tooltip.style.left = `${Math.max(112, Math.min(frame.clientWidth - 112, pixelX))}px`;
@@ -4786,58 +5505,85 @@ function bindWeatherThermalInteraction({ rows, period, width, xFor, yTemp, yHumi
 }
 
 function renderWeatherHeatChart(rows, period) {
-  if (!els.weatherHeatChart || !rows.length) return;
-  const values = rows.map((row) => estimatedWbgt(row.tempC, row.wetBulbC));
-  const width = 560;
-  const height = 205;
-  const plot = { left: 42, right: 18, top: 20, bottom: 36 };
-  const min = 23;
-  const max = Math.max(33, Math.ceil(Math.max(...values.filter(Number.isFinite)) + 1));
-  const xFor = (index) => plot.left + (index / Math.max(rows.length - 1, 1)) * (width - plot.left - plot.right);
-  const yFor = (value) => plot.top + (1 - (value - min) / (max - min)) * (height - plot.top - plot.bottom);
-  const points = values.map((value, index) => `${xFor(index).toFixed(1)},${yFor(value).toFixed(1)}`).join(" ");
-  const band = (low, high, className) => {
-    const top = yFor(Math.min(high, max));
-    const bottom = yFor(Math.max(low, min));
-    return `<rect class="${className}" x="${plot.left}" y="${top}" width="${width - plot.left - plot.right}" height="${Math.max(0, bottom - top)}"></rect>`;
-  };
-  const ticks = [24, 27, 30, 33].filter((value) => value <= max).map((value) => `<line x1="${plot.left}" x2="${width - plot.right}" y1="${yFor(value)}" y2="${yFor(value)}"></line><text x="${plot.left - 8}" y="${yFor(value) + 3}" text-anchor="end">${value}°</text>`).join("");
-  const current = values.at(-1);
-  const peak = Math.max(...values.filter(Number.isFinite));
-  els.weatherHeatChart.innerHTML = `
-    <div class="weather-heat-summary"><div><span>Current</span><strong>${formatNumber(current, 1)} °C</strong></div><div><span>Period peak</span><strong>${formatNumber(peak, 1)} °C</strong></div></div>
-    <div class="weather-heat-plot"><svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Estimated WBGT trend">
-      <g class="weather-risk-bands">${band(min, 27, "low")}${band(27, 30, "moderate")}${band(30, max, "high")}</g>
-      <g class="weather-heat-grid">${ticks}</g><polyline class="weather-heat-series" points="${points}"></polyline>
-      <circle class="weather-heat-current" cx="${xFor(values.length - 1)}" cy="${yFor(current)}" r="4"></circle>
-      <line class="weather-heat-hover-line" y1="${plot.top}" y2="${height - plot.bottom}" hidden></line><circle class="weather-heat-hover-dot" r="4" hidden></circle>
-    </svg><div class="weather-heat-tooltip" role="status" hidden></div></div>
-  `;
-  bindWeatherHeatInteraction({ rows, values, period, width, xFor, yFor });
+  renderWeatherSingleSeries(els.weatherHeatChart, rows, period, {
+    name: "Estimated WBGT", unit: "°C", className: "wbgt", digits: 1,
+    value: (row) => estimatedWbgt(row.tempC, row.wetBulbC),
+    describe: (value) => `${formatNumber(value, 1)} °C · ${weatherHeatLevel(value).label}`,
+  });
 }
 
-function bindWeatherHeatInteraction({ rows, values, period, width, xFor, yFor }) {
-  const frame = els.weatherHeatChart.querySelector(".weather-heat-plot");
-  const tooltip = frame?.querySelector(".weather-heat-tooltip");
-  const line = frame?.querySelector(".weather-heat-hover-line");
-  const dot = frame?.querySelector(".weather-heat-hover-dot");
-  if (!frame || !tooltip || !line || !dot) return;
+function renderWeatherWindChart(rows, period) {
+  renderWeatherSingleSeries(els.weatherWindChart, rows, period, {
+    name: "Wind direction", unit: "°", className: "wind", digits: 0, min: 0, max: 360,
+    value: (row) => Number.isFinite(row.windDirection) ? ((row.windDirection % 360) + 360) % 360 : null,
+    describe: (value) => `${formatNumber(value, 0)}° ${compassDirection(value)}`,
+  });
+}
+
+function renderWeatherSingleSeries(frame, rows, period, config) {
+  if (!frame || !rows.length) return;
+  const values = rows.map(config.value);
+  const finite = values.filter(Number.isFinite);
+  if (!finite.length) {
+    frame.innerHTML = '<div class="weather-empty"><strong>No reported data</strong><span>No usable values are available for this period.</span></div>';
+    return;
+  }
+  const width = Math.max(460, frame.clientWidth - 20);
+  const height = Math.max(290, Math.min(390, width * 0.48));
+  const plot = { left: 58, right: 28, top: 28, bottom: 45 };
+  const plotWidth = width - plot.left - plot.right;
+  const plotHeight = height - plot.top - plot.bottom;
+  const min = Number.isFinite(config.min) ? config.min : Math.floor(Math.min(...finite) - 1);
+  const max = Number.isFinite(config.max) ? config.max : Math.ceil(Math.max(...finite) + 1);
+  const xFor = (index) => plot.left + index / Math.max(rows.length - 1, 1) * plotWidth;
+  const yFor = (value) => plot.top + (1 - (value - min) / Math.max(max - min, 1)) * plotHeight;
+  const points = values.map((value, index) => Number.isFinite(value) ? `${xFor(index).toFixed(1)},${yFor(value).toFixed(1)}` : "").filter(Boolean).join(" ");
+  const grid = Array.from({ length: 5 }, (_, index) => {
+    const value = max - index / 4 * (max - min);
+    const y = yFor(value);
+    return `<line x1="${plot.left}" x2="${width - plot.right}" y1="${y}" y2="${y}"></line><text x="${plot.left - 12}" y="${y + 4}" text-anchor="end">${formatNumber(value, config.digits)}${config.unit}</text>`;
+  }).join("");
+  const tickIndexes = period === "yearly" ? rows.map((_, index) => index)
+    : [...new Set(Array.from({ length: 6 }, (_, index) => Math.round(index * (rows.length - 1) / 5)))];
+  const ticks = tickIndexes.map((index) => `<text x="${xFor(index)}" y="${height - 14}" text-anchor="middle">${weatherAxisLabel(rows[index].time, period)}</text>`).join("");
+  const hits = rows.map((row, index) => {
+    if (!Number.isFinite(values[index])) return "";
+    const start = index === 0 ? plot.left : (xFor(index - 1) + xFor(index)) / 2;
+    const end = index === rows.length - 1 ? width - plot.right : (xFor(index) + xFor(index + 1)) / 2;
+    return `<rect class="weather-chart-hit" data-weather-single-index="${index}" x="${start}" y="${plot.top}" width="${Math.max(1, end - start)}" height="${plotHeight}" tabindex="0" aria-label="Inspect ${escapeHtml(weatherAxisLabel(row.time, period, true))}"></rect>`;
+  }).join("");
+  const source = period === "yearly"
+    ? `Source: Open-Meteo / ERA5 historical estimates · through ${escapeHtml(state.weatherYearData.lastDate)}${rows.at(-1)?.partial ? " · latest month is partial" : ""}`
+    : "Source: Open-Meteo · Singapore time (SGT)";
+  frame.innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(config.name)} time series">
+    <text class="weather-axis-unit" x="${plot.left}" y="14">${escapeHtml(config.name)} ${escapeHtml(config.unit)}</text>
+    <g class="weather-chart-grid">${grid}</g><g class="weather-chart-axis">${ticks}</g>
+    <polyline class="weather-series ${config.className}" points="${points}"></polyline>
+    ${values.map((value, index) => Number.isFinite(value) ? `<circle class="weather-mean-dot ${config.className}" cx="${xFor(index)}" cy="${yFor(value)}" r="3"></circle>` : "").join("")}
+    <line class="weather-hover-line" y1="${plot.top}" y2="${height - plot.bottom}" hidden></line><circle class="weather-hover-dot ${config.className}" r="5" hidden></circle>
+    <g>${hits}</g></svg><div class="weather-chart-tooltip" role="status" hidden></div><p class="weather-chart-note">${source}</p>`;
+  const tooltip = frame.querySelector(".weather-chart-tooltip");
+  const line = frame.querySelector(".weather-hover-line");
+  const dot = frame.querySelector(".weather-hover-dot");
   const hide = () => { tooltip.hidden = true; line.hidden = true; dot.hidden = true; };
-  const show = (event) => {
-    const bounds = frame.getBoundingClientRect();
-    const ratio = Math.min(1, Math.max(0, (event.clientX - bounds.left) / Math.max(bounds.width, 1)));
-    const index = Math.round(ratio * (values.length - 1));
-    const value = values[index];
-    const x = xFor(index);
+  const show = (index) => {
+    const x = xFor(index), value = values[index];
     line.setAttribute("x1", x); line.setAttribute("x2", x); line.hidden = false;
     dot.setAttribute("cx", x); dot.setAttribute("cy", yFor(value)); dot.hidden = false;
-    const level = weatherHeatLevel(value);
-    tooltip.innerHTML = `<span>${weatherAxisLabel(rows[index].time, period, true)}</span><strong>${formatNumber(value, 1)} °C</strong><small>${level.label} heat stress</small>`;
+    const detail = period === "yearly" ? `Monthly average · ${rows[index].sampleDays} days${rows[index].partial ? " · partial month" : ""}` : period === "30d" ? "Daily average" : "3-hour sample";
+    tooltip.innerHTML = `<header>${weatherAxisLabel(rows[index].time, period, true)}</header><div><span><i class="${config.className}"></i>${escapeHtml(config.name)}</span><strong>${escapeHtml(config.describe(value))}</strong></div><small>${detail}</small>`;
     tooltip.hidden = false;
-    const pixelX = (x / width) * frame.clientWidth;
-    tooltip.style.left = `${Math.max(70, Math.min(frame.clientWidth - 70, pixelX))}px`;
+    const pixelX = x / width * frame.clientWidth;
+    tooltip.style.left = `${Math.max(112, Math.min(frame.clientWidth - 112, pixelX))}px`;
+    tooltip.classList.toggle("align-right", pixelX > frame.clientWidth * 0.78);
   };
-  frame.addEventListener("pointermove", show);
+  frame.querySelectorAll("[data-weather-single-index]").forEach((hit) => {
+    const index = Number(hit.dataset.weatherSingleIndex);
+    hit.addEventListener("pointerenter", () => show(index));
+    hit.addEventListener("pointermove", () => show(index));
+    hit.addEventListener("focus", () => show(index));
+    hit.addEventListener("blur", hide);
+  });
   frame.addEventListener("pointerleave", hide);
 }
 
@@ -4861,6 +5607,7 @@ function renderWeatherForecast(rows) {
 }
 
 function renderWeatherDashboard() {
+  if (window.NUSStationWeather.isActive()) return;
   const data = state.weatherData;
   if (!data) return;
   const current = data.current;
@@ -4876,35 +5623,33 @@ function renderWeatherDashboard() {
   els.weatherHeatStressMeta.textContent = `${heat.label} · estimated in shade`;
   els.weatherWind.textContent = `${formatNumber(current.windDirection, 0)}° ${compassDirection(current.windDirection)}`;
   els.weatherWindMeta.textContent = `Feels like ${formatNumber(current.apparentTempC, 1)} °C`;
-  els.weatherHeatStatus.textContent = heat.label;
-  els.weatherHeatStatus.className = `tag ${heat.className}`.trim();
-  const rows = weatherRowsForPeriod(data);
-  const aggregation = state.activeWeatherPeriod === "30d" ? "daily means" : state.activeWeatherPeriod === "7d" ? "3-hour samples" : "hourly samples";
-  els.weatherChartSubtitle.textContent = `${weatherPeriodLabel(state.activeWeatherPeriod)} · ${aggregation} · Open-Meteo`;
-  els.weatherHeatSubtitle.textContent = `${weatherPeriodLabel(state.activeWeatherPeriod)} · estimated WBGT in shade`;
-  renderWeatherThermalChart(rows, state.activeWeatherPeriod);
-  renderWeatherHeatChart(rows, state.activeWeatherPeriod);
-  renderWeatherForecast(data.forecast);
+  renderWeatherPeriodChart();
 }
 
 function setWeatherPeriod(period) {
-  state.activeWeatherPeriod = ["24h", "7d", "30d"].includes(period) ? period : "7d";
+  state.activeWeatherPeriod = ["7d", "30d", "yearly"].includes(period) ? period : "7d";
   els.weatherPeriodButtons.forEach((button) => {
     const active = button.dataset.weatherPeriod === state.activeWeatherPeriod;
     button.classList.toggle("active", active);
     button.setAttribute("aria-pressed", String(active));
   });
-  renderWeatherDashboard();
+  if (window.NUSStationWeather.isActive()) { window.NUSStationWeather.load(state.activeWeatherPeriod); return; }
+  if (state.activeWeatherPeriod === "yearly" && !state.weatherYearData) loadWeatherYear();
+  renderWeatherPeriodChart();
 }
 
 function bindControls() {
+  document.getElementById("weatherLocation").addEventListener("change", (event) => {
+    window.NUSStationWeather.select(event.target.value);
+    loadWeatherDashboard();
+    setWeatherPeriod(state.activeWeatherPeriod);
+  });
   els.tabButtons.forEach((button) => button.addEventListener("click", () => activateTab(button.dataset.tab)));
   els.weatherPeriodButtons.forEach((button) => button.addEventListener("click", () => setWeatherPeriod(button.dataset.weatherPeriod)));
-  document.querySelectorAll(".local-segmented").forEach((control) => {
-    control.addEventListener("click", (event) => {
-      const button = event.target.closest("button");
-      if (!button) return;
-      control.querySelectorAll("button").forEach((item) => item.classList.toggle("active", item === button));
+  els.dataHealthFilterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      state.activeDataHealthFilter = button.dataset.dataHealthFilter;
+      renderDataHealth();
     });
   });
   els.overviewBuildingPerformance?.addEventListener("click", (event) => {
@@ -4925,6 +5670,7 @@ function bindControls() {
         item.setAttribute("aria-pressed", String(active));
       });
       renderBuildingAnalytics();
+      loadBuildingPerformanceHistory();
     });
   });
   els.buildingMetricButtons.forEach((button) => {
@@ -4936,10 +5682,19 @@ function bindControls() {
         item.setAttribute("aria-pressed", String(active));
       });
       renderBuildingAnalytics();
+      loadBuildingPerformanceHistory();
     });
   });
   els.marketViewButtons.forEach((button) => button.addEventListener("click", () => setMarketView(button.dataset.marketView)));
   els.marketIntervalButtons.forEach((button) => button.addEventListener("click", () => renderMarketInterval(button.dataset.marketInterval)));
+  els.nemsRefresh?.addEventListener("click", () => loadNemsMarket({ force: true }));
+  els.nemsProductSelect?.addEventListener("change", (event) => selectNemsProduct(event.target.value));
+  els.nemsViewButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      setNemsView(button.dataset.nemsView);
+      loadNemsMarket();
+    });
+  });
   els.externalDataButtons.forEach((button) => {
     button.addEventListener("click", () => renderExternalDataPanel(button.dataset.external));
   });
@@ -4984,9 +5739,6 @@ function bindControls() {
       ],
       event.target.checked,
     );
-  });
-  els.togglePv.addEventListener("change", (event) => {
-    setLayerVisibility(["pv-markers"], event.target.checked);
   });
   els.toggleEuiLayer.addEventListener("change", (event) => {
     setLayerVisibility(["eui-context-fill", "eui-context-outline"], event.target.checked);
@@ -5146,10 +5898,11 @@ els.tokenForm.addEventListener("submit", (event) => {
 });
 
 bindControls();
+window.NUSStationWeather.select(document.getElementById("weatherLocation").value);
 renderMarketHeatmap();
 renderBuildingAnalytics();
-setMarketView(state.activeMarketView);
-renderMarketInterval(state.activeMarketInterval);
+loadNemsMarket();
+scheduleNemsMarketRefresh();
 setWeatherPeriod(state.activeWeatherPeriod);
 activateTab(state.activeTab);
 

@@ -3,47 +3,188 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>NUS Campus DT User Guide</title>
-    <link rel="stylesheet" href="styles.css" />
+    <meta name="description" content="A guide to NUS Campus Digital Twins: building energy, Singapore electricity prices, local weather and data coverage." />
+    <title>User Guide | NUS Campus Digital Twins</title>
+    <link rel="stylesheet" href="styles.css?v=20260908-data-framework" />
   </head>
   <body>
-    <main class="guide-shell">
-      <header class="guide-header">
-        <img src="../assets/bior-logo.png" alt="NUS Building Informatics & Operations Research Lab" />
-        <p>User Guide</p>
-        <h1>NUS Campus Digital Twins</h1>
-        <p class="intro">A quick guide to the campus energy management and information system.</p>
-        <a href="../index.html">Open dashboard</a>
-      </header>
-
-      <nav class="guide-nav" aria-label="Guide sections">
+    <a class="skip-link" href="#main-content">Skip to guide</a>
+    <aside class="guide-sidebar">
+      <a class="back-link" href="../">← Back to dashboard</a>
+      <nav class="guide-nav" aria-label="Guide contents">
+        <p class="nav-label">Contents</p>
+        <a href="#about">About</a>
+        <a href="#objectives">Objectives</a>
+        <a href="#sources">Data sources</a>
         <a href="#overview">Overview</a>
         <a href="#buildings">Buildings</a>
         <a href="#price">Energy Price</a>
-        <a href="#weather">Weather</a>
-        <a href="#data">Data</a>
+        <a href="#weather">Campus Weather</a>
+        <a href="#data">Data Health</a>
+        <a href="#interpretation">Interpretation</a>
+        <a href="#team">Team &amp; related platforms</a>
       </nav>
+      <p class="sidebar-note">NUS Campus DT<br />Building Informatics &amp; Operations Research Lab</p>
+    </aside>
+    <main class="guide-shell" id="main-content">
+      <header class="guide-header">
+        <img src="../assets/bior-logo.png" alt="NUS Building Informatics &amp; Operations Research Lab" width="440" />
+        <p class="eyebrow">Platform documentation</p>
+        <h1>NUS Campus Digital Twins<br /><span>User Guide</span></h1>
+        <p class="intro">Explore campus building energy performance, local weather conditions and Singapore electricity market information. This guide explains the platform’s objectives, data sources, controls and interpretation limits.</p>
+      </header>
 
-      <section id="overview">
-        <span>01</span>
-        <div><h2>Overview</h2><p>View the spatial coverage of mapped live endpoints across selected NUS buildings.</p></div>
+      <section id="about" aria-labelledby="about-title">
+        <h2 id="about-title"><span class="section-number" aria-hidden="true">01</span> About</h2>
+        <p>NUS Campus Digital Twins is a web-based energy management and information system (EMIS) for campus energy monitoring and analysis. It brings together building information, electricity consumption, cooling demand and photovoltaic (PV) generation data across selected NUS buildings.</p>
+        <p>Interactive maps and historical energy profiles are presented alongside weather conditions for NUS Kent Ridge and Singapore wholesale electricity prices. Together, these views help users understand building energy use and the environmental and market context around it.</p>
+        <div class="feature-grid">
+          <div class="feature"><h3>Platform scope</h3><p>Selected NUS buildings and their configured data streams. Coverage varies by building, variable and reporting period.</p></div>
+          <div class="feature"><h3>Primary use</h3><p>Energy monitoring, exploratory analysis and research. The dashboard does not directly control building systems.</p></div>
+        </div>
       </section>
-      <section id="buildings">
-        <span>02</span>
-        <div><h2>Buildings</h2><p>Select campus buildings and compare electricity, cooling, and photovoltaic performance across reporting periods.</p></div>
+
+      <section id="objectives" aria-labelledby="objectives-title">
+        <h2 id="objectives-title"><span class="section-number" aria-hidden="true">02</span> Objectives</h2>
+        <ul>
+          <li>Provide a shared view of available campus building energy information.</li>
+          <li>Explore daily and seasonal patterns in electricity use, cooling demand and solar generation.</li>
+          <li>Place energy performance in context using local weather and wholesale electricity market information.</li>
+          <li>Make data coverage and limitations visible before drawing comparisons.</li>
+        </ul>
+        <h3>Questions the platform can support</h3>
+        <p>When does a building use the most energy? How does its profile change across reporting periods? Which buildings have usable data for a chosen variable? Weather and market views provide supporting context, but do not by themselves establish why energy consumption changes.</p>
       </section>
-      <section id="price">
-        <span>03</span>
-        <div><h2>Energy Price</h2><p>Review Singapore wholesale electricity-price context, including real-time and historical reporting intervals.</p></div>
+
+      <section id="sources" aria-labelledby="sources-title">
+        <h2 id="sources-title"><span class="section-number" aria-hidden="true">03</span> Data sources</h2>
+        <h3>DEMIS — Digital Energy Management Information System</h3>
+        <p>NUS Campus Digital Twins uses <strong>DEMIS</strong>, a Digital Energy Management Information System developed by the BIOR Lab, as its data foundation. DEMIS provides a common framework for collecting, organising, storing and distributing building operational data from sources with different communication protocols, update frequencies and point definitions.</p>
+        <p><strong>Multi-source data integration.</strong> The framework connects physical rooms, HVAC systems and environmental sensors to a shared data infrastructure. Building Automation System (BAS) points are integrated through BACnet/OPC connections to the PI Server and made accessible through the PI Web API. The wider architecture also supports occupancy and indoor environmental sensors through IoT gateways and MQTT, alongside interfaces for external data services.</p>
+        <p><strong>Collection and service execution.</strong> Docker-based services separate data collection tasks from downstream applications. Python collectors retrieve configured PI records through the PI Web API, process timestamps and numeric values, and write the collected records to the database. Source-specific collection schedules and resampling allow streams with different reporting frequencies to be prepared for time-based analysis.</p>
+        <p><strong>InfluxDB storage and point mapping.</strong> InfluxDB provides the core time-series storage for collected building energy and weather data. Timestamped values are associated with building, point, source and unit metadata. Configured mappings link original PI point names and WebIds to the building codes and metric names exposed by DEMIS, so records can be retrieved consistently by building, variable and time range while retaining their source identity.</p>
+        <p><strong>API access and dashboard use.</strong> The DEMIS API exposes selected latest records and historical series from InfluxDB. NUS Campus Digital Twins uses these records to display mapped buildings, energy profiles and weather charts, applying the sampling or aggregation appropriate to each reporting period. The wider framework supports digital twin visualisation, analytics, fault diagnostics and control applications; this public dashboard presents selected data and visualisation functions.</p>
+        <figure class="data-framework">
+          <a href="../assets/building-dt-framework.svg" target="_blank" rel="noopener noreferrer" aria-label="Open DEMIS framework at full size in a new tab">
+            <img src="../assets/building-dt-framework.svg" width="1237" height="1034" loading="lazy" alt="DEMIS framework showing physical systems and sensors, data integration through gateways and PI Server, collection services, InfluxDB storage, and analytics and control applications." />
+          </a>
+          <figcaption><strong>DEMIS data collection and management framework</strong><span>The wider framework connects physical systems and sensors with data integration, collection services, InfluxDB storage and digital twin applications. This campus dashboard uses the collection, point mapping, API access and visualisation components. Open-Meteo and EMC / NEMS are accessed separately for this dashboard; their data is not stored in the DEMIS database.</span><a href="../assets/building-dt-framework.svg" target="_blank" rel="noopener noreferrer">View full-size framework ↗</a></figcaption>
+        </figure>
+        <div class="table-wrap" role="region" aria-label="Data sources table" tabindex="0">
+          <table>
+            <thead><tr><th scope="col">Information</th><th scope="col">Source</th><th scope="col">How it is used</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Building energy</th><td>DEMIS API · mapped InfluxDB records</td><td>Selected campus electricity, cooling and solar-generation records are aggregated into daily or monthly energy profiles.</td></tr>
+              <tr><th scope="row">On-site weather</th><td>SDE4 Weather Station via the DEMIS API</td><td>Weather records collected and stored in InfluxDB support air temperature, relative humidity, wind direction and solar irradiance charts.</td></tr>
+              <tr><th scope="row">Reference weather</th><td>Open-Meteo <a href="https://open-meteo.com/en/docs" target="_blank" rel="noopener noreferrer">weather ↗</a> and <a href="https://open-meteo.com/en/docs/historical-weather-api" target="_blank" rel="noopener noreferrer">historical APIs ↗</a></td><td>Model-based weather for NUS Kent Ridge provides recent conditions and historical context, including monthly averages for the yearly view.</td></tr>
+              <tr><th scope="row">Electricity market</th><td><a href="https://www.nems.emcsg.com/en/" target="_blank" rel="noopener noreferrer">EMC / NEMS ↗</a></td><td>Published electricity prices, demand, solar output and forecast products.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout"><strong>Check the date, not just the badge.</strong> Sources have different publication schedules and historical coverage. Refer to each chart’s dates, source and last-updated information; “real-time” does not mean every source updates continuously or simultaneously.</div>
       </section>
-      <section id="weather">
-        <span>04</span>
-        <div><h2>Weather</h2><p>Explore temperature, humidity, wind, and estimated heat-stress conditions for the NUS Kent Ridge area.</p></div>
+
+      <section id="overview" aria-labelledby="overview-title">
+        <h2 id="overview-title"><span class="section-number" aria-hidden="true">04</span> Overview</h2>
+        <p>The <a href="../?tab=overview">Overview</a> introduces the project and provides a spatial view of the campus. Use the map to orient yourself, then open a module from the left navigation rail.</p>
+        <p>At campus scale, coloured regions show the four districts and the number of buildings included in this platform. Click a district to zoom in. As you zoom closer, the regional markers fade and building labels appear. Included buildings retain their district colour; other campus buildings are light grey. Colours identify districts, not energy performance or data availability.</p>
+        <p>Hover over an included building to see its name, district and available energy data. Click it to keep its information card open; the selected building turns orange. Choose <strong>View building analysis</strong> to open its energy profiles. Close the card or click the map background to clear the selection.</p>
+        <h3>A simple starting workflow</h3>
+        <ol>
+          <li>Open <strong>Buildings</strong> and select a building and energy variable.</li>
+          <li>Choose a reporting period and inspect the chart’s dates and values.</li>
+          <li>Use <strong>Weather</strong> or <strong>Energy Price</strong> for additional context.</li>
+          <li>Consult <strong>Data Health</strong> and source timestamps before interpreting missing or unusual results.</li>
+        </ol>
       </section>
-      <section id="data">
-        <span>05</span>
-        <div><h2>Data</h2><p>Check building mapping coverage, source freshness, and the status of available data streams.</p></div>
+
+      <section id="buildings" aria-labelledby="buildings-title">
+        <h2 id="buildings-title"><span class="section-number" aria-hidden="true">05</span> Buildings</h2>
+        <p>The <a href="../?tab=buildings">Buildings</a> module shows energy profiles for a selected building. Choose a building from <strong>Select building</strong>, then choose <strong>Electricity</strong>, <strong>Cooling</strong> or <strong>PV</strong>. Not every building has all three variables.</p>
+        <div class="table-wrap" role="region" aria-label="Building reporting periods" tabindex="0">
+          <table>
+            <thead><tr><th scope="col">Period</th><th scope="col">Date range</th><th scope="col">Chart values</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Monthly</th><td>Selected calendar month (28–31 days)</td><td>Daily reported energy totals, shown as a line</td></tr>
+              <tr><th scope="row">Yearly</th><td>Year to date</td><td>Monthly energy totals</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Yearly is the default view, with monthly energy totals shown as bars. Monthly automatically shows the most recent completed month with full reporting coverage where available; the reporting month is stated below the chart title. If no fully reported month exists, the latest ended month with data is used, or the current partial month if that is the only data available. There is no manual month selector. Weekly and hourly charts are not offered in this module.</p>
+        <p>Hover over a chart point or bar to inspect the date and energy value. The summary reports the available energy total, average, peak reporting period and number of available series. Units are shown as kWh or MWh, depending on the scale. Dates without readings remain gaps; incomplete daily totals are identified in the chart subtitle.</p>
+        <div class="callout"><strong>Available data is not necessarily a complete period.</strong> A partial month, gaps or a late start in API coverage can reduce the reported total. Missing values should not be read as zero consumption. Check coverage before comparing buildings or periods. Unsupported or unavailable selections show <strong>No reported data</strong>.</div>
       </section>
+
+      <section id="price" aria-labelledby="price-title">
+        <h2 id="price-title"><span class="section-number" aria-hidden="true">06</span> Energy Price</h2>
+        <p>The <a href="../?tab=market">Energy Price</a> module presents EMC / NEMS market information. Use the data-product selector to switch between six views:</p>
+        <ul class="product-list">
+          <li>Real-time Energy Prices and Demand</li>
+          <li>72-period Energy Prices and Demand</li>
+          <li>7-day Energy Prices and Demand (Period-based)</li>
+          <li>7-day Demand (Daily Average-Min-Max)</li>
+          <li>7-day Energy Prices (Daily Average-Min-Max)</li>
+          <li>7-day Solar Forecast (Average-Min-Max)</li>
+        </ul>
+        <h3>Reading charts and tables</h3>
+        <p>The real-time and 72-period products support <strong>Chart</strong> and <strong>Table</strong> views. Trading periods are half-hour intervals. On charts, consult the legend to distinguish past values, the current period and future forecasts. Daily range products show the average together with minimum and maximum values.</p>
+        <p><strong>USEP</strong> means Uniform Singapore Energy Price. Price values use S$/MWh; demand and solar output use MW. Hover over the chart for individual values, and check the last-updated time before using them.</p>
+        <div class="callout warning"><strong>Market context, not a campus bill.</strong> Wholesale prices, including provisional values and forecasts, are not the NUS contracted tariff or an electricity-bill estimate. Data availability depends on the upstream provider. If the display is stale or unavailable, use Refresh or follow the <a href="https://www.nems.emcsg.com/en/" target="_blank" rel="noopener noreferrer">official EMC / NEMS source ↗</a>.</div>
+      </section>
+
+      <section id="weather" aria-labelledby="weather-title">
+        <h2 id="weather-title"><span class="section-number" aria-hidden="true">07</span> Campus Weather</h2>
+        <p>The <a href="../?tab=weather">Weather</a> module opens with <strong>SDE4 Weather Station</strong>, presenting weather records collected through DEMIS, stored in InfluxDB and served by the DEMIS API. Select <strong>NUS Kent Ridge</strong> under Reference location to explore Open-Meteo weather and historical data for the campus reference coordinates (1.2966° N, 103.7764° E). All times are shown in Singapore time (SGT, UTC+8).</p>
+        <h3>Weather charts</h3>
+        <p>Kent Ridge displays combined air temperature and relative humidity, estimated WBGT and wind direction charts. SDE4 displays separate air temperature, relative humidity, wind direction and solar irradiance charts. Hover over or keyboard-focus a chart period to open the dark tooltip showing its date, value, unit and sampling or averaging method.</p>
+        <div class="table-wrap" role="region" aria-label="Weather reporting periods" tabindex="0">
+          <table>
+            <thead><tr><th scope="col">Period</th><th scope="col">Date range</th><th scope="col">Chart values</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Weekly</th><td>Trailing 7 days</td><td>A sample every 3 hours</td></tr>
+              <tr><th scope="row">Monthly</th><td>Trailing 30 days</td><td>Daily averages</td></tr>
+              <tr><th scope="row">Yearly</th><td>Current calendar year, to the latest available historical date</td><td>Monthly averages of daily values</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Monthly and Yearly are different aggregations, not the same series with different labels. Kent Ridge yearly charts use ERA5 historical data, which arrives with a delay; the latest month may be partial. SDE4 yearly charts aggregate the available hourly station records into monthly means.</p>
+        <p>For SDE4, the displayed relative humidity applies the current presentation convention of multiplying the raw station signal by 10 and constraining it to 0–100%RH. Wind direction is normalised to 0–360°. These display conversions do not correct upstream sensor or mapping problems.</p>
+        <div class="callout"><strong>Current conditions stay current.</strong> Changing the chart period does not change the latest-condition cards above it. Estimated WBGT is a shade-based approximation, not a measured heat-stress index or a substitute for site-specific safety assessment.</div>
+      </section>
+
+      <section id="data" aria-labelledby="data-title">
+        <h2 id="data-title"><span class="section-number" aria-hidden="true">08</span> Data Health</h2>
+        <p>The <a href="../?tab=data">Data Health</a> module checks the latest response from the DEMIS API and compares it with the 16-building dashboard scope. The summary shows how many buildings are reporting, the number of records returned by the latest API response, partial coverage and buildings with no current records.</p>
+        <ul>
+          <li><strong>All:</strong> shows every building in the selected dashboard scope.</li>
+          <li><strong>Partial:</strong> shows buildings for which only part of the intended electricity, cooling or PV coverage is currently available.</li>
+          <li><strong>Missing:</strong> shows buildings with no current records in the latest public API response.</li>
+        </ul>
+        <p>The filter changes the rows in the Building × metric coverage table; it does not alter the API data or the summary totals. A check mark means a usable latest value was returned for that metric. The source-health table distinguishes a recently checked source from a source that has not yet been opened during the current browser session.</p>
+        <div class="callout"><strong>Latest API records include retained aliases.</strong> The record count describes the complete latest response used by the dashboard and may include both canonical names and migration aliases. It should not be interpreted as a count of unique physical meters.</div>
+      </section>
+
+      <section id="interpretation" aria-labelledby="interpretation-title">
+        <h2 id="interpretation-title"><span class="section-number" aria-hidden="true">09</span> Interpretation &amp; limitations</h2>
+        <h3>Keep units and time ranges aligned</h3>
+        <p>Energy (kWh or MWh) is accumulated over time; power (kW or MW) describes a rate. A building’s monthly energy total is not directly comparable to a market demand value in MW. Likewise, weather averages and energy totals answer different questions.</p>
+        <h3>Compare like with like</h3>
+        <p>Use the same variable, date range and data coverage when comparing profiles. Building size, use and operating hours can differ. A higher total alone does not establish poorer efficiency, and a relationship with weather does not establish causation.</p>
+        <h3>Recognise the source type</h3>
+        <p>Meter-derived energy, modelled weather, historical reanalysis and market forecasts are distinct kinds of information. Preserve these distinctions when exporting findings into reports or presentations, and include the source and reporting dates.</p>
+        <div class="callout warning"><strong>If something looks wrong:</strong> check the selected building, variable, period, units and timestamp first. For an unavailable source, retry later or consult the linked provider. Do not treat an old value as a new observation.</div>
+      </section>
+
+      <section id="team" aria-labelledby="team-title">
+        <h2 id="team-title"><span class="section-number" aria-hidden="true">10</span> Team &amp; related platforms</h2>
+        <p>NUS Campus Digital Twins is a platform from the <strong>Building Informatics &amp; Operations Research (BIOR) Lab</strong> at the National University of Singapore.</p>
+        <ul class="related-links">
+          <li><a href="https://maomaohu.net/" target="_blank" rel="noopener noreferrer">BIOR Lab ↗</a><span>Research and lab information</span></li>
+          <li><a href="https://urbandt.org/" target="_blank" rel="noopener noreferrer">Urban Digital Twins ↗</a><span>Urban-scale microclimate and building energy analysis</span></li>
+          <li><a href="https://www.buildingdt.org/" target="_blank" rel="noopener noreferrer">Building Digital Twins ↗</a><span>Related building-scale platform</span></li>
+        </ul>
+      </section>
+      <footer class="guide-footer"><span>NUS Campus Digital Twins · User Guide</span><a href="#main-content">Back to top ↑</a></footer>
     </main>
   </body>
 </html>

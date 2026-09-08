@@ -3182,7 +3182,7 @@ h3 {
 }
 
 .legend {
-  display: none;
+  display: block;
   left: 16px;
   right: auto;
   bottom: 14px;
@@ -3190,6 +3190,45 @@ h3 {
   min-width: 200px;
   border-radius: 6px;
 }
+
+.map-stage[data-active-workspace="overview"] .legend {
+  width: 224px;
+  min-width: 0;
+  padding: 11px 12px;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px #15324f12;
+}
+.map-stage[data-active-workspace="overview"] .legend-title { font-size: 11px; margin-bottom: 8px; color: var(--nus-blue); }
+.map-stage[data-active-workspace="overview"] .legend-items { gap: 5px; }
+.map-stage[data-active-workspace="overview"] .legend-items span { font-size: 11px; }
+.map-stage[data-active-workspace="overview"] .legend-items i { width: 9px; height: 9px; border-radius: 2px; }
+
+@media (min-width: 981px) {
+  .app-shell:has(#tab-overview.active) { grid-template-columns: 76px 380px minmax(0, 1fr); }
+}
+@media (min-width: 981px) and (max-width: 1200px) {
+  .app-shell:has(#tab-overview.active) { grid-template-columns: 70px 350px minmax(0, 1fr); }
+}
+
+.campus-building-popup.is-hover { pointer-events: none; }
+.campus-building-popup .mapboxgl-popup-content {
+  min-width: 0;
+  width: 260px;
+  max-width: calc(100vw - 32px);
+  padding: 14px;
+  border: 1px solid var(--workspace-line);
+  border-radius: 4px;
+  box-shadow: 0 4px 16px #15324f18;
+  color: var(--nus-blue);
+}
+.campus-building-card { display: grid; gap: 7px; font: 12px/1.5 Inter, ui-sans-serif, system-ui, sans-serif; }
+.campus-building-card > strong { font-size: 17px; }
+.campus-building-region { border-left: 3px solid var(--region-color); padding-left: 7px; color: #52677b; }
+.campus-building-card p { margin: 0; padding-top: 8px; border-top: 1px solid #e3e9ef; }
+.campus-building-card small { color: #65788c; }
+.campus-building-card button { border: 0; border-radius: 4px; padding: 9px 12px; background: #003d7c; color: white; cursor: pointer; font: inherit; }
+.campus-building-card button:hover { background: #174f91; }
+.campus-building-card button:focus-visible { outline: 2px solid #ef7c00; outline-offset: 3px; }
 
 .control-panel:has(#tab-overview.active) .panel-header {
   margin-bottom: 2px;
@@ -3211,27 +3250,28 @@ h3 {
 
 .overview-brand-title {
   display: grid;
-  gap: 10px;
+  gap: 12px;
   margin: 0;
 }
 
 .overview-title-highlight {
   color: var(--nus-orange);
-  font-size: clamp(24px, 2.8vw, 40px);
+  font-size: clamp(26px, 2.1vw, 32px);
   font-weight: 700;
-  line-height: 1.05;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
 }
 
 .overview-title-main {
   color: var(--nus-blue);
-  font-size: clamp(20px, 2.1vw, 30px);
+  font-size: clamp(19px, 1.55vw, 23px);
   font-weight: 600;
-  line-height: 1.12;
+  line-height: 1.35;
 }
 
 .overview-project-summary {
   min-height: 120px;
-  margin-top: 22px;
+  margin-top: 26px;
   padding: 0 2px;
   border: 0;
   background: transparent;
@@ -3240,9 +3280,9 @@ h3 {
 .overview-project-summary h2 {
   margin: 0;
   color: var(--workspace-muted);
-  font-size: 14px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -3535,7 +3575,7 @@ h3 {
 .change-down { color: #16843d; font-weight: 800; }
 
 .weather-analysis-content {
-  grid-template-rows: auto auto minmax(360px, 1fr) minmax(260px, auto);
+  grid-template-rows: auto auto minmax(440px, 1fr);
   align-content: start;
   min-height: calc(100vh - 61px);
 }
@@ -3641,7 +3681,7 @@ h3 {
 .weather-primary {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  min-height: 360px;
+  min-height: 440px;
 }
 
 .weather-chart-legend {
@@ -3651,16 +3691,77 @@ h3 {
 
 .weather-chart-frame {
   position: relative;
-  min-height: 300px;
-  padding: 4px 10px 8px;
+  min-height: 310px;
+  align-self: start;
+  padding: 20px 10px 16px;
 }
 
 .weather-chart-frame > svg {
   display: block;
   width: 100%;
-  height: 100%;
-  min-height: 300px;
+  height: auto;
 }
+
+/* Station variant reuses dashboard cards, field controls and weather typography. */
+.sde4-weather-active .kent-weather-current,
+.sde4-weather-active .weather-primary,
+.sde4-weather-active .kent-weather-series { display: none; }
+#stationWeatherCharts[hidden] { display: none; }
+#stationWeatherCharts { display: grid; gap: 14px; min-width: 0; }
+.station-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.station-toolbar p, .weather-location-note { color: var(--muted); font-size: 11px; line-height: 1.6; }
+.weather-location-note { margin: 0; }
+.station-card { min-width: 0; min-height: 400px; }
+.station-card header { flex-wrap: wrap; gap: 10px; }
+.station-chart { padding: 0 14px 10px; min-width: 0; }
+.station-chart svg { display: block; width: 100%; height: auto; }
+.station-grid line { stroke: var(--line); stroke-width: 1; }
+.station-grid text { fill: var(--muted); font-size: 10px; }
+.station-line { fill: none; stroke-width: 2; }
+.station-line.temperature, .station-chart circle.temperature { stroke: #b33c30; }
+.station-line.humidity, .station-chart circle.humidity { stroke: #1769aa; }
+.station-line.wind, .station-chart circle.wind { stroke: #247c70; }
+.station-line.solar, .station-chart circle.solar { stroke: #ef7c00; }
+.station-chart circle { fill: var(--panel); stroke-width: 1.5; cursor: crosshair; }
+.station-chart circle:focus { outline: none; stroke: var(--nus-orange); stroke-width: 4; }
+.weather-kpi-strip .solar { box-shadow: inset 3px 0 var(--nus-orange); }
+.weather-series-card { min-height: 400px; }
+.weather-series.wbgt, .weather-mean-dot.wbgt, .weather-hover-dot.wbgt { stroke: var(--nus-orange); }
+.weather-series.wind, .weather-mean-dot.wind, .weather-hover-dot.wind { stroke: #247c70; }
+.weather-chart-tooltip i.wbgt { background: var(--nus-orange); }
+.weather-chart-tooltip i.wind { background: #247c70; }
+.weather-year-retry { margin: 0 auto 20px; display: block; }
+@media (max-width: 700px) {
+  .station-chart { overflow-x: auto; }
+  .station-chart svg { min-width: 580px; }
+}
+
+.weather-current-summary h2 {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 5px 12px;
+  margin: 0 0 8px;
+  color: #34475a;
+  font-size: 11px;
+}
+
+.weather-current-summary h2 span {
+  color: #66778a;
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.weather-chart-note {
+  margin: 10px 48px 0;
+  color: #66778a;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.weather-mean-dot { fill: #fff; stroke-width: 1.5; }
+.weather-mean-dot.temperature { stroke: #b33c30; }
+.weather-mean-dot.humidity { stroke: #1769aa; }
 
 .weather-chart-grid line,
 .weather-heat-grid line {
@@ -3775,6 +3876,8 @@ h3 {
 
 .weather-chart-tooltip i.temperature { background: #e15b4e; }
 .weather-chart-tooltip i.humidity { background: #54a4e5; }
+.weather-chart-tooltip i.wind { background: #247c70; }
+.weather-chart-tooltip i.solar { background: #ef7c00; }
 
 .weather-chart-tooltip strong {
   font-variant-numeric: tabular-nums;
@@ -4282,8 +4385,10 @@ h3 {
 }
 
 .building-period-control {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
+
+.building-chart-kpis[hidden] { display: none; }
 
 .building-metric-control,
 .market-range-control {
@@ -4359,6 +4464,7 @@ h3 {
 
 .building-primary-chart {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto auto auto;
   min-width: 0;
 }
@@ -4447,6 +4553,7 @@ h3 {
 
 .generated-chart {
   min-height: 0;
+  min-width: 0;
   padding: 8px 14px 13px;
 }
 
@@ -4454,7 +4561,7 @@ h3 {
   position: relative;
   width: 100%;
   aspect-ratio: 1120 / 390;
-  min-height: 300px;
+  min-height: 0;
   overflow: visible;
 }
 
@@ -4944,6 +5051,549 @@ h3 {
 .market-session dt { color: #66778a; }
 .market-session dd { margin: 0; font-weight: 700; }
 
+.legacy-market-ui {
+  display: none !important;
+}
+
+.market-analysis-content {
+  display: block;
+  min-height: calc(100vh - 61px);
+  padding: 16px 18px 22px;
+}
+
+.nems-realtime-card {
+  min-height: calc(100vh - 100px);
+  overflow: hidden;
+  border-radius: 3px;
+  background: #fff;
+}
+
+.dashboard-card > header.nems-market-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 55px;
+  padding: 11px 18px;
+}
+
+.nems-market-toolbar h2 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.nems-market-toolbar p {
+  margin: 3px 0 0;
+  color: #68788a;
+  font-size: 9px;
+}
+
+.nems-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.nems-view-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, 68px);
+}
+
+.nems-view-toggle button {
+  min-height: 31px;
+  border: 1px solid #b8c5d0;
+  background: #fff;
+  color: #42566b;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.nems-view-toggle button:first-child {
+  border-radius: 2px 0 0 2px;
+}
+
+.nems-view-toggle button:last-child {
+  border-left: 0;
+  border-radius: 0 2px 2px 0;
+}
+
+.nems-view-toggle button.active {
+  border-color: var(--nus-blue);
+  background: var(--nus-blue);
+  color: #fff;
+}
+
+.nems-refresh {
+  min-height: 31px;
+  padding: 0 15px;
+  border: 1px solid #b8c5d0;
+  border-radius: 2px;
+  background: #fff;
+  color: #0d376f;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.nems-refresh:hover {
+  border-color: var(--nus-blue);
+  background: #f3f7fb;
+}
+
+.nems-refresh:disabled {
+  cursor: wait;
+  opacity: .55;
+}
+
+.nems-market-body {
+  min-height: 600px;
+  padding: 28px 28px 14px;
+}
+
+.nems-current-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 36px;
+  padding: 0 24px 26px;
+}
+
+.nems-current-grid.metrics-1 {
+  grid-template-columns: minmax(220px, 1fr);
+  max-width: 360px;
+}
+
+.nems-current-grid.metrics-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 720px;
+}
+
+.nems-current-grid.metrics-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.nems-current-metric {
+  min-width: 0;
+}
+
+.nems-metric-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #050505;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.nems-help {
+  display: inline-grid;
+  width: 19px;
+  height: 19px;
+  place-items: center;
+  border-radius: 50%;
+  background: #b9bec3;
+  color: #fff;
+  cursor: help;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.nems-metric-value {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 23px;
+  color: #020202;
+  font-size: clamp(24px, 2.15vw, 38px);
+  font-weight: 700;
+  letter-spacing: -.02em;
+  white-space: nowrap;
+}
+
+.nems-metric-value i {
+  width: 6px;
+  height: 40px;
+  margin-right: 5px;
+  background: var(--metric-color);
+}
+
+.nems-metric-value small {
+  align-self: flex-end;
+  margin-bottom: 6px;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+.nems-chart-frame {
+  position: relative;
+  min-height: 430px;
+}
+
+.nems-market-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 380px;
+  overflow: visible;
+}
+
+.nems-grid line {
+  stroke: #e3e7ea;
+  stroke-width: 1;
+}
+
+.nems-axis-label {
+  fill: #59616a;
+  font-size: 11px;
+}
+
+.nems-axis-title {
+  fill: #4c5054;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.nems-area {
+  pointer-events: none;
+}
+
+.nems-usep-area { fill: url(#nemsUsepFill); }
+.nems-demand-area { fill: url(#nemsDemandFill); }
+.nems-solar-area { fill: url(#nemsSolarFill); }
+
+.nems-line {
+  fill: none;
+  stroke-linecap: square;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.nems-line.future {
+  stroke-dasharray: 4 5;
+}
+
+.nems-usep-line { stroke: #004e71; }
+.nems-demand-line { stroke: #00a8e1; }
+.nems-solar-line { stroke: #e7f3a2; }
+.nems-vcp-line { stroke: #8d9dbd; stroke-width: 2; }
+
+.nems-current-line {
+  stroke: #9b9b9b;
+  stroke-width: 4;
+  opacity: .75;
+  vector-effect: non-scaling-stroke;
+}
+
+.nems-hover-line {
+  stroke: #2b3035;
+  stroke-width: 1;
+  opacity: .45;
+  pointer-events: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.nems-chart-hit {
+  fill: transparent;
+  outline: none;
+}
+
+.nems-chart-tooltip {
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  gap: 3px;
+  min-width: 142px;
+  padding: 9px 10px;
+  transform: translateX(-50%);
+  border-radius: 3px;
+  background: rgba(30, 34, 36, .92);
+  color: #fff;
+  font-size: 10px;
+  pointer-events: none;
+}
+
+.nems-chart-tooltip strong {
+  margin-bottom: 2px;
+  font-size: 11px;
+}
+
+.nems-chart-tooltip span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nems-chart-tooltip i {
+  width: 9px;
+  height: 9px;
+  border: 1px solid rgba(255, 255, 255, .5);
+  background: var(--tip);
+}
+
+.nems-range-band {
+  fill: var(--range-band);
+  opacity: .42;
+}
+
+.nems-range-average {
+  fill: none;
+  stroke: var(--range-average);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.nems-range-point {
+  fill: #fff;
+  stroke: var(--range-average);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.nems-range-legend {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: -15px;
+  color: #5e6267;
+  font-size: 10px;
+}
+
+.nems-range-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nems-range-legend i.average {
+  width: 19px;
+  border-top: 3px solid var(--range-average);
+}
+
+.nems-range-legend i.range {
+  width: 19px;
+  height: 9px;
+  border: 1px solid color-mix(in srgb, var(--range-band) 70%, #fff);
+  background: color-mix(in srgb, var(--range-band) 45%, #fff);
+}
+
+.nems-state-legend {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: -18px;
+  color: #5e6267;
+  font-size: 10px;
+}
+
+.nems-state-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nems-state-legend i {
+  position: relative;
+  width: 18px;
+  height: 8px;
+}
+
+.nems-state-legend i::before {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 18px;
+  border-top: 2px solid #00a8e1;
+  content: "";
+}
+
+.nems-state-legend i.current::before { border-color: #747474; }
+.nems-state-legend i.future::before { border-top-style: dotted; }
+
+.nems-chart-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 5% 0;
+  color: #17489d;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.nems-provisional-note {
+  margin: 10px 5% 0;
+  color: #7b8794;
+  font-size: 9px;
+  text-align: right;
+}
+
+.nems-table-scroll {
+  max-height: 430px;
+  margin: 0 4px;
+  overflow: auto;
+  border: 1px solid #d7dfe6;
+}
+
+.nems-market-table {
+  width: 100%;
+  min-width: 1180px;
+  border-collapse: collapse;
+  background: #fff;
+  color: #26384a;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.nems-market-table th,
+.nems-market-table td {
+  min-width: 82px;
+  height: 34px;
+  padding: 6px 9px;
+  border-right: 1px solid #e2e7ec;
+  border-bottom: 1px solid #e2e7ec;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.nems-market-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f3f6f8;
+  color: #42566b;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.overview-project-summary p {
+  margin: 14px 0 0;
+  color: var(--workspace-muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.overview-project-summary a {
+  color: var(--nus-orange);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.overview-project-summary a:hover,
+.overview-project-summary a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.nems-market-table th:first-child,
+.nems-market-table th:nth-child(2),
+.nems-market-table td:first-child,
+.nems-market-table td:nth-child(2) {
+  text-align: left;
+}
+
+.nems-table-current {
+  background: #d9e9f5;
+  font-weight: 700;
+}
+
+.nems-table-future {
+  background: #edf4fa;
+  color: #526779;
+}
+
+.nems-table-state-key {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 10px 5% 0;
+  color: #5e6e80;
+  font-size: 9px;
+}
+
+.nems-table-state-key span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nems-table-state-key i {
+  width: 16px;
+  height: 8px;
+  border: 1px solid #c9d3dc;
+  background: #fff;
+}
+
+.nems-table-state-key i.current { background: #d9e9f5; }
+.nems-table-state-key i.future { background: #edf4fa; }
+
+.nems-loading-state,
+.nems-error-state {
+  display: grid;
+  min-height: 500px;
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
+  color: #637386;
+  font-size: 11px;
+  text-align: center;
+}
+
+.nems-loading-state {
+  grid-template-columns: auto auto;
+}
+
+.nems-error-state strong {
+  color: #24364a;
+  font-size: 14px;
+}
+
+.nems-error-state button {
+  min-height: 31px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 2px;
+  background: var(--nus-blue);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.market-source-details {
+  display: grid;
+  gap: 8px;
+}
+
+.nems-product-select {
+  width: 100%;
+  min-height: 38px;
+  padding: 0 9px;
+  border: 1px solid #c8d2dc;
+  border-radius: 2px;
+  background: #fff;
+  color: #24364a;
+  font-size: 11px;
+}
+
+.market-readonly-field,
+.market-source-link {
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  text-decoration: none;
+}
+
+.market-source-link {
+  color: var(--nus-blue);
+  font-weight: 700;
+}
+
+@media (max-width: 1280px) {
+  .nems-market-body { padding-inline: 18px; }
+  .nems-current-grid { gap: 18px; padding-inline: 8px; }
+  .nems-metric-value { font-size: 24px; }
+  .nems-metric-value i { height: 32px; }
+}
+
 @media (max-width: 1500px) {
   .app-shell {
     grid-template-columns: 76px 430px minmax(0, 1fr);
@@ -5004,6 +5654,23 @@ h3 {
 .rail-guide {
   font-weight: 700;
   text-align: center;
+  grid-template-rows: 22px max-content;
+  align-content: center;
+  gap: 5px;
+  padding: 8px 2px;
+  line-height: 1.15;
+}
+
+.rail-nav .rail-icon,
+.rail-related .rail-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.rail-nav .rail-icon svg,
+.rail-related .rail-icon svg {
+  width: 20px;
+  height: 20px;
 }
 
 .rail-nav button,
@@ -5050,4 +5717,81 @@ h3 {
 
 .building-analysis-content .building-performance-grid {
   grid-template-columns: minmax(0, 1fr);
+}
+
+/* Campus market presentation: share Buildings' compact cards and chart palette.
+   These tokens describe presentation only; source values and units are unchanged. */
+.nems-realtime-card {
+  --market-price: #187c70;
+  --market-demand: #386fa4;
+  --market-solar: #c66f00;
+  --market-vcp: #7c5cc4;
+  min-height: 0;
+  min-width: 0;
+  border-radius: 3px;
+}
+.dashboard-card > header.nems-market-toolbar { padding: 11px 14px; gap: 14px; flex-wrap: wrap; }
+.nems-market-toolbar h2 { font-size: 14px; }
+.nems-market-toolbar p { font-size: 9px; }
+.nems-realtime-card .nems-market-body { min-height: 0; padding: 8px 14px 14px; }
+.nems-realtime-card .nems-current-grid {
+  width: 100%;
+  max-width: none;
+  gap: 0;
+  padding: 0;
+  margin: 0 0 18px;
+  border: 1px solid #d6dee6;
+  background: #f8fafc;
+}
+.nems-realtime-card .nems-current-grid.metrics-1 { grid-template-columns: minmax(0, 1fr); }
+.nems-realtime-card .nems-current-metric { padding: 10px 12px; min-height: 72px; }
+.nems-realtime-card .nems-current-metric + .nems-current-metric { border-left: 1px solid #d6dee6; }
+.nems-realtime-card .nems-metric-label { color: #68788a; font-size: 10px; font-weight: 400; gap: 6px; }
+.nems-metric-label i { flex: 0 0 9px; height: 2px; background: var(--metric-color); }
+.nems-realtime-card .nems-metric-value { margin-top: 3px; color: #172536; font-size: 18px; font-weight: 700; line-height: 1.3; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.nems-metric-unit { display: block; margin-top: 2px; color: #68788a; font-size: 9px; }
+.nems-realtime-card .nems-chart-frame { min-height: 0; min-width: 0; }
+.nems-realtime-card .nems-market-chart { min-height: 0; width: 100%; }
+.nems-grid line { stroke: #dde4ea; }
+.nems-axis-label { fill: #637386; font-size: 10px; }
+.nems-axis-title { fill: #68788a; font-size: 10px; font-weight: 600; }
+.nems-line { stroke-width: 2; stroke-linecap: round; }
+.nems-usep-line { stroke: var(--market-price); }
+.nems-demand-line { stroke: var(--market-demand); }
+.nems-solar-line { stroke: var(--market-solar); }
+.nems-vcp-line { stroke: var(--market-vcp); stroke-width: 1.5; }
+.nems-current-line { stroke: #68788a; stroke-width: 1.5; }
+.nems-hover-line { stroke: #5f7284; stroke-dasharray: 3 3; opacity: .8; }
+.nems-chart-hit { cursor: crosshair; }
+.nems-chart-hit:focus { fill: rgba(23, 105, 170, .035); }
+.nems-chart-tooltip { padding: 10px 11px; border: 1px solid #172536; background: #172536; box-shadow: 0 8px 22px rgba(14, 29, 44, .2); }
+.nems-range-band { opacity: .12; }
+.nems-range-average { stroke-width: 2.35; }
+.nems-range-point { stroke-width: 1.65; }
+.nems-range-legend, .nems-state-legend { justify-content: flex-start; margin: 8px 0 0; padding-left: 12px; color: #637386; flex-wrap: wrap; }
+.nems-range-legend i.average { border-top-width: 2px; }
+.nems-range-legend i.range { background: color-mix(in srgb, var(--range-band) 12%, #fff); border-color: color-mix(in srgb, var(--range-band) 25%, #fff); }
+.nems-state-legend i::before { border-color: #68788a; }
+.nems-chart-footer { flex-wrap: wrap; margin-top: 16px; padding: 10px 0 0; border-top: 1px solid var(--workspace-line); color: #68788a; font-size: 9px; font-weight: 400; gap: 6px 20px; }
+.nems-chart-footer strong { font-weight: 500; }
+.nems-provisional-note { margin: 6px 0 0; text-align: left; color: #68788a; }
+.nems-realtime-card .nems-loading-state, .nems-realtime-card .nems-error-state { min-height: 330px; }
+.nems-view-toggle { border-radius: 8px; overflow: hidden; }
+.nems-view-toggle button:first-child { border-radius: 8px 0 0 8px; }
+.nems-view-toggle button:last-child { border-radius: 0 8px 8px 0; }
+.nems-refresh { border-color: var(--workspace-line); border-radius: 6px; }
+.nems-product-select.building-select { min-height: 42px; border-radius: 8px; font: inherit; color: var(--ink); padding: 10px 12px; }
+.nems-table-scroll { margin: 0; border-color: var(--workspace-line); border-radius: 3px; }
+.nems-market-table th { background: #f8fafc; color: #68788a; font-size: 9px; }
+.nems-market-table td { font-size: 10px; }
+.nems-market-table tbody tr:hover { background: #f4f7fa; }
+.nems-table-current { background: #e6f2ef; }
+.nems-table-future { background: #f6f8fb; }
+.nems-table-state-key { justify-content: flex-start; padding: 10px 0 0; }
+.nems-table-state-key i.current { background: #e6f2ef; }
+.nems-table-state-key i.future { background: #f6f8fb; }
+@media (max-width: 1400px) {
+  .nems-realtime-card .nems-current-grid:not(.metrics-1) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nems-realtime-card .nems-current-metric:nth-child(3) { border-left: 0; }
+  .nems-realtime-card .nems-current-metric:nth-child(n+3) { border-top: 1px solid #d6dee6; }
 }
