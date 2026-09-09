@@ -1,0 +1,14 @@
+.market-source-link.market-source-button {
+  justify-content: center;
+  margin-top: 3px;
+  border-color: var(--nus-blue);
+  border-radius: 3px;
+  background: var(--nus-blue);
+  color: #fff;
+}
+
+.market-source-link.market-source-button:hover,
+.market-source-link.market-source-button:focus-visible {
+  background: #123d75;
+  color: #fff;
+}

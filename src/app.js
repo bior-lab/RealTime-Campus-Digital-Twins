@@ -732,7 +732,7 @@ const focusRegions = [
 ];
 
 const requestedWorkspace = new URLSearchParams(window.location.search).get("tab");
-const initialWorkspace = ["overview", "buildings", "market", "weather", "data"].includes(requestedWorkspace)
+const initialWorkspace = ["overview", "buildings", "market", "weather"].includes(requestedWorkspace)
   ? requestedWorkspace
   : "overview";
 const requestedBuildingPeriod = new URLSearchParams(window.location.search).get("period");
@@ -784,7 +784,6 @@ const state = {
   nemsRefreshTimer: null,
   nemsLoading: false,
   activeWeatherPeriod: "7d",
-  activeDataHealthFilter: "all",
   weatherData: null,
   weatherLoadPromise: null,
   weatherYearData: null,
@@ -868,20 +867,6 @@ const els = {
   weatherWindTitle: document.getElementById("weatherWindTitle"),
   weatherWindSubtitle: document.getElementById("weatherWindSubtitle"),
   weatherWindChart: document.getElementById("weatherWindChart"),
-  dataHealthSourceChip: document.getElementById("dataHealthSourceChip"),
-  dataHealthReportingCount: document.getElementById("dataHealthReportingCount"),
-  dataHealthRecordCount: document.getElementById("dataHealthRecordCount"),
-  dataHealthPartialCount: document.getElementById("dataHealthPartialCount"),
-  dataHealthMissingCount: document.getElementById("dataHealthMissingCount"),
-  dataHealthResultCount: document.getElementById("dataHealthResultCount"),
-  dataHealthTableBody: document.getElementById("dataHealthTableBody"),
-  dataHealthSourceBody: document.getElementById("dataHealthSourceBody"),
-  dataPanelReportingCount: document.getElementById("dataPanelReportingCount"),
-  dataPanelRecordCount: document.getElementById("dataPanelRecordCount"),
-  dataPanelPartialCount: document.getElementById("dataPanelPartialCount"),
-  dataPanelMissingCount: document.getElementById("dataPanelMissingCount"),
-  dataHealthFilterButtons: document.querySelectorAll("[data-data-health-filter]"),
-  dataHealthPanelSources: document.getElementById("dataHealthPanelSources"),
   weatherForecast: document.getElementById("weatherForecast"),
   regionList: document.getElementById("regionList"),
   aiBriefList: document.getElementById("aiBriefList"),
@@ -1771,7 +1756,6 @@ async function loadRealtime() {
   refreshDerivedData();
   updateMapData();
   updateSummary();
-  renderDataHealth();
   if (!els.trendModal?.classList.contains("hidden")) renderTrendLiveMeters();
   if (!els.brickModal?.classList.contains("hidden")) renderBrickGraph();
   renderBuildingList();
@@ -1917,65 +1901,6 @@ function updateSummary() {
   renderRegionList();
 }
 
-function renderDataHealth() {
-  if (!window.NUSDataHealth || !els.dataHealthTableBody) return;
-  const model = window.NUSDataHealth.buildModel({
-    buildings: focusBuildings,
-    realtimeByBuilding: state.realtimeByBuilding,
-    coverageHints: buildingModelDefinitions,
-    metricCapabilities: buildingMetricCapabilities,
-  });
-  const { summary } = model;
-  const filteredRows = window.NUSDataHealth.filterRows(model.rows, state.activeDataHealthFilter);
-  const latestLabel = summary.latest ? formatTimestamp(summary.latest) : "No current record";
-  const freshness = window.NUSDataHealth.freshness(summary.latest);
-  const setText = (element, value) => { if (element) element.textContent = value; };
-  setText(els.dataHealthReportingCount, `${summary.reporting} / ${summary.total}`);
-  setText(els.dataHealthRecordCount, formatNumber(summary.records, 0));
-  setText(els.dataHealthPartialCount, formatNumber(summary.partial, 0));
-  setText(els.dataHealthMissingCount, formatNumber(summary.missing, 0));
-  setText(els.dataPanelReportingCount, formatNumber(summary.reporting, 0));
-  setText(els.dataPanelRecordCount, formatNumber(summary.records, 0));
-  setText(els.dataPanelPartialCount, formatNumber(summary.partial, 0));
-  setText(els.dataPanelMissingCount, formatNumber(summary.missing, 0));
-  setText(els.dataHealthSourceChip, `Public API · ${freshness.label.toLowerCase()} · ${latestLabel}`);
-  setText(els.dataHealthResultCount, `${filteredRows.length} of ${summary.total} buildings · latest API ${latestLabel}`);
-  els.dataHealthFilterButtons.forEach((button) => {
-    const active = button.dataset.dataHealthFilter === state.activeDataHealthFilter;
-    button.classList.toggle("active", active);
-    button.setAttribute("aria-pressed", String(active));
-  });
-  const matrix = (available) => `<span class="matrix${available ? " complete" : ""}" aria-label="${available ? "Available" : "Unavailable"}">${available ? "✓" : "–"}</span>`;
-  els.dataHealthTableBody.innerHTML = filteredRows.length ? filteredRows.map((row) => {
-    const tone = row.status === "mapped" ? "good" : row.status === "partial" ? "partial" : "";
-    const status = row.status[0].toUpperCase() + row.status.slice(1);
-    return `<tr data-coverage-status="${row.status}"><td><strong>${escapeHtml(row.code)}</strong></td><td>${matrix(row.metrics.electricity)}</td><td>${matrix(row.metrics.cooling)}</td><td>${matrix(row.metrics.pv)}</td><td>${row.latest ? "PI public API" : "—"}</td><td>${row.latest ? "Hourly" : "—"}</td><td><span class="tag ${tone}">${status}</span></td></tr>`;
-  }).join("") : '<tr><td colspan="7"><strong>No matching buildings</strong></td></tr>';
-
-  const sdeWeatherPoints = (state.realtimeByBuilding.SDE4?.points || []).filter((point) => /Weather Station/i.test(point.point || ""));
-  const sdeWeatherLatest = sdeWeatherPoints.map((point) => point.time).filter(Boolean).sort().at(-1) || null;
-  const sources = [
-    { name: "PI public building API", role: "Electricity, cooling and PV", cadence: "Hourly", latest: summary.latest, status: freshness },
-    { name: "SDE4 weather station", role: "On-site weather observations", cadence: "Hourly", latest: sdeWeatherLatest, status: window.NUSDataHealth.freshness(sdeWeatherLatest) },
-    { name: "Open-Meteo", role: "Kent Ridge weather context", cadence: "On demand", latest: state.weatherData?.current?.time || null, status: state.weatherData ? { key: "good", label: "Available" } : { key: "partial", label: "Not checked" } },
-    { name: "EMC / NEMS", role: "Wholesale market context", cadence: "30 minutes", latestLabel: state.nemsMarketData?.lastupdate || "Open Energy Price to check", status: state.nemsMarketData ? { key: "partial", label: "Provisional" } : { key: "partial", label: "Not checked" } },
-  ];
-  const sourceRows = sources.map((source) => {
-    const tone = source.status.key === "good" ? "good" : source.status.key === "partial" ? "partial" : "";
-    const record = source.latestLabel || (source.latest ? formatTimestamp(source.latest) : "No checked record");
-    return `<tr><td><strong>${escapeHtml(source.name)}</strong></td><td>${escapeHtml(source.role)}</td><td>${escapeHtml(source.cadence)}</td><td>${escapeHtml(record)}</td><td><span class="tag ${tone}">${escapeHtml(source.status.label)}</span></td></tr>`;
-  }).join("");
-  els.dataHealthSourceBody.innerHTML = sourceRows;
-  if (els.dataHealthPanelSources) {
-    els.dataHealthPanelSources.innerHTML = `<h3>System sources</h3>${sources.map((source) => {
-      const live = source.status.key === "good" ? "live" : "partial";
-      const tone = source.status.key === "good" ? "good" : "partial";
-      const record = source.latestLabel || (source.latest ? formatTimestamp(source.latest) : "No checked record");
-      return `<div class="source-status-row"><span class="status-dot ${live}"></span><div><strong>${escapeHtml(source.name)}</strong><small>${escapeHtml(record)}</small></div><span class="tag ${tone}">${escapeHtml(source.status.label)}</span></div>`;
-    }).join("")}`;
-  }
-}
-
 function activateTab(tabName) {
   state.mapBuildingPopup?.remove();
   state.mapHoveredSourceId = null;
@@ -2010,7 +1935,6 @@ function activateTab(tabName) {
     els.tokenPanel.classList.add("hidden");
   }
   if (tabName === "weather") loadWeatherDashboard();
-  if (tabName === "data") renderDataHealth();
 }
 
 function zoomToRegionCodes(codes) {
@@ -5646,12 +5570,6 @@ function bindControls() {
   });
   els.tabButtons.forEach((button) => button.addEventListener("click", () => activateTab(button.dataset.tab)));
   els.weatherPeriodButtons.forEach((button) => button.addEventListener("click", () => setWeatherPeriod(button.dataset.weatherPeriod)));
-  els.dataHealthFilterButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      state.activeDataHealthFilter = button.dataset.dataHealthFilter;
-      renderDataHealth();
-    });
-  });
   els.overviewBuildingPerformance?.addEventListener("click", (event) => {
     const button = event.target.closest("[data-performance-building]");
     if (!button) return;
@@ -5901,8 +5819,6 @@ bindControls();
 window.NUSStationWeather.select(document.getElementById("weatherLocation").value);
 renderMarketHeatmap();
 renderBuildingAnalytics();
-loadNemsMarket();
-scheduleNemsMarketRefresh();
 setWeatherPeriod(state.activeWeatherPeriod);
 activateTab(state.activeTab);
 

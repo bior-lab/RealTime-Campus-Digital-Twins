@@ -10,7 +10,8 @@
     
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="vendor/mapbox-gl/mapbox-gl.css" />
-    <link rel="stylesheet" href="src/styles.css?v=20260908-overview-refined" />
+    <link rel="stylesheet" href="src/styles.css?v=20260909-market-link" />
+    <link rel="stylesheet" href="src/market-external.css?v=20260909" />
     <script src="vendor/mapbox-gl/mapbox-gl.js"></script>
   </head>
   <body>
@@ -41,10 +42,6 @@
           <button type="button" data-tab="weather" aria-pressed="false">
             <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M17 17H7a4 4 0 1 1 1.1-7.85A5.5 5.5 0 0 1 18.5 11 3 3 0 0 1 17 17Z"/><path d="M12 2v3M4.9 4.9 7 7M19.1 4.9 17 7"/></svg></span>
             Weather
-          </button>
-          <button type="button" data-tab="data" aria-pressed="false">
-            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"/><path d="m16 17 1.5 1.5L21 15"/></svg></span>
-            Data Health
           </button>
           <a class="rail-guide" href="./guide/" target="_blank" rel="noopener noreferrer">
             <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v17H7.5A3.5 3.5 0 0 0 4 22V5.5Z"/><path d="M4 18.5A3.5 3.5 0 0 1 7.5 15H20"/></svg></span>
@@ -109,11 +106,30 @@
 
         <section class="workspace-view analysis-workspace" data-workspace="market" aria-label="Singapore energy price">
           <header class="workspace-topbar">
-            <div><h1>Energy Price</h1><p>Singapore wholesale electricity prices, demand and solar forecasts · EMC / NEMS</p></div>
-            <div class="topbar-actions"><span id="nemsSourceStatus" class="source-chip"><span class="status-dot loading"></span>Connecting to EMC / NEMS</span></div>
+            <div><h1>Energy Price</h1><p>Official Singapore wholesale electricity market information · EMC / NEMS</p></div>
+            <div class="topbar-actions"><span class="source-chip"><span class="status-dot live"></span>Official external source</span></div>
           </header>
           <div class="workspace-content market-analysis-content">
-            <article class="dashboard-card nems-realtime-card" aria-labelledby="nemsMarketTitle">
+            <article class="dashboard-card market-directory-card" aria-labelledby="marketDirectoryTitle">
+              <div class="market-directory-copy">
+                <h2 id="marketDirectoryTitle">Energy prices and market demand</h2>
+                <div id="marketSnapshotGrid" class="market-snapshot-grid" aria-live="polite">
+                  <div><span>USEP</span><strong>--</strong><small>S$/MWh</small></div>
+                  <div><span>Demand</span><strong>--</strong><small>MW</small></div>
+                  <div><span>Solar</span><strong>--</strong><small>MW</small></div>
+                  <div><span>VCP</span><strong>--</strong><small>S$/MWh</small></div>
+                </div>
+                <a class="market-directory-action" href="https://www.nems.emcsg.com/en/" target="_blank" rel="noopener noreferrer">
+                  View live data on EMC / NEMS
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+              <div class="market-directory-details" aria-label="Market source information">
+                <div><span>Official update</span><strong id="marketSnapshotPublished">--</strong></div>
+                <div><span>Data owner</span><strong>Energy Market Company</strong></div>
+              </div>
+            </article>
+            <article class="dashboard-card nems-realtime-card legacy-market-ui" aria-labelledby="nemsMarketTitle">
               <header class="nems-market-toolbar">
                 <div><h2 id="nemsMarketTitle">Real-time Energy Prices and Demand</h2><p id="nemsMarketSubtitle">Provisional half-hourly market information</p></div>
                 <div class="nems-toolbar-actions">
@@ -217,21 +233,6 @@
               <div id="weatherWindChart" class="weather-chart-frame" aria-live="polite"><div class="weather-loading">Loading observations…</div></div>
             </article>
 
-          </div>
-        </section>
-
-        <section class="workspace-view analysis-workspace" data-workspace="data" aria-label="Data coverage and source health">
-          <header class="workspace-topbar"><div><h1>Data Coverage and Source Health</h1><p>Engineering view · mapping confidence, freshness, and availability</p></div><div class="topbar-actions"><span class="source-chip" id="dataHealthSourceChip">Public API · checking</span></div></header>
-          <div class="workspace-content data-analysis-content">
-            <div class="summary-strip"><div><span>Buildings reporting</span><strong id="dataHealthReportingCount">-- / 16</strong><small>latest public API response</small></div><div><span>Latest API records</span><strong id="dataHealthRecordCount">--</strong><small>canonical and retained aliases</small></div><div><span>Partial buildings</span><strong id="dataHealthPartialCount">--</strong><small>incomplete metric coverage</small></div><div><span>Missing buildings</span><strong id="dataHealthMissingCount">--</strong><small>no current building records</small></div></div>
-            <article class="dashboard-card coverage-card">
-              <header><div><h2>Building × metric coverage</h2><p id="dataHealthResultCount">Checking the latest public API response</p></div><div class="coverage-key"><span class="tag good">Mapped</span><span class="tag partial">Partial</span><span class="tag">Missing</span></div></header>
-              <div class="table-scroll"><table class="engineering-table coverage-table">
-                <thead><tr><th>Building</th><th>Electricity</th><th>Cooling</th><th>PV</th><th>Latest source</th><th>Cadence</th><th>Status</th></tr></thead>
-                <tbody id="dataHealthTableBody"><tr><td colspan="7">Checking current coverage…</td></tr></tbody>
-              </table></div>
-            </article>
-            <article class="dashboard-card source-health-card"><header><div><h2>Source health</h2><p>Collector and public-context services</p></div></header><table class="engineering-table"><thead><tr><th>Source</th><th>Role</th><th>Expected cadence</th><th>Latest record</th><th>Status</th></tr></thead><tbody id="dataHealthSourceBody"><tr><td colspan="5">Checking source freshness…</td></tr></tbody></table></article>
           </div>
         </section>
 
@@ -357,8 +358,14 @@
         </section>
 
         <section id="tab-market" class="tab-panel" data-tab-panel="market">
-          <div class="panel-intro"><h2>Energy Price</h2><p>Singapore wholesale electricity prices and demand for campus energy context.</p></div>
-          <section class="panel-section compact-controls">
+          <div class="panel-intro"><h2>Energy Price</h2><p>Open the official Singapore wholesale electricity market source.</p></div>
+          <section class="panel-section market-external-panel">
+            <span class="field-label">Official source</span>
+            <strong>EMC / NEMS Market Data</strong>
+            <p>Prices, demand, forecasts and published market reports are maintained by the Energy Market Company.</p>
+            <a class="field-control market-source-link market-source-button" href="https://www.nems.emcsg.com/en/" target="_blank" rel="noopener noreferrer">Open official website ↗</a>
+          </section>
+          <section class="panel-section compact-controls legacy-market-ui">
             <label class="field-label" for="nemsProductSelect">Data product</label>
             <select id="nemsProductSelect" class="building-select nems-product-select" aria-label="NEMS market data product">
               <option value="10">Real-time Energy Prices and Demand</option>
@@ -369,8 +376,8 @@
               <option value="19">7-day Solar Forecast (Average-Min-Max)</option>
             </select>
           </section>
-          <section class="panel-section market-source-details"><span class="field-label">Update cadence</span><div id="nemsUpdateCadence" class="field-control market-readonly-field">Every half-hour</div><span class="field-label">Source</span><a class="field-control market-source-link" href="https://www.nems.emcsg.com/en/" target="_blank" rel="noreferrer">EMC / NEMS ↗</a></section>
-          <div class="panel-notice">Wholesale market context only. This is not the NUS contracted tariff or an electricity bill estimate.</div>
+          <section class="panel-section market-source-details legacy-market-ui"><span class="field-label">Update cadence</span><div id="nemsUpdateCadence" class="field-control market-readonly-field">Every half-hour</div><span class="field-label">Source</span><a class="field-control market-source-link" href="https://www.nems.emcsg.com/en/" target="_blank" rel="noreferrer">EMC / NEMS ↗</a></section>
+          <div class="panel-notice">External market information is provided for context only and is not the NUS contracted tariff or an electricity bill estimate.</div>
         </section>
 
         <section id="tab-weather" class="tab-panel" data-tab-panel="weather">
@@ -379,13 +386,6 @@
           <section class="panel-section"><span class="field-label">Period</span><div class="segmented weather-period-control" role="group" aria-label="Weather reporting period"><button class="active" type="button" data-weather-period="7d" aria-pressed="true">Weekly</button><button type="button" data-weather-period="30d" aria-pressed="false">Monthly</button><button type="button" data-weather-period="yearly" aria-pressed="false">Yearly</button></div></section>
           <div id="weatherLocationNote" class="weather-location-note">DEMIS · weather data.</div>
           <div id="externalVizPanel" class="hidden" aria-hidden="true"></div>
-        </section>
-
-        <section id="tab-data" class="tab-panel" data-tab-panel="data">
-          <div class="panel-intro"><h2>Data Status</h2><p>Point coverage, source freshness, and mapping confidence for engineering review.</p></div>
-          <section class="panel-section"><div class="live-summary data-panel-summary"><div><span class="summary-label">Reporting</span><strong id="dataPanelReportingCount">--</strong><small>of 16 buildings</small></div><div><span class="summary-label">API records</span><strong id="dataPanelRecordCount">--</strong><small>latest response</small></div><div><span class="summary-label">Partial</span><strong id="dataPanelPartialCount">--</strong><small>building coverage</small></div><div><span class="summary-label">Missing</span><strong id="dataPanelMissingCount">--</strong><small>no current records</small></div></div></section>
-          <section class="panel-section"><span class="field-label">Filter</span><div class="segmented local-segmented" id="dataHealthFilter" role="group" aria-label="Filter building coverage"><button class="active" type="button" data-data-health-filter="all" aria-pressed="true">All</button><button type="button" data-data-health-filter="partial" aria-pressed="false">Partial</button><button type="button" data-data-health-filter="missing" aria-pressed="false">Missing</button></div></section>
-          <section class="panel-section source-stack" id="dataHealthPanelSources"><h3>System sources</h3><div class="source-status-row"><span class="status-dot partial"></span><div><strong>Public building API</strong><small>Checking latest records</small></div><span class="tag partial">Checking</span></div></section>
         </section>
 
         <div class="compatibility-hooks hidden" aria-hidden="true">
@@ -400,8 +400,8 @@
 
     <script src="src/config.js?v=20260907-nems-live" defer></script>
     <script src="src/building-history.js?v=20260907-aggregate-2" defer></script>
-    <script src="src/data-health.js?v=20260908-live-health" defer></script>
     <script src="src/station-weather.js?v=20260908-demis" defer></script>
-    <script src="src/app.js?v=20260908-default-station" defer></script>
+    <script src="src/market-snapshot.js?v=20260909" defer></script>
+    <script src="src/app.js?v=20260909-remove-data-health" defer></script>
   </body>
 </html>
