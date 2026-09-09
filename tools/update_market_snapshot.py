@@ -120,9 +120,24 @@ def write_snapshot(snapshot: dict[str, Any], output: Path = OUTPUT) -> None:
     temporary.replace(output)
 
 
+def market_record_changed(snapshot: dict[str, Any], output: Path = OUTPUT) -> bool:
+    """Ignore retrieval time so unchanged NEMS records do not create Git commits."""
+    if not output.exists():
+        return True
+    try:
+        existing = json.loads(output.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return True
+    comparable_keys = ("published", "source", "sourceUrl", "metrics")
+    return any(existing.get(key) != snapshot.get(key) for key in comparable_keys)
+
+
 def main() -> int:
     try:
         snapshot = extract_snapshot(fetch_payload())
+        if not market_record_changed(snapshot):
+            print(f"Market record is unchanged ({snapshot['published']})")
+            return 0
         write_snapshot(snapshot)
     except Exception as error:  # The workflow must preserve the previous deployed record.
         print(f"Market record update failed: {error}", file=sys.stderr)

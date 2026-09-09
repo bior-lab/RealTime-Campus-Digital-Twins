@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from update_market_snapshot import extract_snapshot, write_snapshot
+from update_market_snapshot import extract_snapshot, market_record_changed, write_snapshot
 
 
 class MarketSnapshotTests(unittest.TestCase):
@@ -36,6 +36,20 @@ class MarketSnapshotTests(unittest.TestCase):
             snapshot = {"published": "test", "metrics": []}
             write_snapshot(snapshot, output)
             self.assertEqual(json.loads(output.read_text(encoding="utf-8")), snapshot)
+
+    def test_ignores_retrieval_time_when_record_is_unchanged(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "snapshot.json"
+            existing = {
+                "published": "09 Sep 2026 18:31",
+                "retrievedAt": "2026-09-09T10:48:00+00:00",
+                "source": "EMC / NEMS",
+                "sourceUrl": "https://www.nems.emcsg.com/en/",
+                "metrics": [{"key": "usep", "value": 616.05}],
+            }
+            write_snapshot(existing, output)
+            refreshed = {**existing, "retrievedAt": "2026-09-09T10:53:00+00:00"}
+            self.assertFalse(market_record_changed(refreshed, output))
 
 
 if __name__ == "__main__":
