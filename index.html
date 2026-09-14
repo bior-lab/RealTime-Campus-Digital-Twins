@@ -35,13 +35,9 @@
             <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-5h6v5"/><path d="M8 10h.01M12 10h.01M16 10h.01M8 14h.01M16 14h.01"/></svg></span>
             Buildings
           </button>
-          <button type="button" data-tab="market" aria-pressed="false">
-            <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="m7 15 4-4 3 2 5-7"/><path d="M16 6h3v3"/></svg></span>
-            Energy Price
-          </button>
           <button type="button" data-tab="weather" aria-pressed="false">
             <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M17 17H7a4 4 0 1 1 1.1-7.85A5.5 5.5 0 0 1 18.5 11 3 3 0 0 1 17 17Z"/><path d="M12 2v3M4.9 4.9 7 7M19.1 4.9 17 7"/></svg></span>
-            Weather
+            Weather &amp; Energy Price
           </button>
           <a class="rail-guide" href="./guide/" target="_blank" rel="noopener noreferrer">
             <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v17H7.5A3.5 3.5 0 0 0 4 22V5.5Z"/><path d="M4 18.5A3.5 3.5 0 0 1 7.5 15H20"/></svg></span>
@@ -95,10 +91,20 @@
           </header>
           <div class="workspace-content building-analysis-content">
             <div class="building-performance-grid">
-              <article class="dashboard-card chart-card building-primary-chart">
-                <header class="building-chart-header"><div><h2 id="buildingChartTitle">Electricity consumption</h2><p id="buildingChartSubtitle">Daily totals · weekly view · kWh</p></div><div id="buildingChartLegend" class="chart-legend building-chart-legend"></div></header>
-                <div id="buildingChartKpis" class="building-chart-kpis" aria-label="Selected portfolio energy summary"></div>
-                <div id="buildingPerformanceChart" class="generated-chart" aria-label="Selected building performance comparison"></div>
+              <article class="dashboard-card chart-card building-primary-chart" data-building-chart="electricity">
+                <header class="building-chart-header"><div><h2 data-chart-title>Electricity</h2><p data-chart-subtitle></p></div><div class="segmented local-segmented building-period-control" role="group" aria-label="Electricity reporting period"><button type="button" data-building-period="monthly" aria-pressed="false">Monthly</button><button class="active" type="button" data-building-period="yearly" aria-pressed="true">Yearly</button></div></header>
+                <div data-chart-kpis class="building-chart-kpis" aria-label="Electricity energy summary"></div>
+                <div data-chart-plot class="generated-chart" aria-label="Electricity building performance"></div>
+              </article>
+              <article class="dashboard-card chart-card building-primary-chart" data-building-chart="cooling">
+                <header class="building-chart-header"><div><h2 data-chart-title>Cooling</h2><p data-chart-subtitle></p></div><div class="segmented local-segmented building-period-control" role="group" aria-label="Cooling reporting period"><button type="button" data-building-period="monthly" aria-pressed="false">Monthly</button><button class="active" type="button" data-building-period="yearly" aria-pressed="true">Yearly</button></div></header>
+                <div data-chart-kpis class="building-chart-kpis" aria-label="Cooling energy summary"></div>
+                <div data-chart-plot class="generated-chart" aria-label="Cooling building performance"></div>
+              </article>
+              <article class="dashboard-card chart-card building-primary-chart" data-building-chart="pv">
+                <header class="building-chart-header"><div><h2 data-chart-title>PV</h2><p data-chart-subtitle></p></div><div class="segmented local-segmented building-period-control" role="group" aria-label="PV reporting period"><button type="button" data-building-period="monthly" aria-pressed="false">Monthly</button><button class="active" type="button" data-building-period="yearly" aria-pressed="true">Yearly</button></div></header>
+                <div data-chart-kpis class="building-chart-kpis" aria-label="PV energy summary"></div>
+                <div data-chart-plot class="generated-chart" aria-label="PV building performance"></div>
               </article>
             </div>
           </div>
@@ -196,7 +202,7 @@
           </header>
           <div class="workspace-content weather-analysis-content">
             <div class="weather-toolbar">
-              <div class="weather-station-identity"><span>Reference location</span><strong>NUS Kent Ridge</strong><small>1.2966° N, 103.7764° E</small></div>
+              <div class="weather-station-identity"><span>Weather station location</span><strong>NUS Kent Ridge</strong><small>1.2966° N, 103.7764° E</small></div>
             </div>
 
             <section class="weather-current-summary kent-weather-current" aria-labelledby="weatherCurrentTitle">
@@ -209,27 +215,27 @@
             </div>
             </section>
 
-            <article class="dashboard-card weather-primary">
+            <article class="dashboard-card weather-primary" data-weather-chart="thermal">
               <header>
                 <div><h2 id="weatherChartTitle">Thermal conditions · Weekly</h2><p id="weatherChartSubtitle">Temperature and relative humidity · loading</p></div>
                 <div class="chart-legend weather-chart-legend"><span style="--series:#b33c30">Temperature · °C</span><span style="--series:#1769aa">Humidity · %RH</span></div>
-              </header>
+              <div class="segmented weather-period-control" role="group" aria-label="Chart reporting period"><button type="button" data-weather-period="7d" aria-pressed="true" class="active">Weekly</button><button type="button" data-weather-period="30d" aria-pressed="false" class="">Monthly</button><button type="button" data-weather-period="yearly" aria-pressed="false" class="">Yearly</button></div></header>
               <div id="weatherThermalChart" class="weather-chart-frame" aria-live="polite"><div class="weather-loading">Loading observations…</div></div>
             </article>
 
-            <article class="dashboard-card weather-series-card kent-weather-series">
+            <article class="dashboard-card weather-series-card kent-weather-series" data-weather-chart="heat">
               <header>
                 <div><h2 id="weatherHeatTitle">Estimated WBGT · Weekly</h2><p id="weatherHeatSubtitle">Shade estimate · loading</p></div>
                 <div class="chart-legend weather-chart-legend"><span style="--series:#ef7c00">WBGT · °C</span></div>
-              </header>
+              <div class="segmented weather-period-control" role="group" aria-label="Chart reporting period"><button type="button" data-weather-period="7d" aria-pressed="true" class="active">Weekly</button><button type="button" data-weather-period="30d" aria-pressed="false" class="">Monthly</button><button type="button" data-weather-period="yearly" aria-pressed="false" class="">Yearly</button></div></header>
               <div id="weatherHeatChart" class="weather-chart-frame" aria-live="polite"><div class="weather-loading">Loading observations…</div></div>
             </article>
 
-            <article class="dashboard-card weather-series-card kent-weather-series">
+            <article class="dashboard-card weather-series-card kent-weather-series" data-weather-chart="wind">
               <header>
                 <div><h2 id="weatherWindTitle">Wind direction · Weekly</h2><p id="weatherWindSubtitle">10 m direction · loading</p></div>
                 <div class="chart-legend weather-chart-legend"><span style="--series:#247c70">Direction · °</span></div>
-              </header>
+              <div class="segmented weather-period-control" role="group" aria-label="Chart reporting period"><button type="button" data-weather-period="7d" aria-pressed="true" class="active">Weekly</button><button type="button" data-weather-period="30d" aria-pressed="false" class="">Monthly</button><button type="button" data-weather-period="yearly" aria-pressed="false" class="">Yearly</button></div></header>
               <div id="weatherWindChart" class="weather-chart-frame" aria-live="polite"><div class="weather-loading">Loading observations…</div></div>
             </article>
 
@@ -347,12 +353,8 @@
         <section id="tab-buildings" class="tab-panel" data-tab-panel="buildings">
           <div class="panel-intro"><h2>Building Analysis</h2><p>Explore energy use for a selected campus building.</p></div>
           <section class="panel-section analysis-controls">
-            <label class="field-label" for="buildingSelect">Select building</label>
-            <select id="buildingSelect" class="building-select" aria-label="Select building"></select>
-            <span class="field-label">Variables</span>
-            <div class="segmented local-segmented building-metric-control" role="group" aria-label="Building variables"><button class="active" type="button" data-building-metric="electricity" aria-pressed="true">Electricity</button><button type="button" data-building-metric="cooling" aria-pressed="false">Cooling</button><button type="button" data-building-metric="pv" aria-pressed="false">PV</button></div>
-            <span class="field-label">Period</span>
-            <div class="segmented local-segmented building-period-control" role="group" aria-label="Building reporting period"><button type="button" data-building-period="monthly" aria-pressed="false">Monthly</button><button class="active" type="button" data-building-period="yearly" aria-pressed="true">Yearly</button></div>
+            <span id="buildingListLabel" class="field-label">Select building</span>
+            <div id="buildingSelect" class="building-radio-list" role="radiogroup" aria-labelledby="buildingListLabel"></div>
           </section>
 
         </section>
@@ -381,10 +383,13 @@
         </section>
 
         <section id="tab-weather" class="tab-panel" data-tab-panel="weather">
-          <div class="panel-intro"><h2>Campus Weather</h2><p>NUS-coordinate current conditions and recent observations.</p></div>
-          <section class="panel-section compact-controls"><label class="field-label" for="weatherLocation">Reference location</label><select id="weatherLocation" class="field-control"><option value="sde4" selected>SDE4 Weather Station</option><option value="kent-ridge">NUS Kent Ridge</option></select></section>
-          <section class="panel-section"><span class="field-label">Period</span><div class="segmented weather-period-control" role="group" aria-label="Weather reporting period"><button class="active" type="button" data-weather-period="7d" aria-pressed="true">Weekly</button><button type="button" data-weather-period="30d" aria-pressed="false">Monthly</button><button type="button" data-weather-period="yearly" aria-pressed="false">Yearly</button></div></section>
-          <div id="weatherLocationNote" class="weather-location-note">DEMIS · weather data.</div>
+          <div class="panel-intro"><h2>Real-time Weather and Energy prices</h2><p>NUS-coordinate current conditions and recent observations.</p></div>
+          <section class="panel-section compact-controls"><span id="weatherLocationLabel" class="field-label">Weather station location</span><div id="weatherLocation" class="building-radio-list" role="radiogroup" aria-labelledby="weatherLocationLabel"><label class="building-radio-option"><input type="radio" name="weather-location" value="sde4" checked><span>SDE4 Weather Station</span></label><label class="building-radio-option"><input type="radio" name="weather-location" value="kent-ridge"><span>NUS Kent Ridge</span></label></div></section>
+          <div id="weatherLocationNote" class="weather-location-note">On-site weather station · weather data.</div>
+          <section class="panel-section weather-price-section" aria-labelledby="weatherPriceTitle">
+            <h2 id="weatherPriceTitle">Price</h2>
+            <a class="weather-price-link" href="https://www.nems.emcsg.com/en/" target="_blank" rel="noopener noreferrer">View real-time National Electricity Market of Singapore (NEMS) prices here</a>
+          </section>
           <div id="externalVizPanel" class="hidden" aria-hidden="true"></div>
         </section>
 
@@ -400,7 +405,7 @@
 
     <script src="src/config.js?v=20260907-nems-live" defer></script>
     <script src="src/building-history.js?v=20260907-aggregate-2" defer></script>
-    <script src="src/station-weather.js?v=20260908-demis" defer></script>
+    <script src="src/station-weather.js?v=20260914-onsite" defer></script>
     <script src="src/market-snapshot.js?v=20260909" defer></script>
     <script src="src/app.js?v=20260909-remove-data-health" defer></script>
   </body>

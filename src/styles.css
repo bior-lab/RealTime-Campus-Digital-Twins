@@ -6002,3 +6002,33 @@ h3 {
   .nems-realtime-card .nems-current-metric:nth-child(3) { border-left: 0; }
   .nems-realtime-card .nems-current-metric:nth-child(n+3) { border-top: 1px solid #d6dee6; }
 }
+
+/* Building metrics share one vertically ordered workspace. */
+.building-performance-grid { grid-template-columns: minmax(0, 1fr); }
+.building-chart-header { display: flex; justify-content: space-between; flex-wrap: wrap; }
+.building-chart-header .building-period-control { margin-left: auto; flex: 0 0 auto; }
+.building-primary-chart > .building-chart-legend { max-width: 100%; justify-content: flex-start; margin: 8px 0; }
+
+.building-radio-list { display: grid; gap: 6px; }
+.building-radio-option { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--workspace-line); border-radius: 6px; background: #fff; cursor: pointer; font-size: 13px; }
+.building-radio-option:hover { background: #f3f7fa; }
+.building-radio-option:has(input:checked) { border-color: var(--nus-blue); background: #edf5fb; }
+.building-radio-option:has(input:focus-visible) { outline: 2px solid var(--nus-blue); outline-offset: 2px; }
+.building-radio-option input { flex: 0 0 auto; width: 16px; height: 16px; margin: 0; accent-color: var(--nus-blue); }
+
+.building-area-group { display: grid; gap: 6px; min-width: 0; margin: 0; padding: 0 0 12px; border: 0; }
+.building-area-group legend { width: 100%; padding: 10px 0 8px; font-size: 12px; font-weight: 700; color: var(--nus-blue); }
+
+[data-workspace="weather"] article > header { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 12px; }
+[data-workspace="weather"] article > header .weather-period-control { grid-column: 2; grid-row: 1; justify-self: end; }
+[data-workspace="weather"] article > header .weather-chart-legend { grid-column: 1 / -1; grid-row: 2; }
+@media (max-width: 640px) {
+  [data-workspace="weather"] article > header { grid-template-columns: minmax(0, 1fr); }
+  [data-workspace="weather"] article > header .weather-period-control { grid-column: 1; grid-row: 2; }
+  [data-workspace="weather"] article > header .weather-chart-legend { grid-row: 3; }
+}
+
+.weather-price-section { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--workspace-line); }
+.weather-price-section h2 { margin: 0 0 12px; font-size: 20px; }
+.weather-price-link { color: var(--nus-blue); line-height: 1.6; text-decoration: underline; text-underline-offset: 3px; }
+.weather-price-link:focus-visible { outline: 2px solid var(--nus-blue); outline-offset: 3px; }

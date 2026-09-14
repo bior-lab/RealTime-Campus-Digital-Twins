@@ -69,6 +69,7 @@
   const dateLabel = (t, options = {}) => new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Singapore", day: "2-digit", month: "short", ...options }).format(new Date(t));
   const number = (v, digits = 1) => new Intl.NumberFormat("en-GB", { maximumFractionDigits: digits }).format(v);
   let active = false, period = "7d", pending = null, fetchedAt = 0, records = [], panel;
+  const periods = Object.fromEntries(metrics.map(metric => [metric.key, "7d"]));
   let originalIdentity, originalSubtitle;
   async function fetchRange(metric) {
     const point = metric.pointName;
@@ -105,11 +106,11 @@
     workspace.classList.toggle("sde4-weather-active", active);
     panel.hidden = !active;
     workspace.querySelector(".weather-station-identity").innerHTML = active
-      ? "<span>Reference location</span><strong>SDE4 Weather Station</strong><small>On-site weather · DEMIS API</small>" : originalIdentity;
+      ? "<span>Weather station location</span><strong>SDE4 Weather Station</strong><small>On-site weather station</small>" : originalIdentity;
     const subtitle = workspace.querySelector(".workspace-topbar p");
     if (subtitle) subtitle.textContent = active ? "SDE4 · on-site weather station observations" : originalSubtitle;
     document.getElementById("weatherLocationNote").textContent = active
-      ? "DEMIS · weather data."
+      ? "On-site weather station · weather data."
       : "Open-Meteo · model-based weather at NUS Kent Ridge coordinates.";
     document.getElementById("weatherSourceStatus").textContent = active ? "SDE4 · loading" : "Open-Meteo · loading";
     document.getElementById("weatherUpdated").textContent = "Awaiting update";
@@ -127,7 +128,7 @@
     render(period);
     return pending;
   }
-  function chart(metric, rows, id) {
+  function chart(metric, rows, period) {
     const values = rows.filter(r => r.v !== null);
     if (!values.length) return '<div class="weather-empty"><strong>No reported data</strong><span>No usable values for this metric and period.</span></div>';
     const w = 850, h = 270, left = 70, right = 20, top = 25, bottom = 38;
@@ -168,16 +169,14 @@
       const detail = period === "7d" ? "3-hour sample" : period === "30d" ? `Daily average · ${r.n} hourly values` : `Monthly average · ${r.n} hourly values`;
       return `<rect class="weather-chart-hit" tabindex="0" role="img" aria-label="Inspect ${escape(time)}" data-station-hit data-station-time="${escape(time)}" data-station-display="${escape(display)}" data-station-detail="${escape(detail)}" data-station-x="${x(i)}" data-station-y="${y(r.v)}" x="${start}" y="${top}" width="${Math.max(1, end - start)}" height="${h - top - bottom}"></rect>`;
     }).join("");
-    return `<svg viewBox="0 0 ${w} ${h}" role="group" aria-label="${escape(metric.name)} ${escape(metric.unit)}"><text class="weather-axis-unit" x="${left}" y="14">${escape(metric.name)} ${escape(metric.unit)}</text><g class="station-grid">${ticks}${labels}</g><path class="station-line ${metric.key}" d="${path}"/>${dots}<line class="weather-hover-line" y1="${top}" y2="${h - bottom}" hidden></line><circle class="weather-hover-dot ${metric.key}" r="5" hidden></circle><g>${hits}</g></svg><div class="weather-chart-tooltip" role="status" hidden data-station-tooltip><header></header><div><span><i class="${metric.key}"></i>${escape(metric.name)}</span><strong></strong></div><small></small></div><p class="weather-chart-note">Source: DEMIS · Singapore time (SGT)</p>`;
+    return `<svg viewBox="0 0 ${w} ${h}" role="group" aria-label="${escape(metric.name)} ${escape(metric.unit)}"><text class="weather-axis-unit" x="${left}" y="14">${escape(metric.name)} ${escape(metric.unit)}</text><g class="station-grid">${ticks}${labels}</g><path class="station-line ${metric.key}" d="${path}"/>${dots}<line class="weather-hover-line" y1="${top}" y2="${h - bottom}" hidden></line><circle class="weather-hover-dot ${metric.key}" r="5" hidden></circle><g>${hits}</g></svg><div class="weather-chart-tooltip" role="status" hidden data-station-tooltip><header></header><div><span><i class="${metric.key}"></i>${escape(metric.name)}</span><strong></strong></div><small></small></div><p class="weather-chart-note">Source: On-site weather station · Singapore time (SGT)</p>`;
   }
   function render(nextPeriod = period) {
     period = nextPeriod;
     if (!active) return;
     init();
-    const now = Date.now(), periodName = period === "yearly" ? "Yearly" : period === "30d" ? "Monthly" : "Weekly";
-    const mode = period === "yearly" ? "Year to date · monthly means of available hourly values · current month partial"
-      : period === "30d" ? "Last 30 calendar days · daily means of available hourly values · today partial" : "Last 7 calendar days · one sample every 3 hours";
-    document.getElementById("weatherSourceStatus").textContent = pending ? "SDE4 · loading" : "DEMIS · SDE4";
+    const now = Date.now();
+    document.getElementById("weatherSourceStatus").textContent = pending ? "SDE4 · loading" : "On-site weather station · SDE4";
     const latestTimes = records.map((record) => record.rows.at(-1)?.t).filter(Number.isFinite);
     const latestTime = latestTimes.length ? Math.max(...latestTimes) : null;
     document.getElementById("weatherUpdated").textContent = pending ? "Loading station history" : latestTime ? `Updated ${dateLabel(latestTime, { hour: "2-digit", minute: "2-digit" })} SGT` : "No update available";
@@ -187,18 +186,28 @@
       const display = !latest ? "--" : metric.key === "wind" ? `${number(latest.v, metric.digits)}° ${compass(latest.v)}` : `${number(latest.v, metric.digits)} ${metric.unit}`;
       return `<div class="${metric.kpiClass}"><span>${metric.name}</span><strong>${display}</strong><small>${latest ? dateLabel(latest.t, { hour: "2-digit", minute: "2-digit" }) + " SGT" : "No current value"}</small></div>`;
     }).join("");
-    panel.innerHTML = `<section class="weather-current-summary station-current-summary"><h2>Current conditions <span>Latest available · independent of chart period</span></h2><div class="weather-kpi-strip">${currentCards}</div></section><div class="station-toolbar"><span>${mode}</span><button type="button" class="nems-refresh" id="stationRefresh" ${pending ? "disabled" : ""}>${pending ? "Loading…" : "Refresh"}</button></div>` + metrics.map(metric => {
+    panel.innerHTML = `<section class="weather-current-summary station-current-summary"><h2>Current conditions <span>Latest available · independent of chart period</span></h2><div class="weather-kpi-strip">${currentCards}</div></section><div class="station-toolbar"><span>Station observations</span><button type="button" class="nems-refresh" id="stationRefresh" ${pending ? "disabled" : ""}>${pending ? "Loading…" : "Refresh"}</button></div>` + metrics.map(metric => {
+      const period = periods[metric.key];
+      const periodName = period === "yearly" ? "Yearly" : period === "30d" ? "Monthly" : "Weekly";
+      const mode = period === "yearly" ? "Year to date · monthly means · current month partial" : period === "30d" ? "Last 30 calendar days · daily means · today partial" : "Last 7 calendar days · one sample every 3 hours";
+      const controls = `<div class="segmented weather-period-control" role="group" aria-label="${metric.name} reporting period">${[["7d", "Weekly"], ["30d", "Monthly"], ["yearly", "Yearly"]].map(([value, label]) => `<button type="button" data-station-metric="${metric.key}" data-station-period="${value}" class="${value === period ? "active" : ""}" aria-pressed="${value === period}">${label}</button>`).join("")}</div>`;
       const record = records.find(r => r.metric.key === metric.key);
       const rows = aggregate(record?.rows || [], period, now, metric.aggregate), latest = record?.rows.at(-1);
       const range = `${dateLabel(rows[0].t, { year: "numeric" })} – ${dateLabel(now, { year: "numeric" })}`;
-      return `<article class="dashboard-card station-card"><header><div><h2>${metric.name} · ${periodName}</h2><p>${range} · ${mode}</p></div><div class="chart-legend weather-chart-legend"><span style="--series:${metric.color}">${metric.name} · ${metric.unit}</span></div></header><div class="weather-chart-frame station-chart">${pending ? '<div class="weather-loading">Loading station observations…</div>' : record?.error ? '<div class="weather-empty"><strong>Station data unavailable</strong><span>This point could not be loaded. Use Refresh to retry.</span></div>' : chart(metric, rows, metric.key)}</div></article>`;
+      return `<article class="dashboard-card station-card"><header><div><h2>${metric.name} · ${periodName}</h2><p>${range} · ${mode}</p></div><div class="chart-legend weather-chart-legend"><span style="--series:${metric.color}">${metric.name} · ${metric.unit}</span></div>${controls}</header><div class="weather-chart-frame station-chart">${pending ? '<div class="weather-loading">Loading station observations…</div>' : record?.error ? '<div class="weather-empty"><strong>Station data unavailable</strong><span>This point could not be loaded. Use Refresh to retry.</span></div>' : chart(metric, rows, period)}</div></article>`;
     }).join("");
     document.getElementById("stationRefresh").addEventListener("click", () => load(period, true));
+    panel.querySelectorAll("[data-station-period]").forEach(button => button.addEventListener("click", () => {
+      const { stationMetric, stationPeriod } = button.dataset;
+      periods[stationMetric] = stationPeriod;
+      render();
+      panel.querySelector(`[data-station-metric="${stationMetric}"][data-station-period="${stationPeriod}"]`)?.focus({ preventScroll: true });
+    }));
     panel.querySelectorAll(".station-chart").forEach(frame => {
       const tooltip = frame.querySelector("[data-station-tooltip]");
       const line = frame.querySelector(".weather-hover-line");
       const dot = frame.querySelector(".weather-hover-dot");
-      const hide = () => { tooltip.hidden = true; line.hidden = true; dot.hidden = true; };
+      const hide = () => { if (!tooltip || !line || !dot) return; tooltip.hidden = true; line.hidden = true; dot.hidden = true; };
       frame.querySelectorAll("[data-station-hit]").forEach(hit => {
         const show = () => {
           const x = Number(hit.dataset.stationX), y = Number(hit.dataset.stationY);

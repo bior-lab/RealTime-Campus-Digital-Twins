@@ -737,8 +737,6 @@ const initialWorkspace = ["overview", "buildings", "market", "weather"].includes
   : "overview";
 const requestedBuildingPeriod = new URLSearchParams(window.location.search).get("period");
 const initialBuildingPeriod = ["monthly", "yearly"].includes(requestedBuildingPeriod) ? requestedBuildingPeriod : "yearly";
-const requestedBuildingMetric = new URLSearchParams(window.location.search).get("metric");
-const initialBuildingMetric = ["electricity", "cooling", "pv"].includes(requestedBuildingMetric) ? requestedBuildingMetric : "electricity";
 
 const state = {
   map: null,
@@ -772,8 +770,7 @@ const state = {
   mapClickHandler: null,
   refreshTimer: null,
   selectedComparisonBuildings: new Set(["SDE4"]),
-  activeBuildingPeriod: initialBuildingPeriod,
-  activeBuildingMetric: initialBuildingMetric,
+  buildingPeriods: { electricity: initialBuildingPeriod, cooling: initialBuildingPeriod, pv: initialBuildingPeriod },
   activeMarketView: "chart",
   activeMarketInterval: "realtime",
   activeNemsProduct: "10",
@@ -784,6 +781,7 @@ const state = {
   nemsRefreshTimer: null,
   nemsLoading: false,
   activeWeatherPeriod: "7d",
+  weatherPeriods: { thermal: "7d", heat: "7d", wind: "7d" },
   weatherData: null,
   weatherLoadPromise: null,
   weatherYearData: null,
@@ -816,13 +814,8 @@ const els = {
   toggleEuiLayer: document.getElementById("toggleEuiLayer"),
   buildingSelect: document.getElementById("buildingSelect"),
   buildingPeriodButtons: document.querySelectorAll("[data-building-period]"),
-  buildingMetricButtons: document.querySelectorAll("[data-building-metric]"),
   buildingWorkspaceSubtitle: document.getElementById("buildingWorkspaceSubtitle"),
-  buildingChartTitle: document.getElementById("buildingChartTitle"),
-  buildingChartSubtitle: document.getElementById("buildingChartSubtitle"),
-  buildingChartLegend: document.getElementById("buildingChartLegend"),
-  buildingChartKpis: document.getElementById("buildingChartKpis"),
-  buildingPerformanceChart: document.getElementById("buildingPerformanceChart"),
+  buildingCharts: document.querySelectorAll("[data-building-chart]"),
   summaryElectricity: document.getElementById("summaryElectricity"),
   summaryCooling: document.getElementById("summaryCooling"),
   summaryWater: document.getElementById("summaryWater"),
@@ -1902,6 +1895,7 @@ function updateSummary() {
 }
 
 function activateTab(tabName) {
+  if (tabName === "market") tabName = "weather";
   state.mapBuildingPopup?.remove();
   state.mapHoveredSourceId = null;
   updateMapBuildingHighlight();
@@ -2789,7 +2783,10 @@ function aggregateHistoryBySingaporeDay(rows) {
 }
 
 async function loadBuildingPerformanceHistory(buildingCodes = selectedBuildingCodes()) {
-  const metric = state.activeBuildingMetric;
+  await Promise.all(["electricity", "cooling", "pv"].map(metric => loadBuildingMetricHistory(buildingCodes, metric)));
+}
+
+async function loadBuildingMetricHistory(buildingCodes, metric) {
   await Promise.all([...new Set(buildingCodes)].map(async (building) => {
     const definition = buildingHistoryPointMap[building]?.[metric];
     if (!definition) return;
@@ -2826,8 +2823,8 @@ async function loadBuildingPerformanceHistory(buildingCodes = selectedBuildingCo
   }));
 }
 
-function bindBuildingChartInteraction({ width, plot, labels, series, xFor, yFor, period }) {
-  const frame = els.buildingPerformanceChart.querySelector(".building-chart-frame");
+function bindBuildingChartInteraction({ chart, width, plot, labels, series, xFor, yFor, period }) {
+  const frame = chart.querySelector(".building-chart-frame");
   if (!frame) return;
   const tooltip = frame.querySelector(".building-chart-tooltip");
   const crosshair = frame.querySelector(".building-hover-line");
@@ -2884,12 +2881,24 @@ function bindBuildingChartInteraction({ width, plot, labels, series, xFor, yFor,
 }
 
 function renderBuildingAnalytics() {
-  if (!els.buildingPerformanceChart) return;
-  const metric = buildingMetricMeta[state.activeBuildingMetric];
-  const period = state.activeBuildingPeriod;
+  els.buildingWorkspaceSubtitle.textContent = `Energy analysis · ${selectedBuildingCodes().join(", ")}`;
+  els.buildingCharts.forEach(card => renderBuildingMetricChart(card));
+}
+
+function renderBuildingMetricChart(card) {
+  const metricKey = card.dataset.buildingChart;
+  const metric = buildingMetricMeta[metricKey];
+  const period = state.buildingPeriods[metricKey];
+  const els = {
+    buildingPerformanceChart: card.querySelector("[data-chart-plot]"),
+    buildingChartTitle: card.querySelector("[data-chart-title]"),
+    buildingChartSubtitle: card.querySelector("[data-chart-subtitle]"),
+    buildingChartKpis: card.querySelector("[data-chart-kpis]"),
+    buildingPeriodButtons: card.querySelectorAll("[data-building-period]"),
+  };
   const codes = selectedBuildingCodes();
   const periodLabel = period === "yearly" ? "Yearly" : "Monthly";
-  const activeData = buildingPerformanceModel[codes[0]]?.[state.activeBuildingMetric];
+  const activeData = buildingPerformanceModel[codes[0]]?.[metricKey];
   const chosenMonth = activeData?.monthlyMonth;
   const monthLabel = chosenMonth ? formatBuildingChartLabel(chosenMonth, "yearly", true) : "No reporting month";
   const spanLabel = period === "yearly" ? "Year to date" : monthLabel;
@@ -2897,7 +2906,7 @@ function renderBuildingAnalytics() {
   const selectedSeries = codes
     .map((code) => {
       const model = buildingPerformanceModel[code];
-      const metricData = model?.[state.activeBuildingMetric];
+      const metricData = model?.[metricKey];
       const month = metricData?.monthProfiles?.[chosenMonth];
       return { code, model, values: period === "monthly" ? month?.values : metricData?.[period], labels: period === "monthly" ? month?.labels : metricData?.[labelKey], sourceStart: metricData?.sourceStart, latest: metricData?.latest };
     })
@@ -2916,13 +2925,7 @@ function renderBuildingAnalytics() {
     button.classList.toggle("active", active);
     button.setAttribute("aria-pressed", String(active));
   });
-  els.buildingMetricButtons.forEach((button) => {
-    const active = button.dataset.buildingMetric === state.activeBuildingMetric;
-    button.classList.toggle("active", active);
-    button.setAttribute("aria-pressed", String(active));
-  });
-  els.buildingWorkspaceSubtitle.textContent = `${periodLabel} energy analysis · ${[...state.selectedComparisonBuildings][0]}`;
-  els.buildingChartTitle.textContent = `${period === "yearly" ? "Monthly" : "Daily"} ${metric.label.toLowerCase()} profile`;
+  els.buildingChartTitle.textContent = metric.label;
 
   const totalFinite = (values) => values.filter((value) => Number.isFinite(value)).reduce((total, value) => total + value, 0);
   const totals = series.map((item) => ({ ...item, total: totalFinite(item.values) }));
@@ -2944,10 +2947,6 @@ function renderBuildingAnalytics() {
     : period === "monthly" && activeData?.monthProfiles?.[chosenMonth] ? ` · ${activeData.monthProfiles[chosenMonth].reportedDays}/${labels.length} days reported${activeData.monthProfiles[chosenMonth].partialDays ? " · partial daily totals" : ""}` : "";
 
   els.buildingChartSubtitle.textContent = `${spanLabel} · ${period === "yearly" ? "monthly" : "daily"} totals · ${chartUnit}${coverageNote} · hover to inspect`;
-  els.buildingChartLegend.innerHTML = [
-    ...totals.map(({ code, model, total }) => `<span style="--series:${model.color}"><b>${code}</b><small>${formatEnergyCompact(total)}</small></span>`),
-    ...unavailable.map((code) => `<span class="unavailable" style="--series:#9aa7b3"><b>${code}</b><small>No reported data</small></span>`),
-  ].join("");
   els.buildingChartKpis.innerHTML = `
     <div><span>Reported energy</span><strong>${series.length ? formatEnergyCompact(periodTotal) : "--"}</strong><small>${periodLabel.toLowerCase()} selected total</small></div>
     <div><span>${period === "yearly" ? "Monthly" : "Daily"} average</span><strong>${Number.isFinite(averageValue) ? formatEnergyCompact(averageValue) : "--"}</strong><small>available reporting periods</small></div>
@@ -2956,7 +2955,7 @@ function renderBuildingAnalytics() {
   `;
 
   els.buildingChartKpis.hidden = !series.length;
-  if (!series.length && codes.some(code => state.buildingHistoryPending.has(`${code}:${state.activeBuildingMetric}`))) {
+  if (!series.length && codes.some(code => state.buildingHistoryPending.has(`${code}:${metricKey}`))) {
     els.buildingPerformanceChart.innerHTML = '<div class="building-chart-empty" role="status"><strong>Loading reported data…</strong></div>';
   } else if (!series.length) {
     els.buildingPerformanceChart.innerHTML = '<div class="building-chart-empty"><strong>No reported data</strong><p>The selected buildings do not expose usable values for this metric and period.</p></div>';
@@ -3033,7 +3032,7 @@ function renderBuildingAnalytics() {
         <div class="building-chart-tooltip" role="status" hidden></div>
       </div>
     `;
-    bindBuildingChartInteraction({ width, plot, labels, series, xFor, yFor, period });
+    bindBuildingChartInteraction({ chart: els.buildingPerformanceChart, width, plot, labels, series, xFor, yFor, period });
   }
 
 }
@@ -3052,18 +3051,50 @@ function renderBuildingList() {
   const selectedCode = [...state.selectedComparisonBuildings][0];
   const features = visibleFeatures().slice().sort((a, b) =>
     String(a.properties.short_name).localeCompare(String(b.properties.short_name)));
+  const focusedCode = els.buildingSelect.contains(document.activeElement) ? document.activeElement.value : null;
   els.buildingSelect.replaceChildren();
   const seen = new Set();
+  const groups = new Map();
+  const areaNames = { "design-engineering": "Engineering Area", computing: "Computing Area", science: "Science Area", medicine: "Medicine Area" };
+  const areaFor = (props) => {
+    const code = String(props.short_name || "").toUpperCase();
+    const region = focusRegions.find(region => region.codes.some(item => item.toUpperCase() === code));
+    return region ? areaNames[region.id] : (props.zone || "Other Buildings");
+  };
+  const areaOrder = Object.values(areaNames);
+  const areaRank = (area) => areaOrder.includes(area) ? areaOrder.indexOf(area) : areaOrder.length;
+  features.sort((a, b) => areaRank(areaFor(a.properties)) - areaRank(areaFor(b.properties))
+    || areaFor(a.properties).localeCompare(areaFor(b.properties))
+    || String(a.properties.short_name).localeCompare(String(b.properties.short_name), undefined, { numeric: true }));
   features.forEach(({ properties: props }) => {
     const code = String(props.short_name || "").toUpperCase();
     if (!code || seen.has(code)) return;
     seen.add(code);
-    const option = document.createElement("option");
-    option.value = code;
-    option.textContent = String(props.name).toUpperCase() === code ? code : `${code} — ${props.name}`;
-    els.buildingSelect.appendChild(option);
+    const label = document.createElement("label");
+    label.className = "building-radio-option";
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.name = "selected-building";
+    input.value = code;
+    input.checked = code === selectedCode;
+    const text = document.createElement("span");
+    text.textContent = String(props.name).toUpperCase() === code ? code : `${code} — ${props.name}`;
+    label.append(input, text);
+    const area = areaFor(props);
+    if (!groups.has(area)) {
+      const group = document.createElement("fieldset");
+      group.className = "building-area-group";
+      const heading = document.createElement("legend");
+      heading.textContent = area;
+      group.appendChild(heading);
+      groups.set(area, group);
+      els.buildingSelect.appendChild(group);
+    }
+    groups.get(area).appendChild(label);
   });
-  els.buildingSelect.value = selectedCode;
+  if (focusedCode) {
+    [...els.buildingSelect.querySelectorAll("input")].find(input => input.value === focusedCode)?.focus({ preventScroll: true });
+  }
 }
 
 function realtimePlaceLabel(buildingCode) {
@@ -5213,59 +5244,47 @@ async function loadWeatherYear() {
     state.weatherYearError = error.message || "Historical data is temporarily unavailable.";
   }).finally(() => {
     state.weatherYearPromise = null;
-    if (state.activeWeatherPeriod === "yearly") renderWeatherPeriodChart();
+    renderWeatherPeriodChart();
   });
   return state.weatherYearPromise;
 }
 
 function renderWeatherPeriodChart() {
-  if (window.NUSStationWeather.isActive()) return window.NUSStationWeather.render(state.activeWeatherPeriod);
-  const period = state.activeWeatherPeriod;
-  const name = period === "yearly" ? "Yearly" : period === "30d" ? "Monthly" : "Weekly";
-  els.weatherChartTitle.textContent = `Thermal conditions · ${name}`;
-  els.weatherHeatTitle.textContent = `Estimated WBGT · ${name}`;
-  els.weatherWindTitle.textContent = `Wind direction · ${name}`;
-  if (period === "yearly") {
-    const archive = state.weatherYearData;
-    const subtitle = archive
-      ? `Jan–${weatherAxisLabel(archive.rows.at(-1).time, period)} ${archive.year} · ${archive.rows.length} monthly averages · year to date`
-      : "Year to date · one point per month · loading historical data";
-    els.weatherChartSubtitle.textContent = subtitle;
-    els.weatherHeatSubtitle.textContent = subtitle;
-    els.weatherWindSubtitle.textContent = subtitle;
-    if (archive) {
-      renderWeatherThermalChart(archive.rows, period);
-      renderWeatherHeatChart(archive.rows, period);
-      renderWeatherWindChart(archive.rows, period);
+  if (window.NUSStationWeather.isActive()) return window.NUSStationWeather.render();
+  const charts = [
+    ["thermal", els.weatherChartTitle, els.weatherChartSubtitle, els.weatherThermalChart, renderWeatherThermalChart, "Thermal conditions"],
+    ["heat", els.weatherHeatTitle, els.weatherHeatSubtitle, els.weatherHeatChart, renderWeatherHeatChart, "Estimated WBGT"],
+    ["wind", els.weatherWindTitle, els.weatherWindSubtitle, els.weatherWindChart, renderWeatherWindChart, "Wind direction"],
+  ];
+  charts.forEach(([key, title, subtitle, frame, render, label]) => {
+    const period = state.weatherPeriods[key];
+    const name = period === "yearly" ? "Yearly" : period === "30d" ? "Monthly" : "Weekly";
+    title.textContent = `${label} · ${name}`;
+    frame.closest("article").querySelectorAll("[data-weather-period]").forEach(button => {
+      const active = button.dataset.weatherPeriod === period;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+    if (period === "yearly") {
+      const archive = state.weatherYearData;
+      subtitle.textContent = archive
+        ? `Jan–${weatherAxisLabel(archive.rows.at(-1).time, period)} ${archive.year} · ${archive.rows.length} monthly averages · year to date`
+        : "Year to date · one point per month";
+      if (archive) render(archive.rows, period);
+      else if (state.weatherYearError) {
+        frame.innerHTML = `<div class="weather-empty"><strong>Historical weather unavailable</strong><span>${escapeHtml(state.weatherYearError)}</span></div><button type="button" class="nems-refresh" data-weather-year-retry>Try again</button>`;
+        frame.querySelector("[data-weather-year-retry]").addEventListener("click", () => { loadWeatherYear(); renderWeatherPeriodChart(); });
+      } else frame.innerHTML = '<div class="weather-loading">Loading this year’s historical weather…</div>';
+      return;
     }
-    else if (state.weatherYearError) {
-      const empty = `<div class="weather-empty"><strong>Historical weather unavailable</strong><span>${escapeHtml(state.weatherYearError)}</span></div>`;
-      els.weatherThermalChart.innerHTML = `${empty}<button type="button" class="nems-refresh weather-year-retry" data-weather-year-retry>Try again</button>`;
-      els.weatherHeatChart.innerHTML = empty;
-      els.weatherWindChart.innerHTML = empty;
-      els.weatherThermalChart.querySelector("[data-weather-year-retry]").addEventListener("click", () => {
-        loadWeatherYear();
-        renderWeatherPeriodChart();
-      });
-    } else {
-      [els.weatherThermalChart, els.weatherHeatChart, els.weatherWindChart].forEach((chart) => {
-        chart.innerHTML = '<div class="weather-loading">Loading this year’s historical weather…</div>';
-      });
-    }
-    return;
-  }
-  if (!state.weatherData) return;
-  const rows = weatherRowsForPeriod(state.weatherData);
-  const aggregation = period === "30d" ? `${rows.length} daily averages` : "one point every 3 hours";
-  const dateFormat = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Singapore" });
-  const dates = rows.length ? dateFormat.formatRange(rows[0].time, rows.at(-1).time) : "No data";
-  const subtitle = `${dates} · ${aggregation} · ${weatherPeriodLabel(period).toLowerCase()}`;
-  els.weatherChartSubtitle.textContent = subtitle;
-  els.weatherHeatSubtitle.textContent = subtitle;
-  els.weatherWindSubtitle.textContent = subtitle;
-  renderWeatherThermalChart(rows, period);
-  renderWeatherHeatChart(rows, period);
-  renderWeatherWindChart(rows, period);
+    if (!state.weatherData) return;
+    const rows = weatherRowsForPeriod(state.weatherData, period);
+    const aggregation = period === "30d" ? `${rows.length} daily averages` : "one point every 3 hours";
+    const dateFormat = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Singapore" });
+    const dates = rows.length ? dateFormat.formatRange(rows[0].time, rows.at(-1).time) : "No data";
+    subtitle.textContent = `${dates} · ${aggregation} · ${weatherPeriodLabel(period).toLowerCase()}`;
+    render(rows, period);
+  });
 }
 
 function weatherDeltaText(current, previous, unit, digits = 1) {
@@ -5550,15 +5569,10 @@ function renderWeatherDashboard() {
   renderWeatherPeriodChart();
 }
 
-function setWeatherPeriod(period) {
-  state.activeWeatherPeriod = ["7d", "30d", "yearly"].includes(period) ? period : "7d";
-  els.weatherPeriodButtons.forEach((button) => {
-    const active = button.dataset.weatherPeriod === state.activeWeatherPeriod;
-    button.classList.toggle("active", active);
-    button.setAttribute("aria-pressed", String(active));
-  });
-  if (window.NUSStationWeather.isActive()) { window.NUSStationWeather.load(state.activeWeatherPeriod); return; }
-  if (state.activeWeatherPeriod === "yearly" && !state.weatherYearData) loadWeatherYear();
+function setWeatherPeriod(period, chartKey) {
+  if (chartKey) state.weatherPeriods[chartKey] = ["7d", "30d", "yearly"].includes(period) ? period : "7d";
+  if (window.NUSStationWeather.isActive()) { window.NUSStationWeather.load(); return; }
+  if (Object.values(state.weatherPeriods).includes("yearly") && !state.weatherYearData) loadWeatherYear();
   renderWeatherPeriodChart();
 }
 
@@ -5569,7 +5583,7 @@ function bindControls() {
     setWeatherPeriod(state.activeWeatherPeriod);
   });
   els.tabButtons.forEach((button) => button.addEventListener("click", () => activateTab(button.dataset.tab)));
-  els.weatherPeriodButtons.forEach((button) => button.addEventListener("click", () => setWeatherPeriod(button.dataset.weatherPeriod)));
+  els.weatherPeriodButtons.forEach((button) => button.addEventListener("click", () => setWeatherPeriod(button.dataset.weatherPeriod, button.closest("[data-weather-chart]").dataset.weatherChart)));
   els.overviewBuildingPerformance?.addEventListener("click", (event) => {
     const button = event.target.closest("[data-performance-building]");
     if (!button) return;
@@ -5581,26 +5595,9 @@ function bindControls() {
   });
   els.buildingPeriodButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      state.activeBuildingPeriod = button.dataset.buildingPeriod;
-      els.buildingPeriodButtons.forEach((item) => {
-        const active = item === button;
-        item.classList.toggle("active", active);
-        item.setAttribute("aria-pressed", String(active));
-      });
-      renderBuildingAnalytics();
-      loadBuildingPerformanceHistory();
-    });
-  });
-  els.buildingMetricButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      state.activeBuildingMetric = button.dataset.buildingMetric;
-      els.buildingMetricButtons.forEach((item) => {
-        const active = item === button;
-        item.classList.toggle("active", active);
-        item.setAttribute("aria-pressed", String(active));
-      });
-      renderBuildingAnalytics();
-      loadBuildingPerformanceHistory();
+      const card = button.closest("[data-building-chart]");
+      state.buildingPeriods[card.dataset.buildingChart] = button.dataset.buildingPeriod;
+      renderBuildingMetricChart(card);
     });
   });
   els.marketViewButtons.forEach((button) => button.addEventListener("click", () => setMarketView(button.dataset.marketView)));
@@ -5816,7 +5813,7 @@ els.tokenForm.addEventListener("submit", (event) => {
 });
 
 bindControls();
-window.NUSStationWeather.select(document.getElementById("weatherLocation").value);
+window.NUSStationWeather.select(document.querySelector('[name="weather-location"]:checked').value);
 renderMarketHeatmap();
 renderBuildingAnalytics();
 setWeatherPeriod(state.activeWeatherPeriod);
