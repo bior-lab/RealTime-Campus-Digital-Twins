@@ -6039,3 +6039,13 @@ h3 {
 .weather-price-section h2 { margin: 0 0 12px; font-size: 20px; }
 .weather-price-link { color: var(--nus-blue); line-height: 1.6; text-decoration: underline; text-underline-offset: 3px; }
 .weather-price-link:focus-visible { outline: 2px solid var(--nus-blue); outline-offset: 3px; }
+
+/* Selected building map above the energy modules. */
+.building-map-card { min-width: 0; padding: 18px; }
+.building-analysis-map { height: 320px; margin-top: 14px; border-radius: 8px; overflow: hidden; background: #edf2f5; }
+.building-map-key { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: #586879; }
+.building-map-key::before { content: ""; width: 11px; height: 11px; background: #ef7c00; border-radius: 3px; }
+.building-map-label { padding: 5px 10px; border-radius: 5px; background: #003d7c; color: #fff; font-size: 12px; font-weight: 700; box-shadow: 0 2px 8px #0003; }
+.map-stage:not([data-active-workspace="overview"]) .building-analysis-map .mapboxgl-control-container { display: block; }
+.building-analysis-map .mapboxgl-ctrl-top-right { top: 0; right: 0; }
+@media (max-width: 640px) { .building-analysis-map { height: 260px; } }

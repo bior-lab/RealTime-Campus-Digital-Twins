@@ -231,8 +231,8 @@ const historyConfig = {
 
 const buildingMetricMeta = {
   electricity: { label: "Electricity", title: "Electricity consumption", unit: "kWh" },
-  cooling: { label: "Cooling", title: "Cooling energy", unit: "kWh" },
-  pv: { label: "PV", title: "PV generation", unit: "kWh" },
+  cooling: { label: "Cooling load", title: "Cooling load", unit: "kWh" },
+  pv: { label: "PV generation", title: "PV generation", unit: "kWh" },
 };
 
 const buildingModelDefinitions = {
@@ -769,7 +769,7 @@ const state = {
   mapTokenIssue: "",
   mapClickHandler: null,
   refreshTimer: null,
-  selectedComparisonBuildings: new Set(["SDE4"]),
+  selectedComparisonBuildings: new Set(["E3A"]),
   buildingPeriods: { electricity: initialBuildingPeriod, cooling: initialBuildingPeriod, pv: initialBuildingPeriod },
   activeMarketView: "chart",
   activeMarketInterval: "realtime",
@@ -1774,7 +1774,7 @@ async function loadData() {
   refreshDerivedData();
   updateSummary();
   renderBuildingList();
-  const defaultBuilding = state.displayFeatures.find((feature) => String(feature.properties.short_name || "").toUpperCase() === "SDE4");
+  const defaultBuilding = state.displayFeatures.find((feature) => String(feature.properties.short_name || "").toUpperCase() === "E3A");
   if (defaultBuilding) selectBuilding(defaultBuilding, { activate: false });
   renderExternalDataPanel(state.activeExternalDataset, { open: false });
   await loadBuildingPerformanceHistory();
@@ -1919,6 +1919,7 @@ function activateTab(tabName) {
     view.hidden = !active;
   });
   if (els.mapStage) els.mapStage.dataset.activeWorkspace = tabName;
+  if (tabName === "buildings") window.requestAnimationFrame(renderBuildingLocationMap);
   if (tabName === "overview") {
     if (state.mapTokenIssue) {
       setTokenError(state.mapTokenIssue);
@@ -2880,7 +2881,56 @@ function bindBuildingChartInteraction({ chart, width, plot, labels, series, xFor
   frame.addEventListener("pointerleave", hide);
 }
 
+function renderBuildingLocationMap() {
+  const codes = selectedBuildingCodes();
+  document.getElementById("buildingMapSelection").textContent = `Selected building · ${codes.join(", ")}`;
+  if (state.activeTab !== "buildings" || !state.data || !state.activeMapboxToken || typeof mapboxgl === "undefined") return;
+  if (!state.buildingMap) {
+    const map = new mapboxgl.Map({
+      container: "buildingAnalysisMap",
+      accessToken: state.activeMapboxToken,
+      style: "mapbox://styles/mapbox/light-v11",
+      center: [103.776, 1.2987], zoom: 15.5,
+      attributionControl: true,
+    });
+    state.buildingMap = map;
+    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
+    map.scrollZoom.disable();
+    map.on("load", () => {
+      map.addSource("analysis-buildings", { type: "vector", url: mapboxEuiLayer.sourceUrl });
+      map.addLayer({ id: "analysis-building-fill", type: "fill", source: "analysis-buildings",
+        "source-layer": mapboxEuiLayer.sourceLayer, filter: campusSourceFilter(),
+        paint: { "fill-color": "#aebecb", "fill-opacity": 0.65 } });
+      map.addLayer({ id: "analysis-building-outline", type: "line", source: "analysis-buildings",
+        "source-layer": mapboxEuiLayer.sourceLayer, filter: campusSourceFilter(),
+        paint: { "line-color": "#8298a9", "line-width": 1 } });
+      renderBuildingLocationMap();
+    });
+    return;
+  }
+  const map = state.buildingMap;
+  map.resize();
+  if (!map.getLayer("analysis-building-fill")) return;
+  const features = state.displayFeatures.filter(feature => codes.includes(String(feature.properties.short_name).toUpperCase()));
+  const ids = features.map(feature => feature.properties.source_id).filter(Boolean);
+  const selected = ["in", ["get", "source_id"], ["literal", ids]];
+  map.setPaintProperty("analysis-building-fill", "fill-color", ["case", selected, "#ef7c00", "#aebecb"]);
+  map.setPaintProperty("analysis-building-outline", "line-color", ["case", selected, "#a74e00", "#8298a9"]);
+  map.setPaintProperty("analysis-building-outline", "line-width", ["case", selected, 3, 1]);
+  state.buildingMapMarkers?.forEach(marker => marker.remove());
+  state.buildingMapMarkers = features.filter(feature => feature.geometry.type === "Point").map(feature => {
+    const label = document.createElement("span");
+    label.className = "building-map-label";
+    label.textContent = feature.properties.short_name;
+    return new mapboxgl.Marker({ element: label, anchor: "bottom", offset: [0, -12] })
+      .setLngLat(feature.geometry.coordinates).addTo(map);
+  });
+  const point = features.find(feature => feature.geometry.type === "Point");
+  if (point) map.easeTo({ center: point.geometry.coordinates, zoom: 16.5, duration: 450 });
+}
+
 function renderBuildingAnalytics() {
+  renderBuildingLocationMap();
   els.buildingWorkspaceSubtitle.textContent = `Energy analysis · ${selectedBuildingCodes().join(", ")}`;
   els.buildingCharts.forEach(card => renderBuildingMetricChart(card));
 }

@@ -91,20 +91,24 @@
           </header>
           <div class="workspace-content building-analysis-content">
             <div class="building-performance-grid">
+              <article class="dashboard-card building-map-card">
+                <header class="building-chart-header"><div><h2>Building location</h2><p id="buildingMapSelection" aria-live="polite">Selected building · E3A</p></div><span class="building-map-key">Selected building</span></header>
+                <div id="buildingAnalysisMap" class="building-analysis-map" role="region" aria-label="Map of selected campus building"></div>
+              </article>
               <article class="dashboard-card chart-card building-primary-chart" data-building-chart="electricity">
                 <header class="building-chart-header"><div><h2 data-chart-title>Electricity</h2><p data-chart-subtitle></p></div><div class="segmented local-segmented building-period-control" role="group" aria-label="Electricity reporting period"><button type="button" data-building-period="monthly" aria-pressed="false">Monthly</button><button class="active" type="button" data-building-period="yearly" aria-pressed="true">Yearly</button></div></header>
                 <div data-chart-kpis class="building-chart-kpis" aria-label="Electricity energy summary"></div>
                 <div data-chart-plot class="generated-chart" aria-label="Electricity building performance"></div>
               </article>
               <article class="dashboard-card chart-card building-primary-chart" data-building-chart="cooling">
-                <header class="building-chart-header"><div><h2 data-chart-title>Cooling</h2><p data-chart-subtitle></p></div><div class="segmented local-segmented building-period-control" role="group" aria-label="Cooling reporting period"><button type="button" data-building-period="monthly" aria-pressed="false">Monthly</button><button class="active" type="button" data-building-period="yearly" aria-pressed="true">Yearly</button></div></header>
-                <div data-chart-kpis class="building-chart-kpis" aria-label="Cooling energy summary"></div>
-                <div data-chart-plot class="generated-chart" aria-label="Cooling building performance"></div>
+                <header class="building-chart-header"><div><h2 data-chart-title>Cooling load</h2><p data-chart-subtitle></p></div><div class="segmented local-segmented building-period-control" role="group" aria-label="Cooling load reporting period"><button type="button" data-building-period="monthly" aria-pressed="false">Monthly</button><button class="active" type="button" data-building-period="yearly" aria-pressed="true">Yearly</button></div></header>
+                <div data-chart-kpis class="building-chart-kpis" aria-label="Cooling load energy summary"></div>
+                <div data-chart-plot class="generated-chart" aria-label="Cooling load building performance"></div>
               </article>
               <article class="dashboard-card chart-card building-primary-chart" data-building-chart="pv">
-                <header class="building-chart-header"><div><h2 data-chart-title>PV</h2><p data-chart-subtitle></p></div><div class="segmented local-segmented building-period-control" role="group" aria-label="PV reporting period"><button type="button" data-building-period="monthly" aria-pressed="false">Monthly</button><button class="active" type="button" data-building-period="yearly" aria-pressed="true">Yearly</button></div></header>
-                <div data-chart-kpis class="building-chart-kpis" aria-label="PV energy summary"></div>
-                <div data-chart-plot class="generated-chart" aria-label="PV building performance"></div>
+                <header class="building-chart-header"><div><h2 data-chart-title>PV generation</h2><p data-chart-subtitle></p></div><div class="segmented local-segmented building-period-control" role="group" aria-label="PV generation reporting period"><button type="button" data-building-period="monthly" aria-pressed="false">Monthly</button><button class="active" type="button" data-building-period="yearly" aria-pressed="true">Yearly</button></div></header>
+                <div data-chart-kpis class="building-chart-kpis" aria-label="PV generation energy summary"></div>
+                <div data-chart-plot class="generated-chart" aria-label="PV generation building performance"></div>
               </article>
             </div>
           </div>
