@@ -97,6 +97,7 @@ button {
 
 .rail-icon {
   display: grid;
+  color: #fff;
   place-items: center;
   width: 27px;
   height: 27px;
@@ -2639,7 +2640,7 @@ h3 {
 .rail-product-icon {
   display: grid;
   place-items: center;
-  color: var(--nus-orange);
+  color: #fff;
 }
 
 .rail-product-icon svg {
@@ -3176,6 +3177,11 @@ h3 {
   right: 16px;
 }
 
+.mapboxgl-ctrl-attrib .lab-attribution {
+  color: var(--nus-blue);
+  font-weight: 800;
+}
+
 .map-toolbar,
 .map-status {
   display: none;
@@ -3192,6 +3198,7 @@ h3 {
 }
 
 .map-stage[data-active-workspace="overview"] .legend {
+  bottom: 64px;
   width: 224px;
   min-width: 0;
   padding: 11px 12px;

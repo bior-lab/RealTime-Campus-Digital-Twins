@@ -5756,8 +5756,13 @@ async function initMap(token, tokenSource = "default") {
     zoom: 15.05,
     pitch: 0,
     bearing: 0,
+    attributionControl: false,
   });
 
+  state.map.addControl(new mapboxgl.AttributionControl({
+    compact: false,
+    customAttribution: '<a class="lab-attribution" href="https://maomaohu.net/" target="_blank" rel="noopener noreferrer">🦁 NUS BIOR Lab</a>',
+  }), "bottom-left");
   state.map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), "top-right");
   state.map.addControl(new mapboxgl.ScaleControl({ maxWidth: 140, unit: "metric" }), "bottom-right");
   state.map.on("error", (event) => {
