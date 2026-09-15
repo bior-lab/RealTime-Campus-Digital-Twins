@@ -683,7 +683,6 @@ const colorModeConfig = {
 
 const focusBuildings = [
   { sourceId: "way/628774809", code: "SDE4", name: "SDE4" },
-  { sourceId: "way/503403831", code: "Ventus", name: "Ventus" },
   { sourceId: "way/140079084", code: "SDE3", name: "SDE3" },
   { sourceId: "way/139974054", code: "E3A", name: "E3A" },
   { sourceId: "way/139957953", code: "T-LAB", name: "E5A / T-Lab" },
@@ -708,7 +707,7 @@ const focusRegions = [
   {
     id: "design-engineering",
     label: "Design and Engineering",
-    codes: ["SDE4", "Ventus", "SDE3", "E3A", "T-LAB", "E8", "E6", "SDE1", "SDE2"],
+    codes: ["SDE4", "SDE3", "E3A", "T-LAB", "E8", "E6", "SDE1", "SDE2"],
     color: "#416fa4",
   },
   {
@@ -1294,7 +1293,6 @@ function compactMapLabel(groupName, shortName) {
     ["Techno Edge", "TE"],
     ["Create Tower", "CRT"],
     ["Create", "CRT"],
-    ["Ventus", "VEN"],
     ["Greenhouse", "GH"],
     ["King Edward VII Hall", "KE7"],
   ]);

@@ -9,7 +9,7 @@ Read-only check at approximately 19:45 SGT. No raw meter values are stored in th
 - Legacy `hourly_electrical_consumption` and `hourly_cooling_consumption` points stop at 22 August 2026 04:00 SGT. Canonical `Total Hourly Electrical Consumption` / `Total Hourly Cooling Consumption` points continue to 7 September 2026 19:00 SGT.
 - SDE1, SDE2 and SDE4 use `Total Cooling Hourly Consumption` (different word order). SDE4 PV retains its two `solar_m*_hourly_energy` components.
 - SDE3 canonical cooling and PV records with current timestamps are returned under building **E3**. This upstream attribution requires confirmation/correction by the data owner. The Campus UI retains SDE3's existing SDE3-scoped historical points; it does not silently use E3-scoped records.
-- E3 and E7 exist in the API but are not in the current 16-building campus map selection. Ventus and S1A are on the map but have no configured energy histories.
+- E3 and E7 exist in the API but are not in the current 15-building campus map selection. S1A is on the map but has no configured energy history.
 
 ## Verified current UI coverage
 
@@ -22,7 +22,7 @@ Dates below refer to usable histories, not continuous completeness. Charts exclu
 | SDE1, SDE2 | Not mapped | May–Sep 2026 | Not mapped |
 | SDE4 | Not mapped | May–Sep 2026 | May–Sep 2026 |
 | SDE3 | Not mapped | May–Aug 2026, legacy stream | May–Aug 2026, legacy components |
-| Ventus, S1A | Not mapped | Not mapped | Not mapped |
+| S1A | Not mapped | Not mapped | Not mapped |
 
 All 26 configured building/metric combinations returned usable historical values. Of these, 24 have 31 reported days in August with 24 readings per day after timestamp deduplication and component matching. SDE3's two metrics have 22 reported days in August, with the last day incomplete; the automatic monthly view uses an earlier fully reported month. Missing metrics display “No reported data”.
 

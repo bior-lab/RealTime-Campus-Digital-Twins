@@ -26,10 +26,10 @@ Current board tabs:
 - `AI`: evidence-first AI insights, diagnosis, and action recommendations;
 - `Layers`: map color mode and layer controls.
 
-Current 16 focus buildings:
+Current 15 focus buildings:
 
 ```text
-SDE4, Ventus, SDE3, E3A, T-LAB, E8, E6, SDE1, SDE2, COM3, S1A, S9, CELS, MD1, MD2, MD6
+SDE4, SDE3, E3A, T-LAB, E8, E6, SDE1, SDE2, COM3, S1A, S9, CELS, MD1, MD2, MD6
 ```
 
 ## Frontend Structure
