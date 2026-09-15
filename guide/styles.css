@@ -103,3 +103,6 @@ tbody tr:last-child > * { border-bottom: 0; }
   .table-wrap { overflow: visible; }
   a { color: var(--nus-blue); }
 }
+
+.embedded .back-link { display: none; }
+.embedded .guide-nav { margin-top: 0; }

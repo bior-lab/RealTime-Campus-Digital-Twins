@@ -10,7 +10,7 @@
     
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="vendor/mapbox-gl/mapbox-gl.css" />
-    <link rel="stylesheet" href="src/styles.css?v=20260914-campus-brand" />
+    <link rel="stylesheet" href="src/styles.css?v=20260915-map-guide" />
     <link rel="stylesheet" href="src/market-external.css?v=20260909" />
     <script src="vendor/mapbox-gl/mapbox-gl.js"></script>
   </head>
@@ -39,10 +39,10 @@
             <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M17 17H7a4 4 0 1 1 1.1-7.85A5.5 5.5 0 0 1 18.5 11 3 3 0 0 1 17 17Z"/><path d="M12 2v3M4.9 4.9 7 7M19.1 4.9 17 7"/></svg></span>
             Weather &amp; Energy Price
           </button>
-          <a class="rail-guide" href="./guide/" target="_blank" rel="noopener noreferrer">
+          <button type="button" data-tab="guide" aria-pressed="false">
             <span class="rail-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v17H7.5A3.5 3.5 0 0 0 4 22V5.5Z"/><path d="M4 18.5A3.5 3.5 0 0 1 7.5 15H20"/></svg></span>
             User Guide
-          </a>
+          </button>
         </nav>
         <nav class="rail-related" aria-label="Related digital twin platforms">
           <a class="rail-guide" href="https://urbandt.org" target="_blank" rel="noopener noreferrer">
@@ -82,6 +82,10 @@
           <span id="realtimeStatusDot" class="status-dot"></span>
           <span id="realtimeStatusText">Realtime API pending</span>
         </div>
+
+        <section class="workspace-view guide-workspace" data-workspace="guide" aria-label="User Guide" hidden>
+          <iframe src="./guide/?embedded=1" title="NUS Campus Digital Twins User Guide" loading="lazy"></iframe>
+        </section>
 
         <section class="workspace-view overview-workspace active" data-workspace="overview" aria-label="Campus monitoring overview"></section>
 
@@ -349,7 +353,7 @@
             <h2>Project Summary</h2>
             <p>NUS Campus Digital Twins integrates campus building information with electricity consumption, cooling demand and solar generation data to support energy monitoring and analysis across selected NUS buildings.</p>
             <p>The platform brings together interactive maps, historical energy profiles, local weather conditions and Singapore wholesale electricity market information, helping users explore campus energy performance and understand its broader context.</p>
-            <p>For more information, please refer to the <a href="./guide/" target="_blank" rel="noopener noreferrer">User Guide</a>.</p>
+            <p>For more information, please refer to the <button class="inline-guide-link" type="button" data-tab="guide" aria-pressed="false">User Guide</button>.</p>
           </section>
           <div id="aiBriefList" class="hidden" aria-hidden="true"></div>
         </section>
@@ -411,6 +415,6 @@
     <script src="src/building-history.js?v=20260907-aggregate-2" defer></script>
     <script src="src/station-weather.js?v=20260914-onsite" defer></script>
     <script src="src/market-snapshot.js?v=20260909" defer></script>
-    <script src="src/app.js?v=20260914-campus-brand" defer></script>
+    <script src="src/app.js?v=20260915-map-guide" defer></script>
   </body>
 </html>
