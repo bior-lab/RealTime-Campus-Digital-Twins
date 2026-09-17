@@ -1,6 +1,6 @@
 {
-  "published": "17 Sep 2026 22:31",
-  "retrievedAt": "2026-09-17T14:51:49+00:00",
+  "published": "18 Sep 2026 02:31",
+  "retrievedAt": "2026-09-17T18:37:54+00:00",
   "source": "EMC / NEMS",
   "sourceUrl": "https://www.nems.emcsg.com/en/",
   "metrics": [
@@ -14,7 +14,7 @@
     {
       "key": "demand",
       "label": "Demand",
-      "value": 7471.0,
+      "value": 6547.0,
       "decimals": 0,
       "unit": "MW"
     },
