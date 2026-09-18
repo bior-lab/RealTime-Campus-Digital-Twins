@@ -739,7 +739,7 @@ const focusRegions = [
 ];
 
 const requestedWorkspace = new URLSearchParams(window.location.search).get("tab");
-const initialWorkspace = ["overview", "buildings", "market", "weather"].includes(requestedWorkspace)
+const initialWorkspace = ["overview", "buildings", "market", "weather", "guide"].includes(requestedWorkspace)
   ? requestedWorkspace
   : "overview";
 const requestedBuildingPeriod = new URLSearchParams(window.location.search).get("period");
@@ -5792,6 +5792,33 @@ function fallBackToDefaultMapboxToken() {
   });
 }
 
+class MapCameraControl {
+  onAdd(map) {
+    this.container = document.createElement("div");
+    this.container.className = "mapboxgl-ctrl mapboxgl-ctrl-group map-camera-controls";
+    const actions = [
+      ["Rotate left 15°", "↶", () => ({ bearing: map.getBearing() - 15 })],
+      ["Rotate right 15°", "↷", () => ({ bearing: map.getBearing() + 15 })],
+      ["Increase pitch 10°", "⌃", () => ({ pitch: Math.min(map.getMaxPitch(), map.getPitch() + 10) })],
+      ["Decrease pitch 10°", "⌄", () => ({ pitch: Math.max(map.getMinPitch(), map.getPitch() - 10) })],
+    ];
+    actions.forEach(([label, icon, camera]) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.title = label;
+      button.setAttribute("aria-label", label);
+      button.textContent = icon;
+      button.addEventListener("click", () => map.easeTo({ ...camera(), duration: 250 }));
+      this.container.append(button);
+    });
+    return this.container;
+  }
+
+  onRemove() {
+    this.container.remove();
+  }
+}
+
 async function initMap(token, tokenSource = "default") {
   if (typeof mapboxgl === "undefined") {
     throw new Error("Mapbox GL could not be loaded. Refresh the page and try again.");
@@ -5824,6 +5851,7 @@ async function initMap(token, tokenSource = "default") {
     customAttribution: '<a class="lab-attribution" href="https://maomaohu.net/" target="_blank" rel="noopener noreferrer">🦁 NUS BIOR Lab</a>',
   }), "bottom-left");
   state.map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), "top-right");
+  state.map.addControl(new MapCameraControl(), "top-right");
   state.map.addControl(new mapboxgl.ScaleControl({ maxWidth: 140, unit: "metric" }), "bottom-right");
   state.map.on("error", (event) => {
     const message = String(event?.error?.message || "");

@@ -5,12 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="A concise guide to NUS Campus Digital Twins, its functions and data sources." />
     <title>User Guide | NUS Campus Digital Twins</title>
-    <link rel="stylesheet" href="styles.css?v=20260908-data-framework" />
+    <link rel="stylesheet" href="styles.css?v=20260915-guide-tab" />
   </head>
   <body>
+    <script>
+      if (new URLSearchParams(window.location.search).get("embedded") === "1") {
+        document.documentElement.classList.add("embedded");
+      }
+    </script>
     <a class="skip-link" href="#main-content">Skip to guide</a>
     <aside class="guide-sidebar">
-      <a class="back-link" href="../">← Back to dashboard</a>
+      <a class="back-link" href="../" target="_top">← Back to dashboard</a>
       <nav class="guide-nav" aria-label="Guide contents">
         <p class="nav-label">Contents</p>
         <a href="#about">About</a>

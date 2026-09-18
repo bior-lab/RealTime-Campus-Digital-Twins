@@ -3189,8 +3189,8 @@ h3 {
 
 .legend {
   display: block;
-  left: 16px;
-  right: auto;
+  left: auto;
+  right: 26px;
   bottom: 14px;
   z-index: 7;
   min-width: 200px;
@@ -6049,3 +6049,16 @@ h3 {
 .map-stage:not([data-active-workspace="overview"]) .building-analysis-map .mapboxgl-control-container { display: block; }
 .building-analysis-map .mapboxgl-ctrl-top-right { top: 0; right: 0; }
 @media (max-width: 640px) { .building-analysis-map { height: 260px; } }
+
+/* In-app documentation shares the primary navigation. */
+.app-shell:has(.guide-workspace.active) { grid-template-columns: 76px minmax(0, 1fr); }
+.app-shell:has(.guide-workspace.active) > .control-panel { display: none; }
+.app-shell:has(.guide-workspace.active) > .map-stage { grid-column: 2; }
+.guide-workspace { background: #f5f7fb; }
+.guide-workspace iframe { display: block; width: 100%; height: 100%; border: 0; }
+.inline-guide-link { padding: 0; border: 0; background: none; color: var(--nus-blue); font: inherit; text-decoration: underline; cursor: pointer; }
+.mapboxgl-ctrl-group.map-camera-controls button { width: 34px; height: 34px; font-size: 20px; color: #003d7c; }
+.map-camera-controls button:focus-visible { outline: 3px solid #ef7c00; outline-offset: -3px; }
+@media (max-width: 680px) {
+  .app-shell:has(.guide-workspace.active) { grid-template-columns: 60px minmax(0, 1fr); }
+}
