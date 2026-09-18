@@ -21,6 +21,7 @@ const defaultMapboxPublicToken =
 
 const apiBuildingAliases = {
   "T-LAB": "TLAB",
+  VENTUS: "Ventus",
 };
 
 function apiBuildingCode(buildingCode) {
@@ -42,12 +43,14 @@ const buildingMetricCapabilities = {
   MD1: ["electricity", "cooling"],
   MD2: ["electricity", "cooling"],
   MD6: ["electricity", "cooling"],
+  S1A: ["electricity", "cooling"],
   S9: ["electricity", "cooling"],
   SDE1: ["cooling"],
   SDE2: ["cooling"],
   SDE3: ["cooling", "pv"],
   SDE4: ["cooling", "pv", "co2", "temperature", "humidity", "airflow"],
   "T-LAB": ["electricity", "cooling"],
+  VENTUS: ["electricity", "cooling"],
 };
 
 const pvHistoryPoints = {
@@ -69,12 +72,14 @@ const realtimeConfig = {
     { code: "MD1" },
     { code: "MD2" },
     { code: "MD6" },
+    { code: "S1A" },
     { code: "S9" },
     { code: "SDE1" },
     { code: "SDE2" },
     { code: "SDE3" },
     { code: "SDE4" },
     { code: "T-LAB", requestCode: "TLAB" },
+    { code: "VENTUS" },
   ],
   refreshMs: 60_000,
 };
@@ -250,6 +255,8 @@ const buildingModelDefinitions = {
   MD1: { color: "#b05278", coverage: "Mapped" },
   MD2: { color: "#c06c84", coverage: "Mapped" },
   MD6: { color: "#8f4c6b", coverage: "Mapped" },
+  S1A: { color: "#8270aa", coverage: "Mapped" },
+  VENTUS: { color: "#4c7f9c", coverage: "Mapped" },
 };
 
 const buildingPerformanceModel = Object.fromEntries(
@@ -683,7 +690,7 @@ const colorModeConfig = {
 
 const focusBuildings = [
   { sourceId: "way/628774809", code: "SDE4", name: "SDE4" },
-  { sourceId: "way/503403831", code: "Ventus", name: "Ventus" },
+  { sourceId: "way/503403831", code: "VENTUS", name: "Ventus" },
   { sourceId: "way/140079084", code: "SDE3", name: "SDE3" },
   { sourceId: "way/139974054", code: "E3A", name: "E3A" },
   { sourceId: "way/139957953", code: "T-LAB", name: "E5A / T-Lab" },
@@ -708,7 +715,7 @@ const focusRegions = [
   {
     id: "design-engineering",
     label: "Design and Engineering",
-    codes: ["SDE4", "Ventus", "SDE3", "E3A", "T-LAB", "E8", "E6", "SDE1", "SDE2"],
+    codes: ["SDE4", "VENTUS", "SDE3", "E3A", "T-LAB", "E8", "E6", "SDE1", "SDE2"],
     color: "#416fa4",
   },
   {
@@ -1668,7 +1675,10 @@ function classifyRealtimePoints(points) {
 
 function applyRealtimeToFeature(feature) {
   const props = feature.properties;
-  const live = state.realtimeByBuilding[props.short_name] || state.realtimeByBuilding[props.id?.toUpperCase()];
+  const focusCode = focusBuildingBySourceId.get(props.source_id)?.code;
+  const live = state.realtimeByBuilding[focusCode]
+    || state.realtimeByBuilding[String(props.short_name || "").toUpperCase()]
+    || state.realtimeByBuilding[String(props.id || "").toUpperCase()];
   props.has_realtime = Boolean(live);
   props.electricity_metric = live?.electricityHourlyKwh ?? props.load_kw ?? 0;
   props.cooling_metric = live?.coolingHourlyKwh ?? props.cooling_kw ?? 0;
