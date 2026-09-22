@@ -716,25 +716,25 @@ const focusRegions = [
     id: "design-engineering",
     label: "Design and Engineering",
     codes: ["SDE4", "VENTUS", "SDE3", "E3A", "T-LAB", "E8", "E6", "SDE1", "SDE2"],
-    color: "#416fa4",
+    color: "#3478f6",
   },
   {
     id: "computing",
     label: "Computing",
     codes: ["COM3"],
-    color: "#448a7e",
+    color: "#12b8a6",
   },
   {
     id: "science",
     label: "Science",
     codes: ["S1A", "S9"],
-    color: "#8270aa",
+    color: "#9656ed",
   },
   {
     id: "medicine",
     label: "Medicine",
     codes: ["CELS", "MD1", "MD2", "MD6"],
-    color: "#b77591",
+    color: "#f16b86",
   },
 ];
 
@@ -1063,7 +1063,7 @@ function updateMapBuildingHighlight() {
   const base = buildingModelColorExpression();
   if (state.metric === "type") {
     const color = ["case", ["==", ["get", "source_id"], selected], "#ef7c00",
-      ["==", ["get", "source_id"], hovered], "#72aacf", base];
+      ["==", ["get", "source_id"], hovered], "#5bcdf2", base];
     state.map.setPaintProperty("buildings-fill", "fill-color", color);
     state.map.setPaintProperty("buildings-extrusion", "fill-extrusion-color", color);
   }
