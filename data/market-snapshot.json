@@ -1,6 +1,6 @@
 {
-  "published": "22 Sep 2026 08:31",
-  "retrievedAt": "2026-09-22T00:53:53+00:00",
+  "published": "22 Sep 2026 13:31",
+  "retrievedAt": "2026-09-22T06:02:21+00:00",
   "source": "EMC / NEMS",
   "sourceUrl": "https://www.nems.emcsg.com/en/",
   "metrics": [
@@ -14,14 +14,14 @@
     {
       "key": "demand",
       "label": "Demand",
-      "value": 7648.0,
+      "value": 7837.0,
       "decimals": 0,
       "unit": "MW"
     },
     {
       "key": "solar",
       "label": "Solar",
-      "value": 275.0,
+      "value": 429.0,
       "decimals": 0,
       "unit": "MW"
     },
